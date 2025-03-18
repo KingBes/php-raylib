@@ -73,7 +73,7 @@ while (!$raylib->windowShouldClose()) {
     // 绘制
     $raylib->beginDrawing();
     // 定义文本
-    $raylib->drawText('Hello World', 100, 100, 20, $color);
+    $raylib->drawText('hello', 100, 100, 20, $color);
     // 结束绘制
     $raylib->endDrawing();
 }
