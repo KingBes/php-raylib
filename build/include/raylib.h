@@ -533,28 +533,28 @@ typedef struct AutomationEventList {
 } AutomationEventList;
 
 //----------------------------------------------------------------------------------
-// Enumerators Definition
+// 枚举定义
 //----------------------------------------------------------------------------------
-// System/Window config flags
-// NOTE: Every bit registers one state (use it with bit masks)
-// By default all flags are set to 0
+// 系统/窗口配置标志
+// 注意: 每个位代表一种状态 (使用位掩码操作)
+// 默认情况下，所有标志都设置为 0
 typedef enum {
-    FLAG_VSYNC_HINT         = 0x00000040,   // Set to try enabling V-Sync on GPU
-    FLAG_FULLSCREEN_MODE    = 0x00000002,   // Set to run program in fullscreen
-    FLAG_WINDOW_RESIZABLE   = 0x00000004,   // Set to allow resizable window
-    FLAG_WINDOW_UNDECORATED = 0x00000008,   // Set to disable window decoration (frame and buttons)
-    FLAG_WINDOW_HIDDEN      = 0x00000080,   // Set to hide window
-    FLAG_WINDOW_MINIMIZED   = 0x00000200,   // Set to minimize window (iconify)
-    FLAG_WINDOW_MAXIMIZED   = 0x00000400,   // Set to maximize window (expanded to monitor)
-    FLAG_WINDOW_UNFOCUSED   = 0x00000800,   // Set to window non focused
-    FLAG_WINDOW_TOPMOST     = 0x00001000,   // Set to window always on top
-    FLAG_WINDOW_ALWAYS_RUN  = 0x00000100,   // Set to allow windows running while minimized
-    FLAG_WINDOW_TRANSPARENT = 0x00000010,   // Set to allow transparent framebuffer
-    FLAG_WINDOW_HIGHDPI     = 0x00002000,   // Set to support HighDPI
-    FLAG_WINDOW_MOUSE_PASSTHROUGH = 0x00004000, // Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
-    FLAG_BORDERLESS_WINDOWED_MODE = 0x00008000, // Set to run program in borderless windowed mode
-    FLAG_MSAA_4X_HINT       = 0x00000020,   // Set to try enabling MSAA 4X
-    FLAG_INTERLACED_HINT    = 0x00010000    // Set to try enabling interlaced video format (for V3D)
+    FLAG_VSYNC_HINT         = 0x00000040,   // 设置以尝试在GPU上启用垂直同步
+    FLAG_FULLSCREEN_MODE    = 0x00000002,   // 设置以全屏模式运行程序
+    FLAG_WINDOW_RESIZABLE   = 0x00000004,   // 设置以允许窗口可调整大小
+    FLAG_WINDOW_UNDECORATED = 0x00000008,   // 设置以禁用窗口装饰 (边框和按钮)
+    FLAG_WINDOW_HIDDEN      = 0x00000080,   // 设置以隐藏窗口
+    FLAG_WINDOW_MINIMIZED   = 0x00000200,   // 设置以最小化窗口 (图标化)
+    FLAG_WINDOW_MAXIMIZED   = 0x00000400,   // 设置以最大化窗口 (扩展到显示器)
+    FLAG_WINDOW_UNFOCUSED   = 0x00000800,   // 设置窗口为非聚焦状态
+    FLAG_WINDOW_TOPMOST     = 0x00001000,   // 设置窗口始终置顶
+    FLAG_WINDOW_ALWAYS_RUN  = 0x00000100,   // 设置以允许窗口在最小化时继续运行
+    FLAG_WINDOW_TRANSPARENT = 0x00000010,   // 设置以允许透明帧缓冲区
+    FLAG_WINDOW_HIGHDPI     = 0x00002000,   // 设置以支持高DPI
+    FLAG_WINDOW_MOUSE_PASSTHROUGH = 0x00004000, // 设置以支持鼠标穿透，仅在FLAG_WINDOW_UNDECORATED时支持
+    FLAG_BORDERLESS_WINDOWED_MODE = 0x00008000, // 设置以无边框窗口模式运行程序
+    FLAG_MSAA_4X_HINT       = 0x00000020,   // 设置以尝试启用4倍多重采样抗锯齿
+    FLAG_INTERLACED_HINT    = 0x00010000    // 设置以尝试启用隔行视频格式 (适用于V3D)
 } ConfigFlags;
 
 // Trace log level
@@ -964,743 +964,981 @@ typedef bool (*SaveFileTextCallback)(const char *fileName, char *text); // FileI
 extern "C" {            // Prevents name mangling of functions
 #endif
 
-// Window-related functions
-RLAPI void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
-RLAPI void CloseWindow(void);                                     // Close window and unload OpenGL context
-RLAPI bool WindowShouldClose(void);                               // Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
-RLAPI bool IsWindowReady(void);                                   // Check if window has been initialized successfully
-RLAPI bool IsWindowFullscreen(void);                              // Check if window is currently fullscreen
-RLAPI bool IsWindowHidden(void);                                  // Check if window is currently hidden
-RLAPI bool IsWindowMinimized(void);                               // Check if window is currently minimized
-RLAPI bool IsWindowMaximized(void);                               // Check if window is currently maximized
-RLAPI bool IsWindowFocused(void);                                 // Check if window is currently focused
-RLAPI bool IsWindowResized(void);                                 // Check if window has been resized last frame
-RLAPI bool IsWindowState(unsigned int flag);                      // Check if one specific window flag is enabled
-RLAPI void SetWindowState(unsigned int flags);                    // Set window configuration state using flags
-RLAPI void ClearWindowState(unsigned int flags);                  // Clear window configuration state flags
-RLAPI void ToggleFullscreen(void);                                // Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
-RLAPI void ToggleBorderlessWindowed(void);                        // Toggle window state: borderless windowed, resizes window to match monitor resolution
-RLAPI void MaximizeWindow(void);                                  // Set window state: maximized, if resizable
-RLAPI void MinimizeWindow(void);                                  // Set window state: minimized, if resizable
-RLAPI void RestoreWindow(void);                                   // Set window state: not minimized/maximized
-RLAPI void SetWindowIcon(Image image);                            // Set icon for window (single image, RGBA 32bit)
-RLAPI void SetWindowIcons(Image *images, int count);              // Set icon for window (multiple images, RGBA 32bit)
-RLAPI void SetWindowTitle(const char *title);                     // Set title for window
-RLAPI void SetWindowPosition(int x, int y);                       // Set window position on screen
-RLAPI void SetWindowMonitor(int monitor);                         // Set monitor for the current window
-RLAPI void SetWindowMinSize(int width, int height);               // Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
-RLAPI void SetWindowMaxSize(int width, int height);               // Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE)
-RLAPI void SetWindowSize(int width, int height);                  // Set window dimensions
-RLAPI void SetWindowOpacity(float opacity);                       // Set window opacity [0.0f..1.0f]
-RLAPI void SetWindowFocused(void);                                // Set window focused
-RLAPI void *GetWindowHandle(void);                                // Get native window handle
-RLAPI int GetScreenWidth(void);                                   // Get current screen width
-RLAPI int GetScreenHeight(void);                                  // Get current screen height
-RLAPI int GetRenderWidth(void);                                   // Get current render width (it considers HiDPI)
-RLAPI int GetRenderHeight(void);                                  // Get current render height (it considers HiDPI)
-RLAPI int GetMonitorCount(void);                                  // Get number of connected monitors
-RLAPI int GetCurrentMonitor(void);                                // Get current monitor where window is placed
-RLAPI Vector2 GetMonitorPosition(int monitor);                    // Get specified monitor position
-RLAPI int GetMonitorWidth(int monitor);                           // Get specified monitor width (current video mode used by monitor)
-RLAPI int GetMonitorHeight(int monitor);                          // Get specified monitor height (current video mode used by monitor)
-RLAPI int GetMonitorPhysicalWidth(int monitor);                   // Get specified monitor physical width in millimetres
-RLAPI int GetMonitorPhysicalHeight(int monitor);                  // Get specified monitor physical height in millimetres
-RLAPI int GetMonitorRefreshRate(int monitor);                     // Get specified monitor refresh rate
-RLAPI Vector2 GetWindowPosition(void);                            // Get window position XY on monitor
-RLAPI Vector2 GetWindowScaleDPI(void);                            // Get window scale DPI factor
-RLAPI const char *GetMonitorName(int monitor);                    // Get the human-readable, UTF-8 encoded name of the specified monitor
-RLAPI void SetClipboardText(const char *text);                    // Set clipboard text content
-RLAPI const char *GetClipboardText(void);                         // Get clipboard text content
-RLAPI Image GetClipboardImage(void);                              // Get clipboard image content
-RLAPI void EnableEventWaiting(void);                              // Enable waiting for events on EndDrawing(), no automatic event polling
-RLAPI void DisableEventWaiting(void);                             // Disable waiting for events on EndDrawing(), automatic events polling
+// 窗口相关函数
+// 初始化窗口和OpenGL上下文
+RLAPI void InitWindow(int width, int height, const char *title);
+// 关闭窗口并卸载OpenGL上下文
+RLAPI void CloseWindow(void);
+// 检查应用程序是否应该关闭（按下ESC键或点击窗口关闭图标）
+RLAPI bool WindowShouldClose(void);
+// 检查窗口是否已成功初始化
+RLAPI bool IsWindowReady(void);
+// 检查窗口当前是否为全屏模式
+RLAPI bool IsWindowFullscreen(void);
+// 检查窗口当前是否隐藏
+RLAPI bool IsWindowHidden(void);
+// 检查窗口当前是否最小化
+RLAPI bool IsWindowMinimized(void);
+// 检查窗口当前是否最大化
+RLAPI bool IsWindowMaximized(void);
+// 检查窗口当前是否获得焦点
+RLAPI bool IsWindowFocused(void);
+// 检查窗口在上一帧是否被调整大小
+RLAPI bool IsWindowResized(void);
+// 检查是否启用了一个特定的窗口标志
+RLAPI bool IsWindowState(unsigned int flag);
+// 使用标志设置窗口配置状态
+RLAPI void SetWindowState(unsigned int flags);
+// 清除窗口配置状态标志
+RLAPI void ClearWindowState(unsigned int flags);
+// 切换窗口状态：全屏/窗口模式，调整显示器以匹配窗口分辨率
+RLAPI void ToggleFullscreen(void);
+// 切换窗口状态：无边框窗口模式，调整窗口以匹配显示器分辨率
+RLAPI void ToggleBorderlessWindowed(void);
+// 设置窗口状态：最大化（如果窗口可调整大小）
+RLAPI void MaximizeWindow(void);
+// 设置窗口状态：最小化（如果窗口可调整大小）
+RLAPI void MinimizeWindow(void);
+// 设置窗口状态：非最小化/最大化
+RLAPI void RestoreWindow(void);
+// 设置窗口图标（单张图像，RGBA 32位）
+RLAPI void SetWindowIcon(Image image);
+// 设置窗口图标（多张图像，RGBA 32位）
+RLAPI void SetWindowIcons(Image *images, int count);
+// 设置窗口标题
+RLAPI void SetWindowTitle(const char *title);
+// 设置窗口在屏幕上的位置
+RLAPI void SetWindowPosition(int x, int y);
+// 设置当前窗口所在的显示器
+RLAPI void SetWindowMonitor(int monitor);
+// 设置窗口的最小尺寸（适用于可调整大小的窗口）
+RLAPI void SetWindowMinSize(int width, int height);
+// 设置窗口的最大尺寸（适用于可调整大小的窗口）
+RLAPI void SetWindowMaxSize(int width, int height);
+// 设置窗口尺寸
+RLAPI void SetWindowSize(int width, int height);
+// 设置窗口透明度 [0.0f..1.0f]
+RLAPI void SetWindowOpacity(float opacity);
+// 设置窗口获得焦点
+RLAPI void SetWindowFocused(void);
+// 获取原生窗口句柄
+RLAPI void *GetWindowHandle(void);
+// 获取当前屏幕宽度
+RLAPI int GetScreenWidth(void);
+// 获取当前屏幕高度
+RLAPI int GetScreenHeight(void);
+// 获取当前渲染宽度（考虑高DPI）
+RLAPI int GetRenderWidth(void);
+// 获取当前渲染高度（考虑高DPI）
+RLAPI int GetRenderHeight(void);
+// 获取连接的显示器数量
+RLAPI int GetMonitorCount(void);
+// 获取窗口所在的当前显示器
+RLAPI int GetCurrentMonitor(void);
+// 获取指定显示器的位置
+RLAPI Vector2 GetMonitorPosition(int monitor);
+// 获取指定显示器的宽度（显示器当前使用的视频模式）
+RLAPI int GetMonitorWidth(int monitor);
+// 获取指定显示器的高度（显示器当前使用的视频模式）
+RLAPI int GetMonitorHeight(int monitor);
+// 获取指定显示器的物理宽度（毫米）
+RLAPI int GetMonitorPhysicalWidth(int monitor);
+// 获取指定显示器的物理高度（毫米）
+RLAPI int GetMonitorPhysicalHeight(int monitor);
+// 获取指定显示器的刷新率
+RLAPI int GetMonitorRefreshRate(int monitor);
+// 获取窗口在显示器上的XY位置
+RLAPI Vector2 GetWindowPosition(void);
+// 获取窗口的缩放DPI因子
+RLAPI Vector2 GetWindowScaleDPI(void);
+// 获取指定显示器的可读UTF-8编码名称
+RLAPI const char *GetMonitorName(int monitor);
+// 设置剪贴板的文本内容
+RLAPI void SetClipboardText(const char *text);
+// 获取剪贴板的文本内容
+RLAPI const char *GetClipboardText(void);
+// 获取剪贴板的图像内容
+RLAPI Image GetClipboardImage(void);
+// 启用在EndDrawing()时等待事件，不自动轮询事件
+RLAPI void EnableEventWaiting(void);
+// 禁用在EndDrawing()时等待事件，自动轮询事件
+RLAPI void DisableEventWaiting(void);
 
-// Cursor-related functions
-RLAPI void ShowCursor(void);                                      // Shows cursor
-RLAPI void HideCursor(void);                                      // Hides cursor
-RLAPI bool IsCursorHidden(void);                                  // Check if cursor is not visible
-RLAPI void EnableCursor(void);                                    // Enables cursor (unlock cursor)
-RLAPI void DisableCursor(void);                                   // Disables cursor (lock cursor)
-RLAPI bool IsCursorOnScreen(void);                                // Check if cursor is on the screen
+// 与光标相关的函数
+RLAPI void ShowCursor(void);                                      // 显示光标
+RLAPI void HideCursor(void);                                      // 隐藏光标
+RLAPI bool IsCursorHidden(void);                                  // 检查光标是否不可见
+RLAPI void EnableCursor(void);                                    // 启用光标（解锁光标）
+RLAPI void DisableCursor(void);                                   // 禁用光标（锁定光标）
+RLAPI bool IsCursorOnScreen(void);                                // 检查光标是否在屏幕上
 
-// Drawing-related functions
-RLAPI void ClearBackground(Color color);                          // Set background color (framebuffer clear color)
-RLAPI void BeginDrawing(void);                                    // Setup canvas (framebuffer) to start drawing
-RLAPI void EndDrawing(void);                                      // End canvas drawing and swap buffers (double buffering)
-RLAPI void BeginMode2D(Camera2D camera);                          // Begin 2D mode with custom camera (2D)
-RLAPI void EndMode2D(void);                                       // Ends 2D mode with custom camera
-RLAPI void BeginMode3D(Camera3D camera);                          // Begin 3D mode with custom camera (3D)
-RLAPI void EndMode3D(void);                                       // Ends 3D mode and returns to default 2D orthographic mode
-RLAPI void BeginTextureMode(RenderTexture2D target);              // Begin drawing to render texture
-RLAPI void EndTextureMode(void);                                  // Ends drawing to render texture
-RLAPI void BeginShaderMode(Shader shader);                        // Begin custom shader drawing
-RLAPI void EndShaderMode(void);                                   // End custom shader drawing (use default shader)
-RLAPI void BeginBlendMode(int mode);                              // Begin blending mode (alpha, additive, multiplied, subtract, custom)
-RLAPI void EndBlendMode(void);                                    // End blending mode (reset to default: alpha blending)
-RLAPI void BeginScissorMode(int x, int y, int width, int height); // Begin scissor mode (define screen area for following drawing)
-RLAPI void EndScissorMode(void);                                  // End scissor mode
-RLAPI void BeginVrStereoMode(VrStereoConfig config);              // Begin stereo rendering (requires VR simulator)
-RLAPI void EndVrStereoMode(void);                                 // End stereo rendering (requires VR simulator)
+// 绘图相关函数
+RLAPI void ClearBackground(Color color);                          // 设置背景颜色（帧缓冲区清除颜色）
+RLAPI void BeginDrawing(void);                                    // 设置画布（帧缓冲区）以开始绘图
+RLAPI void EndDrawing(void);                                      // 结束画布绘图并交换缓冲区（双缓冲）
+RLAPI void BeginMode2D(Camera2D camera);                          // 使用自定义相机开始2D模式绘图
+RLAPI void EndMode2D(void);                                       // 结束自定义相机的2D模式绘图
+RLAPI void BeginMode3D(Camera3D camera);                          // 使用自定义相机开始3D模式绘图
+RLAPI void EndMode3D(void);                                       // 结束3D模式绘图并返回默认的2D正交模式
+RLAPI void BeginTextureMode(RenderTexture2D target);              // 开始向渲染纹理绘图
+RLAPI void EndTextureMode(void);                                  // 结束向渲染纹理绘图
+RLAPI void BeginShaderMode(Shader shader);                        // 开始使用自定义着色器绘图
+RLAPI void EndShaderMode(void);                                   // 结束自定义着色器绘图（使用默认着色器）
+RLAPI void BeginBlendMode(int mode);                              // 开始混合模式（alpha、加法、乘法、减法、自定义）
+RLAPI void EndBlendMode(void);                                    // 结束混合模式（重置为默认：alpha混合）
+RLAPI void BeginScissorMode(int x, int y, int width, int height); // 开始裁剪模式（定义后续绘图的屏幕区域）
+RLAPI void EndScissorMode(void);                                  // 结束裁剪模式
+RLAPI void BeginVrStereoMode(VrStereoConfig config);              // 开始立体渲染（需要VR模拟器）
+RLAPI void EndVrStereoMode(void);                                 // 结束立体渲染（需要VR模拟器）
 
-// VR stereo config functions for VR simulator
-RLAPI VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device);     // Load VR stereo config for VR simulator device parameters
-RLAPI void UnloadVrStereoConfig(VrStereoConfig config);           // Unload VR stereo config
+// VR模拟器的VR立体配置函数
+// 为VR模拟器设备参数加载VR立体配置
+RLAPI VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device);
+// 卸载VR立体配置
+RLAPI void UnloadVrStereoConfig(VrStereoConfig config);
 
-// Shader management functions
-// NOTE: Shader functionality is not available on OpenGL 1.1
-RLAPI Shader LoadShader(const char *vsFileName, const char *fsFileName);   // Load shader from files and bind default locations
-RLAPI Shader LoadShaderFromMemory(const char *vsCode, const char *fsCode); // Load shader from code strings and bind default locations
-RLAPI bool IsShaderValid(Shader shader);                                   // Check if a shader is valid (loaded on GPU)
-RLAPI int GetShaderLocation(Shader shader, const char *uniformName);       // Get shader uniform location
-RLAPI int GetShaderLocationAttrib(Shader shader, const char *attribName);  // Get shader attribute location
-RLAPI void SetShaderValue(Shader shader, int locIndex, const void *value, int uniformType);               // Set shader uniform value
-RLAPI void SetShaderValueV(Shader shader, int locIndex, const void *value, int uniformType, int count);   // Set shader uniform value vector
-RLAPI void SetShaderValueMatrix(Shader shader, int locIndex, Matrix mat);         // Set shader uniform value (matrix 4x4)
-RLAPI void SetShaderValueTexture(Shader shader, int locIndex, Texture2D texture); // Set shader uniform value for texture (sampler2d)
-RLAPI void UnloadShader(Shader shader);                                    // Unload shader from GPU memory (VRAM)
+// 着色器管理函数
+// 注意: OpenGL 1.1 不支持着色器功能
+// 从文件加载着色器并绑定默认位置
+RLAPI Shader LoadShader(const char *vsFileName, const char *fsFileName);
+// 从代码字符串加载着色器并绑定默认位置
+RLAPI Shader LoadShaderFromMemory(const char *vsCode, const char *fsCode);
+// 检查着色器是否有效（已加载到 GPU）
+RLAPI bool IsShaderValid(Shader shader);
+// 获取着色器统一变量的位置
+RLAPI int GetShaderLocation(Shader shader, const char *uniformName);
+// 获取着色器属性的位置
+RLAPI int GetShaderLocationAttrib(Shader shader, const char *attribName);
+// 设置着色器统一变量的值
+RLAPI void SetShaderValue(Shader shader, int locIndex, const void *value, int uniformType);
+// 设置着色器统一变量的值向量
+RLAPI void SetShaderValueV(Shader shader, int locIndex, const void *value, int uniformType, int count);
+// 设置着色器统一变量的值（4x4 矩阵）
+RLAPI void SetShaderValueMatrix(Shader shader, int locIndex, Matrix mat);
+// 设置着色器统一变量的纹理值（采样器 2D）
+RLAPI void SetShaderValueTexture(Shader shader, int locIndex, Texture2D texture);
+// 从 GPU 内存（VRAM）中卸载着色器
+RLAPI void UnloadShader(Shader shader);
 
-// Screen-space-related functions
-#define GetMouseRay GetScreenToWorldRay     // Compatibility hack for previous raylib versions
-RLAPI Ray GetScreenToWorldRay(Vector2 position, Camera camera);         // Get a ray trace from screen position (i.e mouse)
-RLAPI Ray GetScreenToWorldRayEx(Vector2 position, Camera camera, int width, int height); // Get a ray trace from screen position (i.e mouse) in a viewport
-RLAPI Vector2 GetWorldToScreen(Vector3 position, Camera camera);        // Get the screen space position for a 3d world space position
-RLAPI Vector2 GetWorldToScreenEx(Vector3 position, Camera camera, int width, int height); // Get size position for a 3d world space position
-RLAPI Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera);    // Get the screen space position for a 2d camera world space position
-RLAPI Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera);    // Get the world space position for a 2d camera screen space position
-RLAPI Matrix GetCameraMatrix(Camera camera);                            // Get camera transform matrix (view matrix)
-RLAPI Matrix GetCameraMatrix2D(Camera2D camera);                        // Get camera 2d transform matrix
+// 与屏幕空间相关的函数
+#define GetMouseRay GetScreenToWorldRay     // 为兼容旧版本 raylib 的代码技巧
+// 从屏幕位置（如鼠标位置）获取一条射线（即射线追踪）
+RLAPI Ray GetScreenToWorldRay(Vector2 position, Camera camera);
+// 在视口内从屏幕位置（如鼠标位置）获取一条射线（即射线追踪）
+RLAPI Ray GetScreenToWorldRayEx(Vector2 position, Camera camera, int width, int height);
+// 获取 3D 世界空间位置在屏幕空间中的位置
+RLAPI Vector2 GetWorldToScreen(Vector3 position, Camera camera);
+// 获取 3D 世界空间位置在指定视口尺寸下的屏幕空间位置
+RLAPI Vector2 GetWorldToScreenEx(Vector3 position, Camera camera, int width, int height);
+// 获取 2D 相机世界空间位置在屏幕空间中的位置
+RLAPI Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera);
+// 获取 2D 相机屏幕空间位置在世界空间中的位置
+RLAPI Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera);
+// 获取相机的变换矩阵（视图矩阵）
+RLAPI Matrix GetCameraMatrix(Camera camera);
+// 获取 2D 相机的变换矩阵
+RLAPI Matrix GetCameraMatrix2D(Camera2D camera);
 
-// Timing-related functions
-RLAPI void SetTargetFPS(int fps);                                 // Set target FPS (maximum)
-RLAPI float GetFrameTime(void);                                   // Get time in seconds for last frame drawn (delta time)
-RLAPI double GetTime(void);                                       // Get elapsed time in seconds since InitWindow()
-RLAPI int GetFPS(void);                                           // Get current FPS
+// 与时间相关的函数
+RLAPI void SetTargetFPS(int fps);                                 // 设置目标帧率（最大值）
+RLAPI float GetFrameTime(void);                                   // 获取上一帧绘制所用的时间（以秒为单位，即增量时间）
+RLAPI double GetTime(void);                                       // 获取自InitWindow()调用以来经过的时间（以秒为单位）
+RLAPI int GetFPS(void);                                           // 获取当前帧率
 
-// Custom frame control functions
-// NOTE: Those functions are intended for advanced users that want full control over the frame processing
-// By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
-// To avoid that behaviour and control frame processes manually, enable in config.h: SUPPORT_CUSTOM_FRAME_CONTROL
-RLAPI void SwapScreenBuffer(void);                                // Swap back buffer with front buffer (screen drawing)
-RLAPI void PollInputEvents(void);                                 // Register all input events
-RLAPI void WaitTime(double seconds);                              // Wait for some time (halt program execution)
+// 自定义帧控制函数
+// 注意: 这些函数供需要完全控制帧处理的高级用户使用
+// 默认情况下，EndDrawing() 完成以下工作: 绘制所有内容 + 交换屏幕缓冲区 + 管理帧计时 + 轮询输入事件
+// 若要避免这种行为并手动控制帧处理过程，请在 config.h 中启用: SUPPORT_CUSTOM_FRAME_CONTROL
+RLAPI void SwapScreenBuffer(void);                                // 交换后缓冲区和前缓冲区（屏幕绘制）
+RLAPI void PollInputEvents(void);                                 // 注册所有输入事件
+RLAPI void WaitTime(double seconds);                              // 等待一段时间（暂停程序执行）
 
-// Random values generation functions
-RLAPI void SetRandomSeed(unsigned int seed);                      // Set the seed for the random number generator
-RLAPI int GetRandomValue(int min, int max);                       // Get a random value between min and max (both included)
-RLAPI int *LoadRandomSequence(unsigned int count, int min, int max); // Load random values sequence, no values repeated
-RLAPI void UnloadRandomSequence(int *sequence);                   // Unload random values sequence
+// 随机值生成函数
+RLAPI void SetRandomSeed(unsigned int seed);                      // 设置随机数生成器的种子
+RLAPI int GetRandomValue(int min, int max);                       // 获取一个介于 min 和 max 之间的随机值（包含两端）
+RLAPI int *LoadRandomSequence(unsigned int count, int min, int max); // 加载随机值序列，无重复值
+RLAPI void UnloadRandomSequence(int *sequence);                   // 卸载随机值序列
 
-// Misc. functions
-RLAPI void TakeScreenshot(const char *fileName);                  // Takes a screenshot of current screen (filename extension defines format)
-RLAPI void SetConfigFlags(unsigned int flags);                    // Setup init configuration flags (view FLAGS)
-RLAPI void OpenURL(const char *url);                              // Open URL with default system browser (if available)
+// 杂项函数
+RLAPI void TakeScreenshot(const char *fileName);                  // 对当前屏幕进行截图（文件名扩展名定义格式）
+RLAPI void SetConfigFlags(unsigned int flags);                    // 设置初始化配置标志（查看 FLAGS）
+RLAPI void OpenURL(const char *url);                              // 使用默认系统浏览器打开 URL（如果可用）
 
-// NOTE: Following functions implemented in module [utils]
+// 注意: 以下函数在 [utils] 模块中实现
 //------------------------------------------------------------------
-RLAPI void TraceLog(int logLevel, const char *text, ...);         // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
-RLAPI void SetTraceLogLevel(int logLevel);                        // Set the current threshold (minimum) log level
-RLAPI void *MemAlloc(unsigned int size);                          // Internal memory allocator
-RLAPI void *MemRealloc(void *ptr, unsigned int size);             // Internal memory reallocator
-RLAPI void MemFree(void *ptr);                                    // Internal memory free
+RLAPI void TraceLog(int logLevel, const char *text, ...);         // 显示跟踪日志消息（LOG_DEBUG、LOG_INFO、LOG_WARNING、LOG_ERROR 等）
+RLAPI void SetTraceLogLevel(int logLevel);                        // 设置当前阈值（最低）日志级别
+RLAPI void *MemAlloc(unsigned int size);                          // 内部内存分配器
+RLAPI void *MemRealloc(void *ptr, unsigned int size);             // 内部内存重新分配器
+RLAPI void MemFree(void *ptr);                                    // 内部内存释放
 
-// Set custom callbacks
-// WARNING: Callbacks setup is intended for advanced users
-RLAPI void SetTraceLogCallback(TraceLogCallback callback);         // Set custom trace log
-RLAPI void SetLoadFileDataCallback(LoadFileDataCallback callback); // Set custom file binary data loader
-RLAPI void SetSaveFileDataCallback(SaveFileDataCallback callback); // Set custom file binary data saver
-RLAPI void SetLoadFileTextCallback(LoadFileTextCallback callback); // Set custom file text data loader
-RLAPI void SetSaveFileTextCallback(SaveFileTextCallback callback); // Set custom file text data saver
+// 设置自定义回调函数
+// 警告: 回调函数的设置仅适用于高级用户
+RLAPI void SetTraceLogCallback(TraceLogCallback callback);         // 设置自定义跟踪日志回调函数
+RLAPI void SetLoadFileDataCallback(LoadFileDataCallback callback); // 设置自定义文件二进制数据加载回调函数
+RLAPI void SetSaveFileDataCallback(SaveFileDataCallback callback); // 设置自定义文件二进制数据保存回调函数
+RLAPI void SetLoadFileTextCallback(LoadFileTextCallback callback); // 设置自定义文件文本数据加载回调函数
+RLAPI void SetSaveFileTextCallback(SaveFileTextCallback callback); // 设置自定义文件文本数据保存回调函数
 
-// Files management functions
-RLAPI unsigned char *LoadFileData(const char *fileName, int *dataSize); // Load file data as byte array (read)
-RLAPI void UnloadFileData(unsigned char *data);                   // Unload file data allocated by LoadFileData()
-RLAPI bool SaveFileData(const char *fileName, void *data, int dataSize); // Save data to file from byte array (write), returns true on success
-RLAPI bool ExportDataAsCode(const unsigned char *data, int dataSize, const char *fileName); // Export data to code (.h), returns true on success
-RLAPI char *LoadFileText(const char *fileName);                   // Load text data from file (read), returns a '\0' terminated string
-RLAPI void UnloadFileText(char *text);                            // Unload file text data allocated by LoadFileText()
-RLAPI bool SaveFileText(const char *fileName, char *text);        // Save text data to file (write), string must be '\0' terminated, returns true on success
+// 文件管理函数
+RLAPI unsigned char *LoadFileData(const char *fileName, int *dataSize); // 以字节数组形式加载文件数据（读取）
+RLAPI void UnloadFileData(unsigned char *data);                   // 卸载由LoadFileData()分配的文件数据
+RLAPI bool SaveFileData(const char *fileName, void *data, int dataSize); // 将字节数组中的数据保存到文件（写入），成功返回true
+RLAPI bool ExportDataAsCode(const unsigned char *data, int dataSize, const char *fileName); // 将数据导出为代码文件（.h），成功返回true
+RLAPI char *LoadFileText(const char *fileName);                   // 从文件中加载文本数据（读取），返回以'\0'结尾的字符串
+RLAPI void UnloadFileText(char *text);                            // 卸载由LoadFileText()分配的文件文本数据
+RLAPI bool SaveFileText(const char *fileName, char *text);        // 将文本数据保存到文件（写入），字符串必须以'\0'结尾，成功返回true
 //------------------------------------------------------------------
 
-// File system functions
-RLAPI bool FileExists(const char *fileName);                      // Check if file exists
-RLAPI bool DirectoryExists(const char *dirPath);                  // Check if a directory path exists
-RLAPI bool IsFileExtension(const char *fileName, const char *ext); // Check file extension (including point: .png, .wav)
-RLAPI int GetFileLength(const char *fileName);                    // Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)
-RLAPI const char *GetFileExtension(const char *fileName);         // Get pointer to extension for a filename string (includes dot: '.png')
-RLAPI const char *GetFileName(const char *filePath);              // Get pointer to filename for a path string
-RLAPI const char *GetFileNameWithoutExt(const char *filePath);    // Get filename string without extension (uses static string)
-RLAPI const char *GetDirectoryPath(const char *filePath);         // Get full path for a given fileName with path (uses static string)
-RLAPI const char *GetPrevDirectoryPath(const char *dirPath);      // Get previous directory path for a given path (uses static string)
-RLAPI const char *GetWorkingDirectory(void);                      // Get current working directory (uses static string)
-RLAPI const char *GetApplicationDirectory(void);                  // Get the directory of the running application (uses static string)
-RLAPI int MakeDirectory(const char *dirPath);                     // Create directories (including full path requested), returns 0 on success
-RLAPI bool ChangeDirectory(const char *dir);                      // Change working directory, return true on success
-RLAPI bool IsPathFile(const char *path);                          // Check if a given path is a file or a directory
-RLAPI bool IsFileNameValid(const char *fileName);                 // Check if fileName is valid for the platform/OS
-RLAPI FilePathList LoadDirectoryFiles(const char *dirPath);       // Load directory filepaths
-RLAPI FilePathList LoadDirectoryFilesEx(const char *basePath, const char *filter, bool scanSubdirs); // Load directory filepaths with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result
-RLAPI void UnloadDirectoryFiles(FilePathList files);              // Unload filepaths
-RLAPI bool IsFileDropped(void);                                   // Check if a file has been dropped into window
-RLAPI FilePathList LoadDroppedFiles(void);                        // Load dropped filepaths
-RLAPI void UnloadDroppedFiles(FilePathList files);                // Unload dropped filepaths
-RLAPI long GetFileModTime(const char *fileName);                  // Get file modification time (last write time)
+// 文件系统函数
+RLAPI bool FileExists(const char *fileName);                      // 检查文件是否存在
+RLAPI bool DirectoryExists(const char *dirPath);                  // 检查目录路径是否存在
+RLAPI bool IsFileExtension(const char *fileName, const char *ext); // 检查文件扩展名（包括点号：.png, .wav）
+RLAPI int GetFileLength(const char *fileName);                    // 获取文件的字节长度（注意: GetFileSize()与windows.h冲突）
+RLAPI const char *GetFileExtension(const char *fileName);         // 获取文件名中扩展名的指针（包括点号: '.png'）
+RLAPI const char *GetFileName(const char *filePath);              // 获取路径字符串中的文件名指针
+RLAPI const char *GetFileNameWithoutExt(const char *filePath);    // 获取不带扩展名的文件名（使用静态字符串）
+RLAPI const char *GetDirectoryPath(const char *filePath);         // 获取包含路径的文件名的完整路径（使用静态字符串）
+RLAPI const char *GetPrevDirectoryPath(const char *dirPath);      // 获取给定路径的上一级目录路径（使用静态字符串）
+RLAPI const char *GetWorkingDirectory(void);                      // 获取当前工作目录（使用静态字符串）
+RLAPI const char *GetApplicationDirectory(void);                  // 获取运行中应用程序的目录（使用静态字符串）
+RLAPI int MakeDirectory(const char *dirPath);                     // 创建目录（包括请求的完整路径），成功返回0
+RLAPI bool ChangeDirectory(const char *dir);                      // 更改工作目录，成功返回true
+RLAPI bool IsPathFile(const char *path);                          // 检查给定路径是文件还是目录
+RLAPI bool IsFileNameValid(const char *fileName);                 // 检查文件名是否对平台/操作系统有效
+RLAPI FilePathList LoadDirectoryFiles(const char *dirPath);       // 加载目录中的文件路径
+RLAPI FilePathList LoadDirectoryFilesEx(const char *basePath, const char *filter, bool scanSubdirs); // 加载目录中的文件路径，并进行扩展名过滤和递归目录扫描。在过滤字符串中使用 'DIR' 可将目录包含在结果中
+RLAPI void UnloadDirectoryFiles(FilePathList files);              // 卸载文件路径
+RLAPI bool IsFileDropped(void);                                   // 检查是否有文件被拖放到窗口中
+RLAPI FilePathList LoadDroppedFiles(void);                        // 加载被拖放的文件路径
+RLAPI void UnloadDroppedFiles(FilePathList files);                // 卸载被拖放的文件路径
+RLAPI long GetFileModTime(const char *fileName);                  // 获取文件的修改时间（最后写入时间）
 
-// Compression/Encoding functionality
-RLAPI unsigned char *CompressData(const unsigned char *data, int dataSize, int *compDataSize);        // Compress data (DEFLATE algorithm), memory must be MemFree()
-RLAPI unsigned char *DecompressData(const unsigned char *compData, int compDataSize, int *dataSize);  // Decompress data (DEFLATE algorithm), memory must be MemFree()
-RLAPI char *EncodeDataBase64(const unsigned char *data, int dataSize, int *outputSize);               // Encode data to Base64 string, memory must be MemFree()
-RLAPI unsigned char *DecodeDataBase64(const unsigned char *data, int *outputSize);                    // Decode Base64 string data, memory must be MemFree()
-RLAPI unsigned int ComputeCRC32(unsigned char *data, int dataSize);     // Compute CRC32 hash code
-RLAPI unsigned int *ComputeMD5(unsigned char *data, int dataSize);      // Compute MD5 hash code, returns static int[4] (16 bytes)
-RLAPI unsigned int *ComputeSHA1(unsigned char *data, int dataSize);      // Compute SHA1 hash code, returns static int[5] (20 bytes)
+// 压缩/编码功能
+RLAPI unsigned char *CompressData(const unsigned char *data, int dataSize, int *compDataSize);        // 压缩数据（DEFLATE算法），内存必须使用MemFree()释放
+RLAPI unsigned char *DecompressData(const unsigned char *compData, int compDataSize, int *dataSize);  // 解压缩数据（DEFLATE算法），内存必须使用MemFree()释放
+RLAPI char *EncodeDataBase64(const unsigned char *data, int dataSize, int *outputSize);               // 将数据编码为Base64字符串，内存必须使用MemFree()释放
+RLAPI unsigned char *DecodeDataBase64(const unsigned char *data, int *outputSize);                    // 解码Base64字符串数据，内存必须使用MemFree()释放
+RLAPI unsigned int ComputeCRC32(unsigned char *data, int dataSize);     // 计算CRC32哈希码
+RLAPI unsigned int *ComputeMD5(unsigned char *data, int dataSize);      // 计算MD5哈希码，返回静态int[4]数组（16字节）
+RLAPI unsigned int *ComputeSHA1(unsigned char *data, int dataSize);      // 计算SHA1哈希码，返回静态int[5]数组（20字节）
 
-
-// Automation events functionality
-RLAPI AutomationEventList LoadAutomationEventList(const char *fileName);                // Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
-RLAPI void UnloadAutomationEventList(AutomationEventList list);                         // Unload automation events list from file
-RLAPI bool ExportAutomationEventList(AutomationEventList list, const char *fileName);   // Export automation events list as text file
-RLAPI void SetAutomationEventList(AutomationEventList *list);                           // Set automation event list to record to
-RLAPI void SetAutomationEventBaseFrame(int frame);                                      // Set automation event internal base frame to start recording
-RLAPI void StartAutomationEventRecording(void);                                         // Start recording automation events (AutomationEventList must be set)
-RLAPI void StopAutomationEventRecording(void);                                          // Stop recording automation events
-RLAPI void PlayAutomationEvent(AutomationEvent event);                                  // Play a recorded automation event
-
-//------------------------------------------------------------------------------------
-// Input Handling Functions (Module: core)
-//------------------------------------------------------------------------------------
-
-// Input-related functions: keyboard
-RLAPI bool IsKeyPressed(int key);                             // Check if a key has been pressed once
-RLAPI bool IsKeyPressedRepeat(int key);                       // Check if a key has been pressed again
-RLAPI bool IsKeyDown(int key);                                // Check if a key is being pressed
-RLAPI bool IsKeyReleased(int key);                            // Check if a key has been released once
-RLAPI bool IsKeyUp(int key);                                  // Check if a key is NOT being pressed
-RLAPI int GetKeyPressed(void);                                // Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
-RLAPI int GetCharPressed(void);                               // Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
-RLAPI void SetExitKey(int key);                               // Set a custom key to exit program (default is ESC)
-
-// Input-related functions: gamepads
-RLAPI bool IsGamepadAvailable(int gamepad);                                        // Check if a gamepad is available
-RLAPI const char *GetGamepadName(int gamepad);                                     // Get gamepad internal name id
-RLAPI bool IsGamepadButtonPressed(int gamepad, int button);                        // Check if a gamepad button has been pressed once
-RLAPI bool IsGamepadButtonDown(int gamepad, int button);                           // Check if a gamepad button is being pressed
-RLAPI bool IsGamepadButtonReleased(int gamepad, int button);                       // Check if a gamepad button has been released once
-RLAPI bool IsGamepadButtonUp(int gamepad, int button);                             // Check if a gamepad button is NOT being pressed
-RLAPI int GetGamepadButtonPressed(void);                                           // Get the last gamepad button pressed
-RLAPI int GetGamepadAxisCount(int gamepad);                                        // Get gamepad axis count for a gamepad
-RLAPI float GetGamepadAxisMovement(int gamepad, int axis);                         // Get axis movement value for a gamepad axis
-RLAPI int SetGamepadMappings(const char *mappings);                                // Set internal gamepad mappings (SDL_GameControllerDB)
-RLAPI void SetGamepadVibration(int gamepad, float leftMotor, float rightMotor, float duration); // Set gamepad vibration for both motors (duration in seconds)
-
-// Input-related functions: mouse
-RLAPI bool IsMouseButtonPressed(int button);                  // Check if a mouse button has been pressed once
-RLAPI bool IsMouseButtonDown(int button);                     // Check if a mouse button is being pressed
-RLAPI bool IsMouseButtonReleased(int button);                 // Check if a mouse button has been released once
-RLAPI bool IsMouseButtonUp(int button);                       // Check if a mouse button is NOT being pressed
-RLAPI int GetMouseX(void);                                    // Get mouse position X
-RLAPI int GetMouseY(void);                                    // Get mouse position Y
-RLAPI Vector2 GetMousePosition(void);                         // Get mouse position XY
-RLAPI Vector2 GetMouseDelta(void);                            // Get mouse delta between frames
-RLAPI void SetMousePosition(int x, int y);                    // Set mouse position XY
-RLAPI void SetMouseOffset(int offsetX, int offsetY);          // Set mouse offset
-RLAPI void SetMouseScale(float scaleX, float scaleY);         // Set mouse scaling
-RLAPI float GetMouseWheelMove(void);                          // Get mouse wheel movement for X or Y, whichever is larger
-RLAPI Vector2 GetMouseWheelMoveV(void);                       // Get mouse wheel movement for both X and Y
-RLAPI void SetMouseCursor(int cursor);                        // Set mouse cursor
-
-// Input-related functions: touch
-RLAPI int GetTouchX(void);                                    // Get touch position X for touch point 0 (relative to screen size)
-RLAPI int GetTouchY(void);                                    // Get touch position Y for touch point 0 (relative to screen size)
-RLAPI Vector2 GetTouchPosition(int index);                    // Get touch position XY for a touch point index (relative to screen size)
-RLAPI int GetTouchPointId(int index);                         // Get touch point identifier for given index
-RLAPI int GetTouchPointCount(void);                           // Get number of touch points
-
-//------------------------------------------------------------------------------------
-// Gestures and Touch Handling Functions (Module: rgestures)
-//------------------------------------------------------------------------------------
-RLAPI void SetGesturesEnabled(unsigned int flags);      // Enable a set of gestures using flags
-RLAPI bool IsGestureDetected(unsigned int gesture);     // Check if a gesture have been detected
-RLAPI int GetGestureDetected(void);                     // Get latest detected gesture
-RLAPI float GetGestureHoldDuration(void);               // Get gesture hold time in seconds
-RLAPI Vector2 GetGestureDragVector(void);               // Get gesture drag vector
-RLAPI float GetGestureDragAngle(void);                  // Get gesture drag angle
-RLAPI Vector2 GetGesturePinchVector(void);              // Get gesture pinch delta
-RLAPI float GetGesturePinchAngle(void);                 // Get gesture pinch angle
-
-//------------------------------------------------------------------------------------
-// Camera System Functions (Module: rcamera)
-//------------------------------------------------------------------------------------
-RLAPI void UpdateCamera(Camera *camera, int mode);      // Update camera position for selected mode
-RLAPI void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, float zoom); // Update camera movement/rotation
-
-//------------------------------------------------------------------------------------
-// Basic Shapes Drawing Functions (Module: shapes)
-//------------------------------------------------------------------------------------
-// Set texture and rectangle to be used on shapes drawing
-// NOTE: It can be useful when using basic shapes and one single font,
-// defining a font char white rectangle would allow drawing everything in a single draw call
-RLAPI void SetShapesTexture(Texture2D texture, Rectangle source);       // Set texture and rectangle to be used on shapes drawing
-RLAPI Texture2D GetShapesTexture(void);                                 // Get texture that is used for shapes drawing
-RLAPI Rectangle GetShapesTextureRectangle(void);                        // Get texture source rectangle that is used for shapes drawing
-
-// Basic shapes drawing functions
-RLAPI void DrawPixel(int posX, int posY, Color color);                                                   // Draw a pixel using geometry [Can be slow, use with care]
-RLAPI void DrawPixelV(Vector2 position, Color color);                                                    // Draw a pixel using geometry (Vector version) [Can be slow, use with care]
-RLAPI void DrawLine(int startPosX, int startPosY, int endPosX, int endPosY, Color color);                // Draw a line
-RLAPI void DrawLineV(Vector2 startPos, Vector2 endPos, Color color);                                     // Draw a line (using gl lines)
-RLAPI void DrawLineEx(Vector2 startPos, Vector2 endPos, float thick, Color color);                       // Draw a line (using triangles/quads)
-RLAPI void DrawLineStrip(const Vector2 *points, int pointCount, Color color);                            // Draw lines sequence (using gl lines)
-RLAPI void DrawLineBezier(Vector2 startPos, Vector2 endPos, float thick, Color color);                   // Draw line segment cubic-bezier in-out interpolation
-RLAPI void DrawCircle(int centerX, int centerY, float radius, Color color);                              // Draw a color-filled circle
-RLAPI void DrawCircleSector(Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);      // Draw a piece of a circle
-RLAPI void DrawCircleSectorLines(Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color); // Draw circle sector outline
-RLAPI void DrawCircleGradient(int centerX, int centerY, float radius, Color inner, Color outer);         // Draw a gradient-filled circle
-RLAPI void DrawCircleV(Vector2 center, float radius, Color color);                                       // Draw a color-filled circle (Vector version)
-RLAPI void DrawCircleLines(int centerX, int centerY, float radius, Color color);                         // Draw circle outline
-RLAPI void DrawCircleLinesV(Vector2 center, float radius, Color color);                                  // Draw circle outline (Vector version)
-RLAPI void DrawEllipse(int centerX, int centerY, float radiusH, float radiusV, Color color);             // Draw ellipse
-RLAPI void DrawEllipseLines(int centerX, int centerY, float radiusH, float radiusV, Color color);        // Draw ellipse outline
-RLAPI void DrawRing(Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color); // Draw ring
-RLAPI void DrawRingLines(Vector2 center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color color);    // Draw ring outline
-RLAPI void DrawRectangle(int posX, int posY, int width, int height, Color color);                        // Draw a color-filled rectangle
-RLAPI void DrawRectangleV(Vector2 position, Vector2 size, Color color);                                  // Draw a color-filled rectangle (Vector version)
-RLAPI void DrawRectangleRec(Rectangle rec, Color color);                                                 // Draw a color-filled rectangle
-RLAPI void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color);                 // Draw a color-filled rectangle with pro parameters
-RLAPI void DrawRectangleGradientV(int posX, int posY, int width, int height, Color top, Color bottom);   // Draw a vertical-gradient-filled rectangle
-RLAPI void DrawRectangleGradientH(int posX, int posY, int width, int height, Color left, Color right);   // Draw a horizontal-gradient-filled rectangle
-RLAPI void DrawRectangleGradientEx(Rectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight); // Draw a gradient-filled rectangle with custom vertex colors
-RLAPI void DrawRectangleLines(int posX, int posY, int width, int height, Color color);                   // Draw rectangle outline
-RLAPI void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color);                            // Draw rectangle outline with extended parameters
-RLAPI void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);              // Draw rectangle with rounded edges
-RLAPI void DrawRectangleRoundedLines(Rectangle rec, float roundness, int segments, Color color);         // Draw rectangle lines with rounded edges
-RLAPI void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, float lineThick, Color color); // Draw rectangle with rounded edges outline
-RLAPI void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                                // Draw a color-filled triangle (vertex in counter-clockwise order!)
-RLAPI void DrawTriangleLines(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                           // Draw triangle outline (vertex in counter-clockwise order!)
-RLAPI void DrawTriangleFan(const Vector2 *points, int pointCount, Color color);                          // Draw a triangle fan defined by points (first vertex is the center)
-RLAPI void DrawTriangleStrip(const Vector2 *points, int pointCount, Color color);                        // Draw a triangle strip defined by points
-RLAPI void DrawPoly(Vector2 center, int sides, float radius, float rotation, Color color);               // Draw a regular polygon (Vector version)
-RLAPI void DrawPolyLines(Vector2 center, int sides, float radius, float rotation, Color color);          // Draw a polygon outline of n sides
-RLAPI void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, float lineThick, Color color); // Draw a polygon outline of n sides with extended parameters
-
-// Splines drawing functions
-RLAPI void DrawSplineLinear(const Vector2 *points, int pointCount, float thick, Color color);                  // Draw spline: Linear, minimum 2 points
-RLAPI void DrawSplineBasis(const Vector2 *points, int pointCount, float thick, Color color);                   // Draw spline: B-Spline, minimum 4 points
-RLAPI void DrawSplineCatmullRom(const Vector2 *points, int pointCount, float thick, Color color);              // Draw spline: Catmull-Rom, minimum 4 points
-RLAPI void DrawSplineBezierQuadratic(const Vector2 *points, int pointCount, float thick, Color color);         // Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
-RLAPI void DrawSplineBezierCubic(const Vector2 *points, int pointCount, float thick, Color color);             // Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
-RLAPI void DrawSplineSegmentLinear(Vector2 p1, Vector2 p2, float thick, Color color);                    // Draw spline segment: Linear, 2 points
-RLAPI void DrawSplineSegmentBasis(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thick, Color color); // Draw spline segment: B-Spline, 4 points
-RLAPI void DrawSplineSegmentCatmullRom(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thick, Color color); // Draw spline segment: Catmull-Rom, 4 points
-RLAPI void DrawSplineSegmentBezierQuadratic(Vector2 p1, Vector2 c2, Vector2 p3, float thick, Color color); // Draw spline segment: Quadratic Bezier, 2 points, 1 control point
-RLAPI void DrawSplineSegmentBezierCubic(Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float thick, Color color); // Draw spline segment: Cubic Bezier, 2 points, 2 control points
-
-// Spline segment point evaluation functions, for a given t [0.0f .. 1.0f]
-RLAPI Vector2 GetSplinePointLinear(Vector2 startPos, Vector2 endPos, float t);                           // Get (evaluate) spline point: Linear
-RLAPI Vector2 GetSplinePointBasis(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t);              // Get (evaluate) spline point: B-Spline
-RLAPI Vector2 GetSplinePointCatmullRom(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t);         // Get (evaluate) spline point: Catmull-Rom
-RLAPI Vector2 GetSplinePointBezierQuad(Vector2 p1, Vector2 c2, Vector2 p3, float t);                     // Get (evaluate) spline point: Quadratic Bezier
-RLAPI Vector2 GetSplinePointBezierCubic(Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t);        // Get (evaluate) spline point: Cubic Bezier
-
-// Basic shapes collision detection functions
-RLAPI bool CheckCollisionRecs(Rectangle rec1, Rectangle rec2);                                           // Check collision between two rectangles
-RLAPI bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, float radius2);        // Check collision between two circles
-RLAPI bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec);                         // Check collision between circle and rectangle
-RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Vector2 p2);               // Check if circle collides with a line created betweeen two points [p1] and [p2]
-RLAPI bool CheckCollisionPointRec(Vector2 point, Rectangle rec);                                         // Check if point is inside rectangle
-RLAPI bool CheckCollisionPointCircle(Vector2 point, Vector2 center, float radius);                       // Check if point is inside circle
-RLAPI bool CheckCollisionPointTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3);               // Check if point is inside a triangle
-RLAPI bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshold);                // Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
-RLAPI bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCount);                // Check if point is within a polygon described by array of vertices
-RLAPI bool CheckCollisionLines(Vector2 startPos1, Vector2 endPos1, Vector2 startPos2, Vector2 endPos2, Vector2 *collisionPoint); // Check the collision between two lines defined by two points each, returns collision point by reference
-RLAPI Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);                                         // Get collision rectangle for two rectangles collision
-
-//------------------------------------------------------------------------------------
-// Texture Loading and Drawing Functions (Module: textures)
+// 自动化事件功能
+// 从文件加载自动化事件列表，若传入 NULL 则返回空列表，容量为 MAX_AUTOMATION_EVENTS
+RLAPI AutomationEventList LoadAutomationEventList(const char *fileName);
+// 从文件中卸载自动化事件列表
+RLAPI void UnloadAutomationEventList(AutomationEventList list);
+// 将自动化事件列表导出为文本文件
+RLAPI bool ExportAutomationEventList(AutomationEventList list, const char *fileName);
+// 设置要记录的自动化事件列表
+RLAPI void SetAutomationEventList(AutomationEventList *list);
+// 设置自动化事件内部的基础帧，开始记录
+RLAPI void SetAutomationEventBaseFrame(int frame);
+// 开始记录自动化事件（必须先设置 AutomationEventList）
+RLAPI void StartAutomationEventRecording(void);
+// 停止记录自动化事件
+RLAPI void StopAutomationEventRecording(void);
+// 播放已记录的自动化事件
+RLAPI void PlayAutomationEvent(AutomationEvent event);
 //------------------------------------------------------------------------------------
 
-// Image loading functions
-// NOTE: These functions do not require GPU access
-RLAPI Image LoadImage(const char *fileName);                                                             // Load image from file into CPU memory (RAM)
-RLAPI Image LoadImageRaw(const char *fileName, int width, int height, int format, int headerSize);       // Load image from RAW file data
-RLAPI Image LoadImageAnim(const char *fileName, int *frames);                                            // Load image sequence from file (frames appended to image.data)
-RLAPI Image LoadImageAnimFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int *frames); // Load image sequence from memory buffer
-RLAPI Image LoadImageFromMemory(const char *fileType, const unsigned char *fileData, int dataSize);      // Load image from memory buffer, fileType refers to extension: i.e. '.png'
-RLAPI Image LoadImageFromTexture(Texture2D texture);                                                     // Load image from GPU texture data
-RLAPI Image LoadImageFromScreen(void);                                                                   // Load image from screen buffer and (screenshot)
-RLAPI bool IsImageValid(Image image);                                                                    // Check if an image is valid (data and parameters)
-RLAPI void UnloadImage(Image image);                                                                     // Unload image from CPU memory (RAM)
-RLAPI bool ExportImage(Image image, const char *fileName);                                               // Export image data to file, returns true on success
-RLAPI unsigned char *ExportImageToMemory(Image image, const char *fileType, int *fileSize);              // Export image to memory buffer
-RLAPI bool ExportImageAsCode(Image image, const char *fileName);                                         // Export image as code file defining an array of bytes, returns true on success
-
-// Image generation functions
-RLAPI Image GenImageColor(int width, int height, Color color);                                           // Generate image: plain color
-RLAPI Image GenImageGradientLinear(int width, int height, int direction, Color start, Color end);        // Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
-RLAPI Image GenImageGradientRadial(int width, int height, float density, Color inner, Color outer);      // Generate image: radial gradient
-RLAPI Image GenImageGradientSquare(int width, int height, float density, Color inner, Color outer);      // Generate image: square gradient
-RLAPI Image GenImageChecked(int width, int height, int checksX, int checksY, Color col1, Color col2);    // Generate image: checked
-RLAPI Image GenImageWhiteNoise(int width, int height, float factor);                                     // Generate image: white noise
-RLAPI Image GenImagePerlinNoise(int width, int height, int offsetX, int offsetY, float scale);           // Generate image: perlin noise
-RLAPI Image GenImageCellular(int width, int height, int tileSize);                                       // Generate image: cellular algorithm, bigger tileSize means bigger cells
-RLAPI Image GenImageText(int width, int height, const char *text);                                       // Generate image: grayscale image from text data
-
-// Image manipulation functions
-RLAPI Image ImageCopy(Image image);                                                                      // Create an image duplicate (useful for transformations)
-RLAPI Image ImageFromImage(Image image, Rectangle rec);                                                  // Create an image from another image piece
-RLAPI Image ImageFromChannel(Image image, int selectedChannel);                                          // Create an image from a selected channel of another image (GRAYSCALE)
-RLAPI Image ImageText(const char *text, int fontSize, Color color);                                      // Create an image from text (default font)
-RLAPI Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Color tint);         // Create an image from text (custom sprite font)
-RLAPI void ImageFormat(Image *image, int newFormat);                                                     // Convert image data to desired format
-RLAPI void ImageToPOT(Image *image, Color fill);                                                         // Convert image to POT (power-of-two)
-RLAPI void ImageCrop(Image *image, Rectangle crop);                                                      // Crop an image to a defined rectangle
-RLAPI void ImageAlphaCrop(Image *image, float threshold);                                                // Crop image depending on alpha value
-RLAPI void ImageAlphaClear(Image *image, Color color, float threshold);                                  // Clear alpha channel to desired color
-RLAPI void ImageAlphaMask(Image *image, Image alphaMask);                                                // Apply alpha mask to image
-RLAPI void ImageAlphaPremultiply(Image *image);                                                          // Premultiply alpha channel
-RLAPI void ImageBlurGaussian(Image *image, int blurSize);                                                // Apply Gaussian blur using a box blur approximation
-RLAPI void ImageKernelConvolution(Image *image, const float *kernel, int kernelSize);                    // Apply custom square convolution kernel to image
-RLAPI void ImageResize(Image *image, int newWidth, int newHeight);                                       // Resize image (Bicubic scaling algorithm)
-RLAPI void ImageResizeNN(Image *image, int newWidth,int newHeight);                                      // Resize image (Nearest-Neighbor scaling algorithm)
-RLAPI void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, int offsetY, Color fill); // Resize canvas and fill with color
-RLAPI void ImageMipmaps(Image *image);                                                                   // Compute all mipmap levels for a provided image
-RLAPI void ImageDither(Image *image, int rBpp, int gBpp, int bBpp, int aBpp);                            // Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
-RLAPI void ImageFlipVertical(Image *image);                                                              // Flip image vertically
-RLAPI void ImageFlipHorizontal(Image *image);                                                            // Flip image horizontally
-RLAPI void ImageRotate(Image *image, int degrees);                                                       // Rotate image by input angle in degrees (-359 to 359)
-RLAPI void ImageRotateCW(Image *image);                                                                  // Rotate image clockwise 90deg
-RLAPI void ImageRotateCCW(Image *image);                                                                 // Rotate image counter-clockwise 90deg
-RLAPI void ImageColorTint(Image *image, Color color);                                                    // Modify image color: tint
-RLAPI void ImageColorInvert(Image *image);                                                               // Modify image color: invert
-RLAPI void ImageColorGrayscale(Image *image);                                                            // Modify image color: grayscale
-RLAPI void ImageColorContrast(Image *image, float contrast);                                             // Modify image color: contrast (-100 to 100)
-RLAPI void ImageColorBrightness(Image *image, int brightness);                                           // Modify image color: brightness (-255 to 255)
-RLAPI void ImageColorReplace(Image *image, Color color, Color replace);                                  // Modify image color: replace color
-RLAPI Color *LoadImageColors(Image image);                                                               // Load color data from image as a Color array (RGBA - 32bit)
-RLAPI Color *LoadImagePalette(Image image, int maxPaletteSize, int *colorCount);                         // Load colors palette from image as a Color array (RGBA - 32bit)
-RLAPI void UnloadImageColors(Color *colors);                                                             // Unload color data loaded with LoadImageColors()
-RLAPI void UnloadImagePalette(Color *colors);                                                            // Unload colors palette loaded with LoadImagePalette()
-RLAPI Rectangle GetImageAlphaBorder(Image image, float threshold);                                       // Get image alpha border rectangle
-RLAPI Color GetImageColor(Image image, int x, int y);                                                    // Get image pixel color at (x, y) position
-
-// Image drawing functions
-// NOTE: Image software-rendering functions (CPU)
-RLAPI void ImageClearBackground(Image *dst, Color color);                                                // Clear image background with given color
-RLAPI void ImageDrawPixel(Image *dst, int posX, int posY, Color color);                                  // Draw pixel within an image
-RLAPI void ImageDrawPixelV(Image *dst, Vector2 position, Color color);                                   // Draw pixel within an image (Vector version)
-RLAPI void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int endPosY, Color color); // Draw line within an image
-RLAPI void ImageDrawLineV(Image *dst, Vector2 start, Vector2 end, Color color);                          // Draw line within an image (Vector version)
-RLAPI void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color color);              // Draw a line defining thickness within an image
-RLAPI void ImageDrawCircle(Image *dst, int centerX, int centerY, int radius, Color color);               // Draw a filled circle within an image
-RLAPI void ImageDrawCircleV(Image *dst, Vector2 center, int radius, Color color);                        // Draw a filled circle within an image (Vector version)
-RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius, Color color);          // Draw circle outline within an image
-RLAPI void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);                   // Draw circle outline within an image (Vector version)
-RLAPI void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);       // Draw rectangle within an image
-RLAPI void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color);                 // Draw rectangle within an image (Vector version)
-RLAPI void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color);                                // Draw rectangle within an image
-RLAPI void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color);                   // Draw rectangle lines within an image
-RLAPI void ImageDrawTriangle(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);               // Draw triangle within an image
-RLAPI void ImageDrawTriangleEx(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color c1, Color c2, Color c3); // Draw triangle with interpolated colors within an image
-RLAPI void ImageDrawTriangleLines(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);          // Draw triangle outline within an image
-RLAPI void ImageDrawTriangleFan(Image *dst, Vector2 *points, int pointCount, Color color);               // Draw a triangle fan defined by points within an image (first vertex is the center)
-RLAPI void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color color);             // Draw a triangle strip defined by points within an image
-RLAPI void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint);             // Draw a source image within a destination image (tint applied to source)
-RLAPI void ImageDrawText(Image *dst, const char *text, int posX, int posY, int fontSize, Color color);   // Draw text (using default font) within an image (destination)
-RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text (custom sprite font) within an image (destination)
-
-// Texture loading functions
-// NOTE: These functions require GPU access
-RLAPI Texture2D LoadTexture(const char *fileName);                                                       // Load texture from file into GPU memory (VRAM)
-RLAPI Texture2D LoadTextureFromImage(Image image);                                                       // Load texture from image data
-RLAPI TextureCubemap LoadTextureCubemap(Image image, int layout);                                        // Load cubemap from image, multiple image cubemap layouts supported
-RLAPI RenderTexture2D LoadRenderTexture(int width, int height);                                          // Load texture for rendering (framebuffer)
-RLAPI bool IsTextureValid(Texture2D texture);                                                            // Check if a texture is valid (loaded in GPU)
-RLAPI void UnloadTexture(Texture2D texture);                                                             // Unload texture from GPU memory (VRAM)
-RLAPI bool IsRenderTextureValid(RenderTexture2D target);                                                 // Check if a render texture is valid (loaded in GPU)
-RLAPI void UnloadRenderTexture(RenderTexture2D target);                                                  // Unload render texture from GPU memory (VRAM)
-RLAPI void UpdateTexture(Texture2D texture, const void *pixels);                                         // Update GPU texture with new data
-RLAPI void UpdateTextureRec(Texture2D texture, Rectangle rec, const void *pixels);                       // Update GPU texture rectangle with new data
-
-// Texture configuration functions
-RLAPI void GenTextureMipmaps(Texture2D *texture);                                                        // Generate GPU mipmaps for a texture
-RLAPI void SetTextureFilter(Texture2D texture, int filter);                                              // Set texture scaling filter mode
-RLAPI void SetTextureWrap(Texture2D texture, int wrap);                                                  // Set texture wrapping mode
-
-// Texture drawing functions
-RLAPI void DrawTexture(Texture2D texture, int posX, int posY, Color tint);                               // Draw a Texture2D
-RLAPI void DrawTextureV(Texture2D texture, Vector2 position, Color tint);                                // Draw a Texture2D with position defined as Vector2
-RLAPI void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint);  // Draw a Texture2D with extended parameters
-RLAPI void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color tint);            // Draw a part of a texture defined by a rectangle
-RLAPI void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draw a part of a texture defined by a rectangle with 'pro' parameters
-RLAPI void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draws a texture (or part of it) that stretches or shrinks nicely
-
-// Color/pixel related functions
-RLAPI bool ColorIsEqual(Color col1, Color col2);                            // Check if two colors are equal
-RLAPI Color Fade(Color color, float alpha);                                 // Get color with alpha applied, alpha goes from 0.0f to 1.0f
-RLAPI int ColorToInt(Color color);                                          // Get hexadecimal value for a Color (0xRRGGBBAA)
-RLAPI Vector4 ColorNormalize(Color color);                                  // Get Color normalized as float [0..1]
-RLAPI Color ColorFromNormalized(Vector4 normalized);                        // Get Color from normalized values [0..1]
-RLAPI Vector3 ColorToHSV(Color color);                                      // Get HSV values for a Color, hue [0..360], saturation/value [0..1]
-RLAPI Color ColorFromHSV(float hue, float saturation, float value);         // Get a Color from HSV values, hue [0..360], saturation/value [0..1]
-RLAPI Color ColorTint(Color color, Color tint);                             // Get color multiplied with another color
-RLAPI Color ColorBrightness(Color color, float factor);                     // Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
-RLAPI Color ColorContrast(Color color, float contrast);                     // Get color with contrast correction, contrast values between -1.0f and 1.0f
-RLAPI Color ColorAlpha(Color color, float alpha);                           // Get color with alpha applied, alpha goes from 0.0f to 1.0f
-RLAPI Color ColorAlphaBlend(Color dst, Color src, Color tint);              // Get src alpha-blended into dst color with tint
-RLAPI Color ColorLerp(Color color1, Color color2, float factor);            // Get color lerp interpolation between two colors, factor [0.0f..1.0f]
-RLAPI Color GetColor(unsigned int hexValue);                                // Get Color structure from hexadecimal value
-RLAPI Color GetPixelColor(void *srcPtr, int format);                        // Get Color from a source pixel pointer of certain format
-RLAPI void SetPixelColor(void *dstPtr, Color color, int format);            // Set color formatted into destination pixel pointer
-RLAPI int GetPixelDataSize(int width, int height, int format);              // Get pixel data size in bytes for certain format
-
-//------------------------------------------------------------------------------------
-// Font Loading and Text Drawing Functions (Module: text)
+// 输入处理函数 (模块: core)
 //------------------------------------------------------------------------------------
 
-// Font loading/unloading functions
-RLAPI Font GetFontDefault(void);                                                            // Get the default Font
-RLAPI Font LoadFont(const char *fileName);                                                  // Load font from file into GPU memory (VRAM)
-RLAPI Font LoadFontEx(const char *fileName, int fontSize, int *codepoints, int codepointCount); // Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height
-RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);                        // Load font from Image (XNA style)
-RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
-RLAPI bool IsFontValid(Font font);                                                          // Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
-RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type); // Load font data for further use
-RLAPI Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod); // Generate image font atlas using chars info
-RLAPI void UnloadFontData(GlyphInfo *glyphs, int glyphCount);                               // Unload font chars info data (RAM)
-RLAPI void UnloadFont(Font font);                                                           // Unload font from GPU memory (VRAM)
-RLAPI bool ExportFontAsCode(Font font, const char *fileName);                               // Export font as code file, returns true on success
+// 与输入相关的函数：键盘
+// 检查某个键是否被按下一次
+RLAPI bool IsKeyPressed(int key);                             
+// 检查某个键是否再次被按下
+RLAPI bool IsKeyPressedRepeat(int key);                       
+// 检查某个键是否正在被按下
+RLAPI bool IsKeyDown(int key);                                
+// 检查某个键是否被释放一次
+RLAPI bool IsKeyReleased(int key);                            
+// 检查某个键是否未被按下
+RLAPI bool IsKeyUp(int key);                                  
+// 获取按下的键（键码），多次调用以处理排队的键，队列空时返回 0
+RLAPI int GetKeyPressed(void);                                
+// 获取按下的字符（Unicode），多次调用以处理排队的字符，队列空时返回 0
+RLAPI int GetCharPressed(void);                               
+// 设置一个自定义键来退出程序（默认是 ESC）
+RLAPI void SetExitKey(int key);                               
 
-// Text drawing functions
-RLAPI void DrawFPS(int posX, int posY);                                                     // Draw current FPS
-RLAPI void DrawText(const char *text, int posX, int posY, int fontSize, Color color);       // Draw text (using default font)
-RLAPI void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text using font and additional parameters
-RLAPI void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint); // Draw text using Font and pro parameters (rotation)
-RLAPI void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSize, Color tint); // Draw one character (codepoint)
-RLAPI void DrawTextCodepoints(Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint); // Draw multiple character (codepoint)
+// 与输入相关的函数：游戏手柄
+// 检查某个游戏手柄是否可用
+RLAPI bool IsGamepadAvailable(int gamepad);                                        
+// 获取游戏手柄的内部名称 ID
+RLAPI const char *GetGamepadName(int gamepad);                                     
+// 检查游戏手柄的某个按钮是否被按下一次
+RLAPI bool IsGamepadButtonPressed(int gamepad, int button);                        
+// 检查游戏手柄的某个按钮是否正在被按下
+RLAPI bool IsGamepadButtonDown(int gamepad, int button);                           
+// 检查游戏手柄的某个按钮是否被释放一次
+RLAPI bool IsGamepadButtonReleased(int gamepad, int button);                       
+// 检查游戏手柄的某个按钮是否未被按下
+RLAPI bool IsGamepadButtonUp(int gamepad, int button);                             
+// 获取最后按下的游戏手柄按钮
+RLAPI int GetGamepadButtonPressed(void);                                           
+// 获取某个游戏手柄的轴数量
+RLAPI int GetGamepadAxisCount(int gamepad);                                        
+// 获取某个游戏手柄的某个轴的移动值
+RLAPI float GetGamepadAxisMovement(int gamepad, int axis);                         
+// 设置内部游戏手柄映射（SDL_GameControllerDB）
+RLAPI int SetGamepadMappings(const char *mappings);                                
+// 设置游戏手柄两个马达的震动（持续时间以秒为单位）
+RLAPI void SetGamepadVibration(int gamepad, float leftMotor, float rightMotor, float duration); 
 
-// Text font info functions
-RLAPI void SetTextLineSpacing(int spacing);                                                 // Set vertical line spacing when drawing with line-breaks
-RLAPI int MeasureText(const char *text, int fontSize);                                      // Measure string width for default font
-RLAPI Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);    // Measure string size for Font
-RLAPI int GetGlyphIndex(Font font, int codepoint);                                          // Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
-RLAPI GlyphInfo GetGlyphInfo(Font font, int codepoint);                                     // Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
-RLAPI Rectangle GetGlyphAtlasRec(Font font, int codepoint);                                 // Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
+// 与输入相关的函数：鼠标
+// 检查某个鼠标按钮是否被按下一次
+RLAPI bool IsMouseButtonPressed(int button);                  
+// 检查某个鼠标按钮是否正在被按下
+RLAPI bool IsMouseButtonDown(int button);                     
+// 检查某个鼠标按钮是否被释放一次
+RLAPI bool IsMouseButtonReleased(int button);                 
+// 检查某个鼠标按钮是否未被按下
+RLAPI bool IsMouseButtonUp(int button);                       
+// 获取鼠标的 X 坐标
+RLAPI int GetMouseX(void);                                    
+// 获取鼠标的 Y 坐标
+RLAPI int GetMouseY(void);                                    
+// 获取鼠标的 XY 坐标
+RLAPI Vector2 GetMousePosition(void);                         
+// 获取两帧之间鼠标的移动增量
+RLAPI Vector2 GetMouseDelta(void);                            
+// 设置鼠标的 XY 坐标
+RLAPI void SetMousePosition(int x, int y);                    
+// 设置鼠标的偏移量
+RLAPI void SetMouseOffset(int offsetX, int offsetY);          
+// 设置鼠标的缩放比例
+RLAPI void SetMouseScale(float scaleX, float scaleY);         
+// 获取鼠标滚轮在 X 或 Y 方向上的最大移动量
+RLAPI float GetMouseWheelMove(void);                          
+// 获取鼠标滚轮在 X 和 Y 方向上的移动量
+RLAPI Vector2 GetMouseWheelMoveV(void);                       
+// 设置鼠标光标样式
+RLAPI void SetMouseCursor(int cursor);                        
 
-// Text codepoints management functions (unicode characters)
-RLAPI char *LoadUTF8(const int *codepoints, int length);                // Load UTF-8 text encoded from codepoints array
-RLAPI void UnloadUTF8(char *text);                                      // Unload UTF-8 text encoded from codepoints array
-RLAPI int *LoadCodepoints(const char *text, int *count);                // Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
-RLAPI void UnloadCodepoints(int *codepoints);                           // Unload codepoints data from memory
-RLAPI int GetCodepointCount(const char *text);                          // Get total number of codepoints in a UTF-8 encoded string
-RLAPI int GetCodepoint(const char *text, int *codepointSize);           // Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
-RLAPI int GetCodepointNext(const char *text, int *codepointSize);       // Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
-RLAPI int GetCodepointPrevious(const char *text, int *codepointSize);   // Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
-RLAPI const char *CodepointToUTF8(int codepoint, int *utf8Size);        // Encode one codepoint into UTF-8 byte array (array length returned as parameter)
-
-// Text strings management functions (no UTF-8 strings, only byte chars)
-// NOTE: Some strings allocate memory internally for returned strings, just be careful!
-RLAPI int TextCopy(char *dst, const char *src);                                             // Copy one string to another, returns bytes copied
-RLAPI bool TextIsEqual(const char *text1, const char *text2);                               // Check if two text string are equal
-RLAPI unsigned int TextLength(const char *text);                                            // Get text length, checks for '\0' ending
-RLAPI const char *TextFormat(const char *text, ...);                                        // Text formatting with variables (sprintf() style)
-RLAPI const char *TextSubtext(const char *text, int position, int length);                  // Get a piece of a text string
-RLAPI char *TextReplace(const char *text, const char *replace, const char *by);             // Replace text string (WARNING: memory must be freed!)
-RLAPI char *TextInsert(const char *text, const char *insert, int position);                 // Insert text in a position (WARNING: memory must be freed!)
-RLAPI const char *TextJoin(const char **textList, int count, const char *delimiter);        // Join text strings with delimiter
-RLAPI const char **TextSplit(const char *text, char delimiter, int *count);                 // Split text into multiple strings
-RLAPI void TextAppend(char *text, const char *append, int *position);                       // Append text at specific position and move cursor!
-RLAPI int TextFindIndex(const char *text, const char *find);                                // Find first text occurrence within a string
-RLAPI const char *TextToUpper(const char *text);                      // Get upper case version of provided string
-RLAPI const char *TextToLower(const char *text);                      // Get lower case version of provided string
-RLAPI const char *TextToPascal(const char *text);                     // Get Pascal case notation version of provided string
-RLAPI const char *TextToSnake(const char *text);                      // Get Snake case notation version of provided string
-RLAPI const char *TextToCamel(const char *text);                      // Get Camel case notation version of provided string
-
-RLAPI int TextToInteger(const char *text);                            // Get integer value from text (negative values not supported)
-RLAPI float TextToFloat(const char *text);                            // Get float value from text (negative values not supported)
-
-//------------------------------------------------------------------------------------
-// Basic 3d Shapes Drawing Functions (Module: models)
-//------------------------------------------------------------------------------------
-
-// Basic geometric 3D shapes drawing functions
-RLAPI void DrawLine3D(Vector3 startPos, Vector3 endPos, Color color);                                    // Draw a line in 3D world space
-RLAPI void DrawPoint3D(Vector3 position, Color color);                                                   // Draw a point in 3D space, actually a small line
-RLAPI void DrawCircle3D(Vector3 center, float radius, Vector3 rotationAxis, float rotationAngle, Color color); // Draw a circle in 3D world space
-RLAPI void DrawTriangle3D(Vector3 v1, Vector3 v2, Vector3 v3, Color color);                              // Draw a color-filled triangle (vertex in counter-clockwise order!)
-RLAPI void DrawTriangleStrip3D(const Vector3 *points, int pointCount, Color color);                      // Draw a triangle strip defined by points
-RLAPI void DrawCube(Vector3 position, float width, float height, float length, Color color);             // Draw cube
-RLAPI void DrawCubeV(Vector3 position, Vector3 size, Color color);                                       // Draw cube (Vector version)
-RLAPI void DrawCubeWires(Vector3 position, float width, float height, float length, Color color);        // Draw cube wires
-RLAPI void DrawCubeWiresV(Vector3 position, Vector3 size, Color color);                                  // Draw cube wires (Vector version)
-RLAPI void DrawSphere(Vector3 centerPos, float radius, Color color);                                     // Draw sphere
-RLAPI void DrawSphereEx(Vector3 centerPos, float radius, int rings, int slices, Color color);            // Draw sphere with extended parameters
-RLAPI void DrawSphereWires(Vector3 centerPos, float radius, int rings, int slices, Color color);         // Draw sphere wires
-RLAPI void DrawCylinder(Vector3 position, float radiusTop, float radiusBottom, float height, int slices, Color color); // Draw a cylinder/cone
-RLAPI void DrawCylinderEx(Vector3 startPos, Vector3 endPos, float startRadius, float endRadius, int sides, Color color); // Draw a cylinder with base at startPos and top at endPos
-RLAPI void DrawCylinderWires(Vector3 position, float radiusTop, float radiusBottom, float height, int slices, Color color); // Draw a cylinder/cone wires
-RLAPI void DrawCylinderWiresEx(Vector3 startPos, Vector3 endPos, float startRadius, float endRadius, int sides, Color color); // Draw a cylinder wires with base at startPos and top at endPos
-RLAPI void DrawCapsule(Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color); // Draw a capsule with the center of its sphere caps at startPos and endPos
-RLAPI void DrawCapsuleWires(Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color); // Draw capsule wireframe with the center of its sphere caps at startPos and endPos
-RLAPI void DrawPlane(Vector3 centerPos, Vector2 size, Color color);                                      // Draw a plane XZ
-RLAPI void DrawRay(Ray ray, Color color);                                                                // Draw a ray line
-RLAPI void DrawGrid(int slices, float spacing);                                                          // Draw a grid (centered at (0, 0, 0))
+// 与输入相关的函数：触摸
+// 获取触摸点 0 的 X 坐标（相对于屏幕尺寸）
+RLAPI int GetTouchX(void);                                    
+// 获取触摸点 0 的 Y 坐标（相对于屏幕尺寸）
+RLAPI int GetTouchY(void);                                    
+// 获取指定触摸点索引的 XY 坐标（相对于屏幕尺寸）
+RLAPI Vector2 GetTouchPosition(int index);                    
+// 获取指定索引的触摸点标识符
+RLAPI int GetTouchPointId(int index);                         
+// 获取触摸点的数量
+RLAPI int GetTouchPointCount(void);
 
 //------------------------------------------------------------------------------------
-// Model 3d Loading and Drawing Functions (Module: models)
+// 手势和触摸处理函数 (模块: rgestures)
+//------------------------------------------------------------------------------------
+// 使用标志启用一组手势
+RLAPI void SetGesturesEnabled(unsigned int flags);
+// 检查是否检测到某个手势
+RLAPI bool IsGestureDetected(unsigned int gesture);
+// 获取最新检测到的手势
+RLAPI int GetGestureDetected(void);
+// 获取手势按住的持续时间（以秒为单位）
+RLAPI float GetGestureHoldDuration(void);
+// 获取手势拖动向量
+RLAPI Vector2 GetGestureDragVector(void);
+// 获取手势拖动角度
+RLAPI float GetGestureDragAngle(void);
+// 获取手势捏合的增量
+RLAPI Vector2 GetGesturePinchVector(void);
+// 获取手势捏合角度
+RLAPI float GetGesturePinchAngle(void);
+
+
+// 样条线绘制函数
+// 绘制线性样条线，至少需要2个点
+RLAPI void DrawSplineLinear(const Vector2 *points, int pointCount, float thick, Color color);
+// 绘制B样条线，至少需要4个点
+RLAPI void DrawSplineBasis(const Vector2 *points, int pointCount, float thick, Color color);
+// 绘制Catmull-Rom样条线，至少需要4个点
+RLAPI void DrawSplineCatmullRom(const Vector2 *points, int pointCount, float thick, Color color);
+// 绘制二次贝塞尔样条线，至少需要3个点（1个控制点）：[p1, c2, p3, c4...]
+RLAPI void DrawSplineBezierQuadratic(const Vector2 *points, int pointCount, float thick, Color color);
+// 绘制三次贝塞尔样条线，至少需要4个点（2个控制点）：[p1, c2, c3, p4, c5, c6...]
+RLAPI void DrawSplineBezierCubic(const Vector2 *points, int pointCount, float thick, Color color);
+// 绘制线性样条线段，需要2个点
+RLAPI void DrawSplineSegmentLinear(Vector2 p1, Vector2 p2, float thick, Color color);
+// 绘制B样条线段，需要4个点
+RLAPI void DrawSplineSegmentBasis(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thick, Color color);
+// 绘制Catmull-Rom样条线段，需要4个点
+RLAPI void DrawSplineSegmentCatmullRom(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thick, Color color);
+// 绘制二次贝塞尔样条线段，需要2个点和1个控制点
+RLAPI void DrawSplineSegmentBezierQuadratic(Vector2 p1, Vector2 c2, Vector2 p3, float thick, Color color);
+// 绘制三次贝塞尔样条线段，需要2个点和2个控制点
+RLAPI void DrawSplineSegmentBezierCubic(Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float thick, Color color);
+
+// 样条线段点评估函数，给定t值范围为 [0.0f .. 1.0f]
+// 获取（评估）线性样条线上的点
+RLAPI Vector2 GetSplinePointLinear(Vector2 startPos, Vector2 endPos, float t);
+// 获取（评估）B样条线上的点
+RLAPI Vector2 GetSplinePointBasis(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t);
+// 获取（评估）Catmull-Rom样条线上的点
+RLAPI Vector2 GetSplinePointCatmullRom(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t);
+// 获取（评估）二次贝塞尔样条线上的点
+RLAPI Vector2 GetSplinePointBezierQuad(Vector2 p1, Vector2 c2, Vector2 p3, float t);
+// 获取（评估）三次贝塞尔样条线上的点
+RLAPI Vector2 GetSplinePointBezierCubic(Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t);
+
+// 基本形状碰撞检测函数
+// 检查两个矩形之间是否发生碰撞
+RLAPI bool CheckCollisionRecs(Rectangle rec1, Rectangle rec2);
+// 检查两个圆之间是否发生碰撞
+RLAPI bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, float radius2);
+// 检查圆和矩形之间是否发生碰撞
+RLAPI bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec);
+// 检查圆是否与由两点 [p1] 和 [p2] 构成的直线发生碰撞
+RLAPI bool CheckCollisionCircleLine(Vector2 center, float radius, Vector2 p1, Vector2 p2);
+// 检查点是否在矩形内部
+RLAPI bool CheckCollisionPointRec(Vector2 point, Rectangle rec);
+// 检查点是否在圆内部
+RLAPI bool CheckCollisionPointCircle(Vector2 point, Vector2 center, float radius);
+// 检查点是否在三角形内部
+RLAPI bool CheckCollisionPointTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3);
+// 检查点是否在由两点 [p1] 和 [p2] 构成的直线上，允许一定的像素误差 [threshold]
+RLAPI bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshold);
+// 检查点是否在由顶点数组描述的多边形内部
+RLAPI bool CheckCollisionPointPoly(Vector2 point, const Vector2 *points, int pointCount);
+// 检查由两个点定义的两条直线是否发生碰撞，通过引用返回碰撞点
+RLAPI bool CheckCollisionLines(Vector2 startPos1, Vector2 endPos1, Vector2 startPos2, Vector2 endPos2, Vector2 *collisionPoint);
+// 获取两个矩形碰撞后的重叠矩形
+RLAPI Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);
+
+//------------------------------------------------------------------------------------
+// 纹理加载和绘制函数 (模块: 纹理)
 //------------------------------------------------------------------------------------
 
-// Model management functions
-RLAPI Model LoadModel(const char *fileName);                                                // Load model from files (meshes and materials)
-RLAPI Model LoadModelFromMesh(Mesh mesh);                                                   // Load model from generated mesh (default material)
-RLAPI bool IsModelValid(Model model);                                                       // Check if a model is valid (loaded in GPU, VAO/VBOs)
-RLAPI void UnloadModel(Model model);                                                        // Unload model (including meshes) from memory (RAM and/or VRAM)
-RLAPI BoundingBox GetModelBoundingBox(Model model);                                         // Compute model bounding box limits (considers all meshes)
+// 图像加载函数
+// 注意: 这些函数不需要GPU访问
+RLAPI Image LoadImage(const char *fileName);                                                             // 从文件加载图像到CPU内存 (RAM)
+RLAPI Image LoadImageRaw(const char *fileName, int width, int height, int format, int headerSize);       // 从原始文件数据加载图像
+RLAPI Image LoadImageAnim(const char *fileName, int *frames);                                            // 从文件加载图像序列 (帧追加到image.data)
+RLAPI Image LoadImageAnimFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int *frames); // 从内存缓冲区加载图像序列
+RLAPI Image LoadImageFromMemory(const char *fileType, const unsigned char *fileData, int dataSize);      // 从内存缓冲区加载图像，fileType指文件扩展名，例如: '.png'
+RLAPI Image LoadImageFromTexture(Texture2D texture);                                                     // 从GPU纹理数据加载图像
+RLAPI Image LoadImageFromScreen(void);                                                                   // 从屏幕缓冲区加载图像 (截图)
+RLAPI bool IsImageValid(Image image);                                                                    // 检查图像是否有效 (数据和参数)
+RLAPI void UnloadImage(Image image);                                                                     // 从CPU内存 (RAM) 卸载图像
+RLAPI bool ExportImage(Image image, const char *fileName);                                               // 将图像数据导出到文件，成功返回true
+RLAPI unsigned char *ExportImageToMemory(Image image, const char *fileType, int *fileSize);              // 将图像导出到内存缓冲区
+RLAPI bool ExportImageAsCode(Image image, const char *fileName);                                         // 将图像导出为定义字节数组的代码文件，成功返回true
 
-// Model drawing functions
-RLAPI void DrawModel(Model model, Vector3 position, float scale, Color tint);               // Draw a model (with texture if set)
-RLAPI void DrawModelEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model with extended parameters
-RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint);          // Draw a model wires (with texture if set)
-RLAPI void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
-RLAPI void DrawModelPoints(Model model, Vector3 position, float scale, Color tint); // Draw a model as points
-RLAPI void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model as points with extended parameters
-RLAPI void DrawBoundingBox(BoundingBox box, Color color);                                   // Draw bounding box (wires)
-RLAPI void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float scale, Color tint);   // Draw a billboard texture
-RLAPI void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector2 size, Color tint); // Draw a billboard texture defined by source
-RLAPI void DrawBillboardPro(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint); // Draw a billboard texture defined by source and rotation
+// 图像生成函数
+RLAPI Image GenImageColor(int width, int height, Color color);                                           // 生成图像: 纯色
+RLAPI Image GenImageGradientLinear(int width, int height, int direction, Color start, Color end);        // 生成图像: 线性渐变，方向为度数 [0..360]，0=垂直渐变
+RLAPI Image GenImageGradientRadial(int width, int height, float density, Color inner, Color outer);      // 生成图像: 径向渐变
+RLAPI Image GenImageGradientSquare(int width, int height, float density, Color inner, Color outer);      // 生成图像: 方形渐变
+RLAPI Image GenImageChecked(int width, int height, int checksX, int checksY, Color col1, Color col2);    // 生成图像: 棋盘格
+RLAPI Image GenImageWhiteNoise(int width, int height, float factor);                                     // 生成图像: 白噪声
+RLAPI Image GenImagePerlinNoise(int width, int height, int offsetX, int offsetY, float scale);           // 生成图像: 柏林噪声
+RLAPI Image GenImageCellular(int width, int height, int tileSize);                                       // 生成图像: 细胞算法，更大的tileSize意味着更大的细胞
+RLAPI Image GenImageText(int width, int height, const char *text);                                       // 生成图像: 从文本数据生成灰度图像
 
-// Mesh management functions
-RLAPI void UploadMesh(Mesh *mesh, bool dynamic);                                            // Upload mesh vertex data in GPU and provide VAO/VBO ids
-RLAPI void UpdateMeshBuffer(Mesh mesh, int index, const void *data, int dataSize, int offset); // Update mesh vertex data in GPU for a specific buffer index
-RLAPI void UnloadMesh(Mesh mesh);                                                           // Unload mesh data from CPU and GPU
-RLAPI void DrawMesh(Mesh mesh, Material material, Matrix transform);                        // Draw a 3d mesh with material and transform
-RLAPI void DrawMeshInstanced(Mesh mesh, Material material, const Matrix *transforms, int instances); // Draw multiple mesh instances with material and different transforms
-RLAPI BoundingBox GetMeshBoundingBox(Mesh mesh);                                            // Compute mesh bounding box limits
-RLAPI void GenMeshTangents(Mesh *mesh);                                                     // Compute mesh tangents
-RLAPI bool ExportMesh(Mesh mesh, const char *fileName);                                     // Export mesh data to file, returns true on success
-RLAPI bool ExportMeshAsCode(Mesh mesh, const char *fileName);                               // Export mesh as code file (.h) defining multiple arrays of vertex attributes
+// 图像操作函数
+RLAPI Image ImageCopy(Image image);                                                                      // 创建图像副本 (用于变换操作)
+RLAPI Image ImageFromImage(Image image, Rectangle rec);                                                  // 从另一个图像的一部分创建图像
+RLAPI Image ImageFromChannel(Image image, int selectedChannel);                                          // 从另一个图像的选定通道创建图像 (灰度图)
+RLAPI Image ImageText(const char *text, int fontSize, Color color);                                      // 从文本创建图像 (默认字体)
+RLAPI Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Color tint);         // 从文本创建图像 (自定义精灵字体)
+RLAPI void ImageFormat(Image *image, int newFormat);                                                     // 将图像数据转换为所需格式
+RLAPI void ImageToPOT(Image *image, Color fill);                                                         // 将图像转换为2的幂次方大小 (POT)
+RLAPI void ImageCrop(Image *image, Rectangle crop);                                                      // 将图像裁剪到定义的矩形
+RLAPI void ImageAlphaCrop(Image *image, float threshold);                                                // 根据alpha值裁剪图像
+RLAPI void ImageAlphaClear(Image *image, Color color, float threshold);                                  // 将alpha通道清除为所需颜色
+RLAPI void ImageAlphaMask(Image *image, Image alphaMask);                                                // 对图像应用alpha遮罩
+RLAPI void ImageAlphaPremultiply(Image *image);                                                          // 预乘alpha通道
+RLAPI void ImageBlurGaussian(Image *image, int blurSize);                                                // 使用盒式模糊近似应用高斯模糊
+RLAPI void ImageKernelConvolution(Image *image, const float *kernel, int kernelSize);                    // 对图像应用自定义方形卷积核
+RLAPI void ImageResize(Image *image, int newWidth, int newHeight);                                       // 调整图像大小 (双三次缩放算法)
+RLAPI void ImageResizeNN(Image *image, int newWidth,int newHeight);                                      // 调整图像大小 (最近邻缩放算法)
+RLAPI void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, int offsetY, Color fill); // 调整画布大小并用颜色填充
+RLAPI void ImageMipmaps(Image *image);                                                                   // 为提供的图像计算所有mipmap级别
+RLAPI void ImageDither(Image *image, int rBpp, int gBpp, int bBpp, int aBpp);                            // 将图像数据抖动到16位或更低 (Floyd-Steinberg抖动)
+RLAPI void ImageFlipVertical(Image *image);                                                              // 垂直翻转图像
+RLAPI void ImageFlipHorizontal(Image *image);                                                            // 水平翻转图像
+RLAPI void ImageRotate(Image *image, int degrees);                                                       // 按输入角度旋转图像 (度数 -359 到 359)
+RLAPI void ImageRotateCW(Image *image);                                                                  // 顺时针旋转图像90度
+RLAPI void ImageRotateCCW(Image *image);                                                                 // 逆时针旋转图像90度
+RLAPI void ImageColorTint(Image *image, Color color);                                                    // 修改图像颜色: 着色
+RLAPI void ImageColorInvert(Image *image);                                                               // 修改图像颜色: 反转
+RLAPI void ImageColorGrayscale(Image *image);                                                            // 修改图像颜色: 灰度化
+RLAPI void ImageColorContrast(Image *image, float contrast);                                             // 修改图像颜色: 对比度 (-100 到 100)
+RLAPI void ImageColorBrightness(Image *image, int brightness);                                           // 修改图像颜色: 亮度 (-255 到 255)
+RLAPI void ImageColorReplace(Image *image, Color color, Color replace);                                  // 修改图像颜色: 替换颜色
+RLAPI Color *LoadImageColors(Image image);                                                               // 从图像加载颜色数据作为Color数组 (RGBA - 32位)
+RLAPI Color *LoadImagePalette(Image image, int maxPaletteSize, int *colorCount);                         // 从图像加载颜色调色板作为Color数组 (RGBA - 32位)
+RLAPI void UnloadImageColors(Color *colors);                                                             // 卸载使用LoadImageColors()加载的颜色数据
+RLAPI void UnloadImagePalette(Color *colors);                                                            // 卸载使用LoadImagePalette()加载的颜色调色板
+RLAPI Rectangle GetImageAlphaBorder(Image image, float threshold);                                       // 获取图像alpha边界矩形
+RLAPI Color GetImageColor(Image image, int x, int y);                                                    // 获取图像在 (x, y) 位置的像素颜色
 
-// Mesh generation functions
-RLAPI Mesh GenMeshPoly(int sides, float radius);                                            // Generate polygonal mesh
-RLAPI Mesh GenMeshPlane(float width, float length, int resX, int resZ);                     // Generate plane mesh (with subdivisions)
-RLAPI Mesh GenMeshCube(float width, float height, float length);                            // Generate cuboid mesh
-RLAPI Mesh GenMeshSphere(float radius, int rings, int slices);                              // Generate sphere mesh (standard sphere)
-RLAPI Mesh GenMeshHemiSphere(float radius, int rings, int slices);                          // Generate half-sphere mesh (no bottom cap)
-RLAPI Mesh GenMeshCylinder(float radius, float height, int slices);                         // Generate cylinder mesh
-RLAPI Mesh GenMeshCone(float radius, float height, int slices);                             // Generate cone/pyramid mesh
-RLAPI Mesh GenMeshTorus(float radius, float size, int radSeg, int sides);                   // Generate torus mesh
-RLAPI Mesh GenMeshKnot(float radius, float size, int radSeg, int sides);                    // Generate trefoil knot mesh
-RLAPI Mesh GenMeshHeightmap(Image heightmap, Vector3 size);                                 // Generate heightmap mesh from image data
-RLAPI Mesh GenMeshCubicmap(Image cubicmap, Vector3 cubeSize);                               // Generate cubes-based map mesh from image data
+// 图像绘制函数
+// 注意: 图像软件渲染函数 (CPU)
+RLAPI void ImageClearBackground(Image *dst, Color color);                                                // 用给定颜色清除图像背景
+RLAPI void ImageDrawPixel(Image *dst, int posX, int posY, Color color);                                  // 在图像内绘制像素
+RLAPI void ImageDrawPixelV(Image *dst, Vector2 position, Color color);                                   // 在图像内绘制像素 (向量版本)
+RLAPI void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int endPosY, Color color); // 在图像内绘制线条
+RLAPI void ImageDrawLineV(Image *dst, Vector2 start, Vector2 end, Color color);                          // 在图像内绘制线条 (向量版本)
+RLAPI void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color color);              // 在图像内绘制定义厚度的线条
+RLAPI void ImageDrawCircle(Image *dst, int centerX, int centerY, int radius, Color color);               // 在图像内绘制填充的圆形
+RLAPI void ImageDrawCircleV(Image *dst, Vector2 center, int radius, Color color);                        // 在图像内绘制填充的圆形 (向量版本)
+RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius, Color color);          // 在图像内绘制圆形轮廓
+RLAPI void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);                   // 在图像内绘制圆形轮廓 (向量版本)
+RLAPI void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);       // 在图像内绘制矩形
+RLAPI void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color);                 // 在图像内绘制矩形 (向量版本)
+RLAPI void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color);                                // 在图像内绘制矩形
+RLAPI void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color);                   // 在图像内绘制矩形线条
+RLAPI void ImageDrawTriangle(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);               // 在图像内绘制三角形
+RLAPI void ImageDrawTriangleEx(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color c1, Color c2, Color c3); // 在图像内绘制带有插值颜色的三角形
+RLAPI void ImageDrawTriangleLines(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);          // 在图像内绘制三角形轮廓
+RLAPI void ImageDrawTriangleFan(Image *dst, Vector2 *points, int pointCount, Color color);               // 在图像内绘制由点定义的三角形扇 (第一个顶点是中心)
+RLAPI void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color color);             // 在图像内绘制由点定义的三角形条带
+RLAPI void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint);             // 在目标图像内绘制源图像 (对源图像应用色调)
+RLAPI void ImageDrawText(Image *dst, const char *text, int posX, int posY, int fontSize, Color color);   // 在图像 (目标) 内绘制文本 (使用默认字体)
+RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // 在图像 (目标) 内绘制文本 (自定义精灵字体)
 
-// Material loading/unloading functions
-RLAPI Material *LoadMaterials(const char *fileName, int *materialCount);                    // Load materials from model file
-RLAPI Material LoadMaterialDefault(void);                                                   // Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
-RLAPI bool IsMaterialValid(Material material);                                              // Check if a material is valid (shader assigned, map textures loaded in GPU)
-RLAPI void UnloadMaterial(Material material);                                               // Unload material from GPU memory (VRAM)
-RLAPI void SetMaterialTexture(Material *material, int mapType, Texture2D texture);          // Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
-RLAPI void SetModelMeshMaterial(Model *model, int meshId, int materialId);                  // Set material for a mesh
+// 纹理加载函数
+// 注意: 这些函数需要访问GPU
+RLAPI Texture2D LoadTexture(const char *fileName);                                                       // 从文件加载纹理到GPU内存 (VRAM)
+RLAPI Texture2D LoadTextureFromImage(Image image);                                                       // 从图像数据加载纹理
+RLAPI TextureCubemap LoadTextureCubemap(Image image, int layout);                                        // 从图像加载立方体贴图，支持多种图像立方体贴图布局
+RLAPI RenderTexture2D LoadRenderTexture(int width, int height);                                          // 加载用于渲染的纹理 (帧缓冲区)
+RLAPI bool IsTextureValid(Texture2D texture);                                                            // 检查纹理是否有效 (已加载到GPU)
+RLAPI void UnloadTexture(Texture2D texture);                                                             // 从GPU内存 (VRAM) 卸载纹理
+RLAPI bool IsRenderTextureValid(RenderTexture2D target);                                                 // 检查渲染纹理是否有效 (已加载到GPU)
+RLAPI void UnloadRenderTexture(RenderTexture2D target);                                                  // 从GPU内存 (VRAM) 卸载渲染纹理
+RLAPI void UpdateTexture(Texture2D texture, const void *pixels);                                         // 用新数据更新GPU纹理
+RLAPI void UpdateTextureRec(Texture2D texture, Rectangle rec, const void *pixels);                       // 用新数据更新GPU纹理的矩形区域
 
-// Model animations loading/unloading functions
-RLAPI ModelAnimation *LoadModelAnimations(const char *fileName, int *animCount);            // Load model animations from file
-RLAPI void UpdateModelAnimation(Model model, ModelAnimation anim, int frame);               // Update model animation pose (CPU)
-RLAPI void UpdateModelAnimationBones(Model model, ModelAnimation anim, int frame);          // Update model animation mesh bone matrices (GPU skinning)
-RLAPI void UnloadModelAnimation(ModelAnimation anim);                                       // Unload animation data
-RLAPI void UnloadModelAnimations(ModelAnimation *animations, int animCount);                // Unload animation array data
-RLAPI bool IsModelAnimationValid(Model model, ModelAnimation anim);                         // Check model animation skeleton match
+// 纹理配置函数
+RLAPI void GenTextureMipmaps(Texture2D *texture);                                                        // 为纹理生成GPU多级渐远纹理
+RLAPI void SetTextureFilter(Texture2D texture, int filter);                                              // 设置纹理缩放过滤模式
+RLAPI void SetTextureWrap(Texture2D texture, int wrap);                                                  // 设置纹理环绕模式
 
-// Collision detection functions
-RLAPI bool CheckCollisionSpheres(Vector3 center1, float radius1, Vector3 center2, float radius2);   // Check collision between two spheres
-RLAPI bool CheckCollisionBoxes(BoundingBox box1, BoundingBox box2);                                 // Check collision between two bounding boxes
-RLAPI bool CheckCollisionBoxSphere(BoundingBox box, Vector3 center, float radius);                  // Check collision between box and sphere
-RLAPI RayCollision GetRayCollisionSphere(Ray ray, Vector3 center, float radius);                    // Get collision info between ray and sphere
-RLAPI RayCollision GetRayCollisionBox(Ray ray, BoundingBox box);                                    // Get collision info between ray and box
-RLAPI RayCollision GetRayCollisionMesh(Ray ray, Mesh mesh, Matrix transform);                       // Get collision info between ray and mesh
-RLAPI RayCollision GetRayCollisionTriangle(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3);            // Get collision info between ray and triangle
-RLAPI RayCollision GetRayCollisionQuad(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4);    // Get collision info between ray and quad
+// 纹理绘制函数
+RLAPI void DrawTexture(Texture2D texture, int posX, int posY, Color tint);                               // 绘制一个Texture2D
+RLAPI void DrawTextureV(Texture2D texture, Vector2 position, Color tint);                                // 以Vector2定义的位置绘制一个Texture2D
+RLAPI void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint);  // 用扩展参数绘制一个Texture2D
+RLAPI void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color tint);            // 绘制由矩形定义的纹理的一部分
+RLAPI void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint); // 用'pro'参数绘制由矩形定义的纹理的一部分
+RLAPI void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint); // 绘制一个可以很好地拉伸或收缩的纹理（或其一部分）
+
+// 颜色/像素相关函数
+// 检查两种颜色是否相等
+RLAPI bool ColorIsEqual(Color col1, Color col2);
+// 获取应用了透明度的颜色，透明度取值范围为 0.0f 到 1.0f
+RLAPI Color Fade(Color color, float alpha);
+// 获取颜色的十六进制值 (0xRRGGBBAA)
+RLAPI int ColorToInt(Color color);
+// 获取颜色归一化后的浮点值 [0..1]
+RLAPI Vector4 ColorNormalize(Color color);
+// 从归一化的值 [0..1] 获取颜色
+RLAPI Color ColorFromNormalized(Vector4 normalized);
+// 获取颜色的 HSV 值，色调 [0..360]，饱和度/明度 [0..1]
+RLAPI Vector3 ColorToHSV(Color color);
+// 从 HSV 值获取颜色，色调 [0..360]，饱和度/明度 [0..1]
+RLAPI Color ColorFromHSV(float hue, float saturation, float value);
+// 获取与另一种颜色相乘后的颜色
+RLAPI Color ColorTint(Color color, Color tint);
+// 获取经过亮度校正后的颜色，亮度因子取值范围为 -1.0f 到 1.0f
+RLAPI Color ColorBrightness(Color color, float factor);
+// 获取经过对比度校正后的颜色，对比度值介于 -1.0f 和 1.0f 之间
+RLAPI Color ColorContrast(Color color, float contrast);
+// 获取应用了透明度的颜色，透明度取值范围为 0.0f 到 1.0f
+RLAPI Color ColorAlpha(Color color, float alpha);
+// 获取源颜色以指定色调与目标颜色进行 alpha 混合后的颜色
+RLAPI Color ColorAlphaBlend(Color dst, Color src, Color tint);
+// 获取两种颜色之间的线性插值颜色，插值因子 [0.0f..1.0f]
+RLAPI Color ColorLerp(Color color1, Color color2, float factor);
+// 从十六进制值获取颜色结构体
+RLAPI Color GetColor(unsigned int hexValue);
+// 从特定格式的源像素指针获取颜色
+RLAPI Color GetPixelColor(void *srcPtr, int format);
+// 将格式化后的颜色设置到目标像素指针
+RLAPI void SetPixelColor(void *dstPtr, Color color, int format);
+// 获取特定格式的像素数据大小（以字节为单位）
+RLAPI int GetPixelDataSize(int width, int height, int format);
+
 
 //------------------------------------------------------------------------------------
-// Audio Loading and Playing Functions (Module: audio)
+// 字体加载和文本绘制函数 (模块: 文本)
 //------------------------------------------------------------------------------------
+
+// 字体加载/卸载函数
+// 获取默认字体
+RLAPI Font GetFontDefault(void);
+// 从文件加载字体到GPU内存 (VRAM)
+RLAPI Font LoadFont(const char *fileName);
+// 从文件加载字体并带有扩展参数，若codepoints为NULL且codepointCount为0则加载默认字符集，字体大小以像素高度提供
+RLAPI Font LoadFontEx(const char *fileName, int fontSize, int *codepoints, int codepointCount);
+// 从图像加载字体 (XNA风格)
+RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);
+// 从内存缓冲区加载字体，fileType指文件扩展名，例如: '.ttf'
+RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount);
+// 检查字体是否有效 (字体数据已加载，警告: 未检查GPU纹理)
+RLAPI bool IsFontValid(Font font);
+// 加载字体数据以供后续使用
+RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type);
+// 使用字符信息生成图像字体图集
+RLAPI Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyphCount, int fontSize, int padding, int packMethod);
+// 卸载字体字符信息数据 (RAM)
+RLAPI void UnloadFontData(GlyphInfo *glyphs, int glyphCount);
+// 从GPU内存 (VRAM) 卸载字体
+RLAPI void UnloadFont(Font font);
+// 将字体导出为代码文件，成功返回true
+RLAPI bool ExportFontAsCode(Font font, const char *fileName);
+
+// 文本绘制函数
+// 绘制当前帧率
+RLAPI void DrawFPS(int posX, int posY);
+// 绘制文本 (使用默认字体)
+RLAPI void DrawText(const char *text, int posX, int posY, int fontSize, Color color);
+// 使用字体和附加参数绘制文本
+RLAPI void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint);
+// 使用字体和专业参数 (旋转) 绘制文本
+RLAPI void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint);
+// 绘制一个字符 (代码点)
+RLAPI void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSize, Color tint);
+// 绘制多个字符 (代码点)
+RLAPI void DrawTextCodepoints(Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint);
+
+// 文本字体信息函数
+// 设置绘制带换行符文本时的垂直行间距
+RLAPI void SetTextLineSpacing(int spacing);
+// 测量默认字体下字符串的宽度
+RLAPI int MeasureText(const char *text, int fontSize);
+// 测量指定字体下字符串的大小
+RLAPI Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);
+// 获取字体中代码点 (Unicode字符) 的字形索引位置，若未找到则回退到 '?'
+RLAPI int GetGlyphIndex(Font font, int codepoint);
+// 获取字体中代码点 (Unicode字符) 的字形信息数据，若未找到则回退到 '?'
+RLAPI GlyphInfo GetGlyphInfo(Font font, int codepoint);
+// 获取字体图集中代码点 (Unicode字符) 的字形矩形，若未找到则回退到 '?'
+RLAPI Rectangle GetGlyphAtlasRec(Font font, int codepoint);
+
+// 文本代码点管理函数 (Unicode字符)
+// 从代码点数组加载UTF-8编码的文本
+RLAPI char *LoadUTF8(const int *codepoints, int length);
+// 卸载从代码点数组编码的UTF-8文本
+RLAPI void UnloadUTF8(char *text);
+// 从UTF-8文本字符串加载所有代码点，代码点数量通过参数返回
+RLAPI int *LoadCodepoints(const char *text, int *count);
+// 从内存中卸载代码点数据
+RLAPI void UnloadCodepoints(int *codepoints);
+// 获取UTF-8编码字符串中的代码点总数
+RLAPI int GetCodepointCount(const char *text);
+// 获取UTF-8编码字符串中的下一个代码点，失败时返回 0x3f('?')
+RLAPI int GetCodepoint(const char *text, int *codepointSize);
+// 获取UTF-8编码字符串中的下一个代码点，失败时返回 0x3f('?')
+RLAPI int GetCodepointNext(const char *text, int *codepointSize);
+// 获取UTF-8编码字符串中的上一个代码点，失败时返回 0x3f('?')
+RLAPI int GetCodepointPrevious(const char *text, int *codepointSize);
+// 将一个代码点编码为UTF-8字节数组 (数组长度作为参数返回)
+RLAPI const char *CodepointToUTF8(int codepoint, int *utf8Size);
+
+// 文本字符串管理函数 (非UTF-8字符串，仅字节字符)
+// 注意: 某些字符串会在内部为返回的字符串分配内存，请小心使用!
+// 将一个字符串复制到另一个字符串，返回复制的字节数
+RLAPI int TextCopy(char *dst, const char *src);
+// 检查两个文本字符串是否相等
+RLAPI bool TextIsEqual(const char *text1, const char *text2);
+// 获取文本长度，检查 '\0' 结尾
+RLAPI unsigned int TextLength(const char *text);
+// 用变量进行文本格式化 (sprintf() 风格)
+RLAPI const char *TextFormat(const char *text, ...);
+// 获取文本字符串的一部分
+RLAPI const char *TextSubtext(const char *text, int position, int length);
+// 替换文本字符串 (警告: 必须释放内存!)
+RLAPI char *TextReplace(const char *text, const char *replace, const char *by);
+// 在指定位置插入文本 (警告: 必须释放内存!)
+RLAPI char *TextInsert(const char *text, const char *insert, int position);
+// 用分隔符连接文本字符串
+RLAPI const char *TextJoin(const char **textList, int count, const char *delimiter);
+// 将文本拆分为多个字符串
+RLAPI const char **TextSplit(const char *text, char delimiter, int *count);
+// 在特定位置追加文本并移动光标!
+RLAPI void TextAppend(char *text, const char *append, int *position);
+// 在字符串中查找第一个文本出现的位置
+RLAPI int TextFindIndex(const char *text, const char *find);
+// 获取提供字符串的大写版本
+RLAPI const char *TextToUpper(const char *text);
+// 获取提供字符串的小写版本
+RLAPI const char *TextToLower(const char *text);
+// 获取提供字符串的帕斯卡命名法版本
+RLAPI const char *TextToPascal(const char *text);
+// 获取提供字符串的蛇形命名法版本
+RLAPI const char *TextToSnake(const char *text);
+// 获取提供字符串的驼峰命名法版本
+RLAPI const char *TextToCamel(const char *text);
+// 从文本中获取整数值 (不支持负值)
+RLAPI int TextToInteger(const char *text);
+// 从文本中获取浮点数值 (不支持负值)
+RLAPI float TextToFloat(const char *text);
+
+
+//------------------------------------------------------------------------------------
+// 基础3D形状绘制函数 (模块: 模型)
+//------------------------------------------------------------------------------------
+
+// 基础几何3D形状绘制函数
+// 在3D世界空间中绘制一条线
+RLAPI void DrawLine3D(Vector3 startPos, Vector3 endPos, Color color);
+// 在3D空间中绘制一个点，实际上是一条小线段
+RLAPI void DrawPoint3D(Vector3 position, Color color);
+// 在3D世界空间中绘制一个圆
+RLAPI void DrawCircle3D(Vector3 center, float radius, Vector3 rotationAxis, float rotationAngle, Color color);
+// 绘制一个填充颜色的三角形（顶点按逆时针顺序排列！）
+RLAPI void DrawTriangle3D(Vector3 v1, Vector3 v2, Vector3 v3, Color color);
+// 绘制由点定义的三角形条带
+RLAPI void DrawTriangleStrip3D(const Vector3 *points, int pointCount, Color color);
+// 绘制立方体
+RLAPI void DrawCube(Vector3 position, float width, float height, float length, Color color);
+// 绘制立方体（向量版本）
+RLAPI void DrawCubeV(Vector3 position, Vector3 size, Color color);
+// 绘制立方体的线框
+RLAPI void DrawCubeWires(Vector3 position, float width, float height, float length, Color color);
+// 绘制立方体的线框（向量版本）
+RLAPI void DrawCubeWiresV(Vector3 position, Vector3 size, Color color);
+// 绘制球体
+RLAPI void DrawSphere(Vector3 centerPos, float radius, Color color);
+// 绘制具有扩展参数的球体
+RLAPI void DrawSphereEx(Vector3 centerPos, float radius, int rings, int slices, Color color);
+// 绘制球体的线框
+RLAPI void DrawSphereWires(Vector3 centerPos, float radius, int rings, int slices, Color color);
+// 绘制圆柱体/圆锥体
+RLAPI void DrawCylinder(Vector3 position, float radiusTop, float radiusBottom, float height, int slices, Color color);
+// 绘制一个圆柱体，底面在startPos，顶面在endPos
+RLAPI void DrawCylinderEx(Vector3 startPos, Vector3 endPos, float startRadius, float endRadius, int sides, Color color);
+// 绘制圆柱体/圆锥体的线框
+RLAPI void DrawCylinderWires(Vector3 position, float radiusTop, float radiusBottom, float height, int slices, Color color);
+// 绘制一个圆柱体的线框，底面在startPos，顶面在endPos
+RLAPI void DrawCylinderWiresEx(Vector3 startPos, Vector3 endPos, float startRadius, float endRadius, int sides, Color color);
+// 绘制一个胶囊体，其球形帽的中心分别在startPos和endPos
+RLAPI void DrawCapsule(Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color);
+// 绘制胶囊体的线框，其球形帽的中心分别在startPos和endPos
+RLAPI void DrawCapsuleWires(Vector3 startPos, Vector3 endPos, float radius, int slices, int rings, Color color);
+// 绘制一个XZ平面
+RLAPI void DrawPlane(Vector3 centerPos, Vector2 size, Color color);
+// 绘制一条射线
+RLAPI void DrawRay(Ray ray, Color color);
+// 绘制一个网格（以(0, 0, 0)为中心）
+RLAPI void DrawGrid(int slices, float spacing);
+
+//------------------------------------------------------------------------------------
+// 3D模型加载和绘制函数 (模块: models)
+//------------------------------------------------------------------------------------
+
+// 模型管理函数
+// 从文件加载模型（网格和材质）
+RLAPI Model LoadModel(const char *fileName);
+// 从生成的网格加载模型（默认材质）
+RLAPI Model LoadModelFromMesh(Mesh mesh);
+// 检查模型是否有效（已加载到GPU，VAO/VBO）
+RLAPI bool IsModelValid(Model model);
+// 从内存（RAM和/或VRAM）卸载模型（包括网格）
+RLAPI void UnloadModel(Model model);
+// 计算模型的边界框限制（考虑所有网格）
+RLAPI BoundingBox GetModelBoundingBox(Model model);
+
+// 模型绘制函数
+// 绘制一个模型（如果设置了纹理）
+RLAPI void DrawModel(Model model, Vector3 position, float scale, Color tint);
+// 用扩展参数绘制一个模型
+RLAPI void DrawModelEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint);
+// 绘制模型的线框（如果设置了纹理）
+RLAPI void DrawModelWires(Model model, Vector3 position, float scale, Color tint);
+// 用扩展参数绘制模型的线框（如果设置了纹理）
+RLAPI void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint);
+// 将模型绘制为点
+RLAPI void DrawModelPoints(Model model, Vector3 position, float scale, Color tint);
+// 用扩展参数将模型绘制为点
+RLAPI void DrawModelPointsEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint);
+// 绘制边界框（线框）
+RLAPI void DrawBoundingBox(BoundingBox box, Color color);
+// 绘制一个广告牌纹理
+RLAPI void DrawBillboard(Camera camera, Texture2D texture, Vector3 position, float scale, Color tint);
+// 绘制由源矩形定义的广告牌纹理
+RLAPI void DrawBillboardRec(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector2 size, Color tint);
+// 绘制由源矩形和旋转定义的广告牌纹理
+RLAPI void DrawBillboardPro(Camera camera, Texture2D texture, Rectangle source, Vector3 position, Vector3 up, Vector2 size, Vector2 origin, float rotation, Color tint);
+
+// 网格管理函数
+// 将网格顶点数据上传到GPU并提供VAO/VBO ID
+RLAPI void UploadMesh(Mesh *mesh, bool dynamic);
+// 更新GPU中特定缓冲区索引的网格顶点数据
+RLAPI void UpdateMeshBuffer(Mesh mesh, int index, const void *data, int dataSize, int offset);
+// 从CPU和GPU卸载网格数据
+RLAPI void UnloadMesh(Mesh mesh);
+// 用材质和变换绘制一个3D网格
+RLAPI void DrawMesh(Mesh mesh, Material material, Matrix transform);
+// 用材质和不同的变换绘制多个网格实例
+RLAPI void DrawMeshInstanced(Mesh mesh, Material material, const Matrix *transforms, int instances);
+// 计算网格的边界框限制
+RLAPI BoundingBox GetMeshBoundingBox(Mesh mesh);
+// 计算网格的切线
+RLAPI void GenMeshTangents(Mesh *mesh);
+// 将网格数据导出到文件，成功返回true
+RLAPI bool ExportMesh(Mesh mesh, const char *fileName);
+// 将网格导出为定义多个顶点属性数组的代码文件（.h）
+RLAPI bool ExportMeshAsCode(Mesh mesh, const char *fileName);
+
+// 网格生成函数
+// 生成多边形网格
+RLAPI Mesh GenMeshPoly(int sides, float radius);
+// 生成平面网格（带有细分）
+RLAPI Mesh GenMeshPlane(float width, float length, int resX, int resZ);
+// 生成长方体网格
+RLAPI Mesh GenMeshCube(float width, float height, float length);
+// 生成球体网格（标准球体）
+RLAPI Mesh GenMeshSphere(float radius, int rings, int slices);
+// 生成半球体网格（无底部盖子）
+RLAPI Mesh GenMeshHemiSphere(float radius, int rings, int slices);
+// 生成圆柱体网格
+RLAPI Mesh GenMeshCylinder(float radius, float height, int slices);
+// 生成圆锥/棱锥网格
+RLAPI Mesh GenMeshCone(float radius, float height, int slices);
+// 生成圆环体网格
+RLAPI Mesh GenMeshTorus(float radius, float size, int radSeg, int sides);
+// 生成三叶结网格
+RLAPI Mesh GenMeshKnot(float radius, float size, int radSeg, int sides);
+// 根据图像数据生成高度图网格
+RLAPI Mesh GenMeshHeightmap(Image heightmap, Vector3 size);
+// 根据图像数据生成基于立方体的地图网格
+RLAPI Mesh GenMeshCubicmap(Image cubicmap, Vector3 cubeSize);
+
+// 材质加载/卸载函数
+// 从模型文件加载材质
+RLAPI Material *LoadMaterials(const char *fileName, int *materialCount);
+// 加载默认材质（支持：漫反射、镜面反射、法线贴图）
+RLAPI Material LoadMaterialDefault(void);
+// 检查材质是否有效（已分配着色器，贴图纹理已加载到GPU）
+RLAPI bool IsMaterialValid(Material material);
+// 从GPU内存（VRAM）卸载材质
+RLAPI void UnloadMaterial(Material material);
+// 为材质贴图类型设置纹理（MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...）
+RLAPI void SetMaterialTexture(Material *material, int mapType, Texture2D texture);
+// 为网格设置材质
+RLAPI void SetModelMeshMaterial(Model *model, int meshId, int materialId);
+
+// 模型动画加载/卸载函数
+// 从文件加载模型动画
+RLAPI ModelAnimation *LoadModelAnimations(const char *fileName, int *animCount);
+// 更新模型动画姿势（CPU）
+RLAPI void UpdateModelAnimation(Model model, ModelAnimation anim, int frame);
+// 更新模型动画网格骨骼矩阵（GPU蒙皮）
+RLAPI void UpdateModelAnimationBones(Model model, ModelAnimation anim, int frame);
+// 卸载动画数据
+RLAPI void UnloadModelAnimation(ModelAnimation anim);
+// 卸载动画数组数据
+RLAPI void UnloadModelAnimations(ModelAnimation *animations, int animCount);
+// 检查模型动画骨骼是否匹配
+RLAPI bool IsModelAnimationValid(Model model, ModelAnimation anim);
+
+// 碰撞检测函数
+// 检查两个球体之间的碰撞
+RLAPI bool CheckCollisionSpheres(Vector3 center1, float radius1, Vector3 center2, float radius2);
+// 检查两个边界框之间的碰撞
+RLAPI bool CheckCollisionBoxes(BoundingBox box1, BoundingBox box2);
+// 检查边界框和球体之间的碰撞
+RLAPI bool CheckCollisionBoxSphere(BoundingBox box, Vector3 center, float radius);
+// 获取射线和球体之间的碰撞信息
+RLAPI RayCollision GetRayCollisionSphere(Ray ray, Vector3 center, float radius);
+// 获取射线和边界框之间的碰撞信息
+RLAPI RayCollision GetRayCollisionBox(Ray ray, BoundingBox box);
+// 获取射线和网格之间的碰撞信息
+RLAPI RayCollision GetRayCollisionMesh(Ray ray, Mesh mesh, Matrix transform);
+// 获取射线和三角形之间的碰撞信息
+RLAPI RayCollision GetRayCollisionTriangle(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3);
+// 获取射线和四边形之间的碰撞信息
+RLAPI RayCollision GetRayCollisionQuad(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4);
+
+//------------------------------------------------------------------------------------
+// 音频加载和播放函数 (模块: 音频)
+//------------------------------------------------------------------------------------
+// 音频回调函数指针类型定义，用于处理音频数据
 typedef void (*AudioCallback)(void *bufferData, unsigned int frames);
 
-// Audio device management functions
-RLAPI void InitAudioDevice(void);                                     // Initialize audio device and context
-RLAPI void CloseAudioDevice(void);                                    // Close the audio device and context
-RLAPI bool IsAudioDeviceReady(void);                                  // Check if audio device has been initialized successfully
-RLAPI void SetMasterVolume(float volume);                             // Set master volume (listener)
-RLAPI float GetMasterVolume(void);                                    // Get master volume (listener)
+// 音频设备管理函数
+RLAPI void InitAudioDevice(void);                                     // 初始化音频设备和上下文
+RLAPI void CloseAudioDevice(void);                                    // 关闭音频设备和上下文
+RLAPI bool IsAudioDeviceReady(void);                                  // 检查音频设备是否已成功初始化
+RLAPI void SetMasterVolume(float volume);                             // 设置主音量 (监听器)
+RLAPI float GetMasterVolume(void);                                    // 获取主音量 (监听器)
 
-// Wave/Sound loading/unloading functions
-RLAPI Wave LoadWave(const char *fileName);                            // Load wave data from file
-RLAPI Wave LoadWaveFromMemory(const char *fileType, const unsigned char *fileData, int dataSize); // Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
-RLAPI bool IsWaveValid(Wave wave);                                    // Checks if wave data is valid (data loaded and parameters)
-RLAPI Sound LoadSound(const char *fileName);                          // Load sound from file
-RLAPI Sound LoadSoundFromWave(Wave wave);                             // Load sound from wave data
-RLAPI Sound LoadSoundAlias(Sound source);                             // Create a new sound that shares the same sample data as the source sound, does not own the sound data
-RLAPI bool IsSoundValid(Sound sound);                                 // Checks if a sound is valid (data loaded and buffers initialized)
-RLAPI void UpdateSound(Sound sound, const void *data, int sampleCount); // Update sound buffer with new data
-RLAPI void UnloadWave(Wave wave);                                     // Unload wave data
-RLAPI void UnloadSound(Sound sound);                                  // Unload sound
-RLAPI void UnloadSoundAlias(Sound alias);                             // Unload a sound alias (does not deallocate sample data)
-RLAPI bool ExportWave(Wave wave, const char *fileName);               // Export wave data to file, returns true on success
-RLAPI bool ExportWaveAsCode(Wave wave, const char *fileName);         // Export wave sample data to code (.h), returns true on success
+// 波形/声音加载/卸载函数
+RLAPI Wave LoadWave(const char *fileName);                            // 从文件加载波形数据
+RLAPI Wave LoadWaveFromMemory(const char *fileType, const unsigned char *fileData, int dataSize); // 从内存缓冲区加载波形，fileType 指文件扩展名，例如: '.wav'
+RLAPI bool IsWaveValid(Wave wave);                                    // 检查波形数据是否有效 (数据已加载且参数正确)
+RLAPI Sound LoadSound(const char *fileName);                          // 从文件加载声音
+RLAPI Sound LoadSoundFromWave(Wave wave);                             // 从波形数据加载声音
+RLAPI Sound LoadSoundAlias(Sound source);                             // 创建一个新的声音，与源声音共享相同的采样数据，不拥有声音数据
+RLAPI bool IsSoundValid(Sound sound);                                 // 检查声音是否有效 (数据已加载且缓冲区已初始化)
+RLAPI void UpdateSound(Sound sound, const void *data, int sampleCount); // 用新数据更新声音缓冲区
+RLAPI void UnloadWave(Wave wave);                                     // 卸载波形数据
+RLAPI void UnloadSound(Sound sound);                                  // 卸载声音
+RLAPI void UnloadSoundAlias(Sound alias);                             // 卸载声音别名 (不释放采样数据)
+RLAPI bool ExportWave(Wave wave, const char *fileName);               // 将波形数据导出到文件，成功返回 true
+RLAPI bool ExportWaveAsCode(Wave wave, const char *fileName);         // 将波形采样数据导出为代码文件 (.h)，成功返回 true
 
-// Wave/Sound management functions
-RLAPI void PlaySound(Sound sound);                                    // Play a sound
-RLAPI void StopSound(Sound sound);                                    // Stop playing a sound
-RLAPI void PauseSound(Sound sound);                                   // Pause a sound
-RLAPI void ResumeSound(Sound sound);                                  // Resume a paused sound
-RLAPI bool IsSoundPlaying(Sound sound);                               // Check if a sound is currently playing
-RLAPI void SetSoundVolume(Sound sound, float volume);                 // Set volume for a sound (1.0 is max level)
-RLAPI void SetSoundPitch(Sound sound, float pitch);                   // Set pitch for a sound (1.0 is base level)
-RLAPI void SetSoundPan(Sound sound, float pan);                       // Set pan for a sound (0.5 is center)
-RLAPI Wave WaveCopy(Wave wave);                                       // Copy a wave to a new wave
-RLAPI void WaveCrop(Wave *wave, int initFrame, int finalFrame);       // Crop a wave to defined frames range
-RLAPI void WaveFormat(Wave *wave, int sampleRate, int sampleSize, int channels); // Convert wave data to desired format
-RLAPI float *LoadWaveSamples(Wave wave);                              // Load samples data from wave as a 32bit float data array
-RLAPI void UnloadWaveSamples(float *samples);                         // Unload samples data loaded with LoadWaveSamples()
+// 波形/声音管理函数
+RLAPI void PlaySound(Sound sound);                                    // 播放声音
+RLAPI void StopSound(Sound sound);                                    // 停止播放声音
+RLAPI void PauseSound(Sound sound);                                   // 暂停声音
+RLAPI void ResumeSound(Sound sound);                                  // 恢复暂停的声音
+RLAPI bool IsSoundPlaying(Sound sound);                               // 检查声音是否正在播放
+RLAPI void SetSoundVolume(Sound sound, float volume);                 // 设置声音的音量 (1.0 为最大级别)
+RLAPI void SetSoundPitch(Sound sound, float pitch);                   // 设置声音的音调 (1.0 为基础级别)
+RLAPI void SetSoundPan(Sound sound, float pan);                       // 设置声音的声像 (0.5 为中心)
+RLAPI Wave WaveCopy(Wave wave);                                       // 将波形复制到一个新的波形
+RLAPI void WaveCrop(Wave *wave, int initFrame, int finalFrame);       // 将波形裁剪到定义的帧范围
+RLAPI void WaveFormat(Wave *wave, int sampleRate, int sampleSize, int channels); // 将波形数据转换为所需格式
+RLAPI float *LoadWaveSamples(Wave wave);                              // 从波形加载采样数据作为 32 位浮点数据数组
+RLAPI void UnloadWaveSamples(float *samples);                         // 卸载使用 LoadWaveSamples() 加载的采样数据
 
-// Music management functions
-RLAPI Music LoadMusicStream(const char *fileName);                    // Load music stream from file
-RLAPI Music LoadMusicStreamFromMemory(const char *fileType, const unsigned char *data, int dataSize); // Load music stream from data
-RLAPI bool IsMusicValid(Music music);                                 // Checks if a music stream is valid (context and buffers initialized)
-RLAPI void UnloadMusicStream(Music music);                            // Unload music stream
-RLAPI void PlayMusicStream(Music music);                              // Start music playing
-RLAPI bool IsMusicStreamPlaying(Music music);                         // Check if music is playing
-RLAPI void UpdateMusicStream(Music music);                            // Updates buffers for music streaming
-RLAPI void StopMusicStream(Music music);                              // Stop music playing
-RLAPI void PauseMusicStream(Music music);                             // Pause music playing
-RLAPI void ResumeMusicStream(Music music);                            // Resume playing paused music
-RLAPI void SeekMusicStream(Music music, float position);              // Seek music to a position (in seconds)
-RLAPI void SetMusicVolume(Music music, float volume);                 // Set volume for music (1.0 is max level)
-RLAPI void SetMusicPitch(Music music, float pitch);                   // Set pitch for a music (1.0 is base level)
-RLAPI void SetMusicPan(Music music, float pan);                       // Set pan for a music (0.5 is center)
-RLAPI float GetMusicTimeLength(Music music);                          // Get music time length (in seconds)
-RLAPI float GetMusicTimePlayed(Music music);                          // Get current music time played (in seconds)
+// 音乐管理函数
+RLAPI Music LoadMusicStream(const char *fileName);                    // 从文件加载音乐流
+RLAPI Music LoadMusicStreamFromMemory(const char *fileType, const unsigned char *data, int dataSize); // 从数据加载音乐流
+RLAPI bool IsMusicValid(Music music);                                 // 检查音乐流是否有效 (上下文和缓冲区已初始化)
+RLAPI void UnloadMusicStream(Music music);                            // 卸载音乐流
+RLAPI void PlayMusicStream(Music music);                              // 开始播放音乐
+RLAPI bool IsMusicStreamPlaying(Music music);                         // 检查音乐是否正在播放
+RLAPI void UpdateMusicStream(Music music);                            // 更新音乐流的缓冲区
+RLAPI void StopMusicStream(Music music);                              // 停止播放音乐
+RLAPI void PauseMusicStream(Music music);                             // 暂停播放音乐
+RLAPI void ResumeMusicStream(Music music);                            // 恢复暂停的音乐播放
+RLAPI void SeekMusicStream(Music music, float position);              // 将音乐定位到指定位置 (以秒为单位)
+RLAPI void SetMusicVolume(Music music, float volume);                 // 设置音乐的音量 (1.0 为最大级别)
+RLAPI void SetMusicPitch(Music music, float pitch);                   // 设置音乐的音调 (1.0 为基础级别)
+RLAPI void SetMusicPan(Music music, float pan);                       // 设置音乐的声像 (0.5 为中心)
+RLAPI float GetMusicTimeLength(Music music);                          // 获取音乐的总时长 (以秒为单位)
+RLAPI float GetMusicTimePlayed(Music music);                          // 获取当前音乐已播放的时长 (以秒为单位)
 
-// AudioStream management functions
-RLAPI AudioStream LoadAudioStream(unsigned int sampleRate, unsigned int sampleSize, unsigned int channels); // Load audio stream (to stream raw audio pcm data)
-RLAPI bool IsAudioStreamValid(AudioStream stream);                    // Checks if an audio stream is valid (buffers initialized)
-RLAPI void UnloadAudioStream(AudioStream stream);                     // Unload audio stream and free memory
-RLAPI void UpdateAudioStream(AudioStream stream, const void *data, int frameCount); // Update audio stream buffers with data
-RLAPI bool IsAudioStreamProcessed(AudioStream stream);                // Check if any audio stream buffers requires refill
-RLAPI void PlayAudioStream(AudioStream stream);                       // Play audio stream
-RLAPI void PauseAudioStream(AudioStream stream);                      // Pause audio stream
-RLAPI void ResumeAudioStream(AudioStream stream);                     // Resume audio stream
-RLAPI bool IsAudioStreamPlaying(AudioStream stream);                  // Check if audio stream is playing
-RLAPI void StopAudioStream(AudioStream stream);                       // Stop audio stream
-RLAPI void SetAudioStreamVolume(AudioStream stream, float volume);    // Set volume for audio stream (1.0 is max level)
-RLAPI void SetAudioStreamPitch(AudioStream stream, float pitch);      // Set pitch for audio stream (1.0 is base level)
-RLAPI void SetAudioStreamPan(AudioStream stream, float pan);          // Set pan for audio stream (0.5 is centered)
-RLAPI void SetAudioStreamBufferSizeDefault(int size);                 // Default size for new audio streams
-RLAPI void SetAudioStreamCallback(AudioStream stream, AudioCallback callback); // Audio thread callback to request new data
+// 音频流管理函数
+RLAPI AudioStream LoadAudioStream(unsigned int sampleRate, unsigned int sampleSize, unsigned int channels); // 加载音频流 (用于流式传输原始音频 PCM 数据)
+RLAPI bool IsAudioStreamValid(AudioStream stream);                    // 检查音频流是否有效 (缓冲区已初始化)
+RLAPI void UnloadAudioStream(AudioStream stream);                     // 卸载音频流并释放内存
+RLAPI void UpdateAudioStream(AudioStream stream, const void *data, int frameCount); // 用数据更新音频流缓冲区
+RLAPI bool IsAudioStreamProcessed(AudioStream stream);                // 检查是否有音频流缓冲区需要重新填充
+RLAPI void PlayAudioStream(AudioStream stream);                       // 播放音频流
+RLAPI void PauseAudioStream(AudioStream stream);                      // 暂停音频流
+RLAPI void ResumeAudioStream(AudioStream stream);                     // 恢复音频流
+RLAPI bool IsAudioStreamPlaying(AudioStream stream);                  // 检查音频流是否正在播放
+RLAPI void StopAudioStream(AudioStream stream);                       // 停止音频流
+RLAPI void SetAudioStreamVolume(AudioStream stream, float volume);    // 设置音频流的音量 (1.0 为最大级别)
+RLAPI void SetAudioStreamPitch(AudioStream stream, float pitch);      // 设置音频流的音调 (1.0 为基础级别)
+RLAPI void SetAudioStreamPan(AudioStream stream, float pan);          // 设置音频流的声像 (0.5 为中心)
+RLAPI void SetAudioStreamBufferSizeDefault(int size);                 // 设置新音频流的默认缓冲区大小
+RLAPI void SetAudioStreamCallback(AudioStream stream, AudioCallback callback); // 音频线程回调，用于请求新数据
 
-RLAPI void AttachAudioStreamProcessor(AudioStream stream, AudioCallback processor); // Attach audio stream processor to stream, receives the samples as 'float'
-RLAPI void DetachAudioStreamProcessor(AudioStream stream, AudioCallback processor); // Detach audio stream processor from stream
+RLAPI void AttachAudioStreamProcessor(AudioStream stream, AudioCallback processor); // 将音频流处理器附加到流，接收的样本为 'float' 类型
+RLAPI void DetachAudioStreamProcessor(AudioStream stream, AudioCallback processor); // 从流中分离音频流处理器
 
-RLAPI void AttachAudioMixedProcessor(AudioCallback processor); // Attach audio stream processor to the entire audio pipeline, receives the samples as 'float'
-RLAPI void DetachAudioMixedProcessor(AudioCallback processor); // Detach audio stream processor from the entire audio pipeline
-
+RLAPI void AttachAudioMixedProcessor(AudioCallback processor); // 将音频流处理器附加到整个音频管道，接收的样本为 'float' 类型
+RLAPI void DetachAudioMixedProcessor(AudioCallback processor); // 从整个音频管道中分离音频流处理器
 #if defined(__cplusplus)
 }
 #endif
