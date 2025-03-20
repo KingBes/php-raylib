@@ -794,4 +794,129 @@ class Core extends Base
     {
         self::ffi()->UnloadVrStereoConfig($config);
     }
+
+    /**
+     * 从文件加载着色器并绑定默认位置
+     *
+     * @param string $vsFileName 顶点着色器文件路径
+     * @param string $fsFileName 片段着色器文件路径
+     * @return \FFI\CData
+     */
+    public static function loadShader(string $vsFileName, string $fsFileName): \FFI\CData
+    {
+        return self::ffi()->LoadShader($vsFileName, $fsFileName);
+    }
+
+    /**
+     * 从代码字符串加载着色器并绑定默认位置
+     *
+     * @param string $vsCode 顶点着色器代码
+     * @param string $fsCode 片段着色器代码
+     * @return \FFI\CData
+     */
+    public static function loadShaderFromMemory(string $vsCode, string $fsCode): \FFI\CData
+    {
+        return self::ffi()->LoadShaderFromMemory($vsCode, $fsCode);
+    }
+
+    /**
+     * 检查着色器是否有效（已加载到 GPU）
+     *
+     * @param \FFI\CData $shader 着色器
+     * @return boolean
+     */
+    public static function isShaderValid(\FFI\CData $shader): bool
+    {
+        return self::ffi()->IsShaderValid($shader);
+    }
+
+    /**
+     * 获取着色器统一变量的位置
+     *
+     * @param \FFI\CData $shader 着色器
+     * @param string $name 变量名称
+     * @return integer
+     */
+    public static function getShaderLocation(\FFI\CData $shader, string $name): int
+    {
+        return self::ffi()->GetShaderLocation($shader, $name);
+    }
+
+    /**
+     * 获取着色器属性的位置
+     *
+     * @param \FFI\CData $shader 着色器
+     * @param string $name 属性名称
+     * @return integer
+     */
+    public static function getShaderLocationAttrib(\FFI\CData $shader, string $name): int
+    {
+        return self::ffi()->GetShaderLocationAttrib($shader, $name);
+    }
+
+    /**
+     * 设置着色器统一变量的值
+     *
+     * @param \FFI\CData $shader 着色器
+     * @param integer $location 变量位置
+     * @param string $value 变量值
+     * @param integer $uniformType 统一类型
+     * @return void
+     */
+    public static function setShaderValue(\FFI\CData $shader, int $location, string $value, int $uniformType): void
+    {
+        self::ffi()->SetShaderValue($shader, $location, $value, $uniformType);
+    }
+
+    /**
+     * 设置着色器统一变量的值向量
+     *
+     * @param \FFI\CData $shader 着色器
+     * @param integer $location 变量位置
+     * @param string $value 变量值
+     * @param integer $uniformType 统一类型
+     * @param integer $count 变量数量
+     * @return void
+     */
+    public static function setShaderValueV(\FFI\CData $shader, int $location, string $value, int $uniformType, int $count): void
+    {
+        self::ffi()->SetShaderValueV($shader, $location, $value, $uniformType, $count);
+    }
+
+    /**
+     * 设置着色器统一变量的值（4x4 矩阵）
+     *
+     * @param \FFI\CData $shader 着色器
+     * @param integer $location 变量位置
+     * @param \FFI\CData $mat 矩阵值
+     * @return void
+     */
+    public static function setShaderValueMatrix(\FFI\CData $shader, int $location, \FFI\CData $mat): void
+    {
+        self::ffi()->SetShaderValueMatrix($shader, $location, $mat);
+    }
+
+    /**
+     * 设置着色器统一变量的纹理值（采样器 2D）
+     *
+     * @param \FFI\CData $shader 着色器
+     * @param integer $location 变量位置
+     * @param \FFI\CData $texture 纹理值2d
+     * @return void
+     */
+    public static function setShaderValueTexture(\FFI\CData $shader, int $location, \FFI\CData $texture): void
+    {
+        self::ffi()->SetShaderValueTexture($shader, $location, $texture);
+    }
+
+    /**
+     * 从 GPU 内存（VRAM）中卸载着色器
+     *
+     * @param \FFI\CData $shader 着色器
+     * @return void
+     */
+    public static function unloadShader(\FFI\CData $shader): void
+    {
+        self::ffi()->UnloadShader($shader);
+    }
 }
