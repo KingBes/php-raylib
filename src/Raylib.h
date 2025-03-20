@@ -785,6 +785,8 @@ typedef enum
     NPATCH_THREE_PATCH_HORIZONTAL // Npatch layout: 3x1 tiles
 } NPatchLayout;
 
+typedef char* va_list;
+
 // Callbacks to hook some internal functions
 // WARNING: These callbacks are intended for advanced users
 typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);       // Logging: Redirect trace log messages
@@ -1098,6 +1100,14 @@ int GetMonitorPhysicalWidth(int monitor);
  * @param monitor int 显示器索引
  * @return int 显示器物理高度
  */
+int GetMonitorPhysicalHeight(int monitor);
+
+/**
+ * @brief 获取指定显示器的刷新率
+ *
+ * @param monitor int 显示器索引
+ * @return int 显示器刷新率
+ */
 int GetMonitorRefreshRate(int monitor);
 
 /**
@@ -1341,7 +1351,7 @@ void EndVrStereoMode(void);
  * @brief 为VR模拟器设备参数加载VR立体配置
  *
  * @param device VrDeviceInfo 设备信息
- * @return VrStereoConfig
+ * @return VrStereoConfig 配置
  */
 VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device);
 
