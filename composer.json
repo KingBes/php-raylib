@@ -1,0 +1,33 @@
+{
+    "name": "kingbes/raylib",
+    "description": "PHP-FFI 绑 定 raylib，实 现 享 受 视 频 游 戏 编 程。",
+    "keywords": [
+        "raylib",
+        "video game",
+        "game",
+        "ffi",
+        "php"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kingbes",
+            "email": "1164601554@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "ext-ffi": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kingbes\\Raylib\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    }
+}
