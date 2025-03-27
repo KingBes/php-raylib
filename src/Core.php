@@ -919,4 +919,241 @@ class Core extends Base
     {
         self::ffi()->UnloadShader($shader);
     }
+
+    /**
+     * 从屏幕位置（如鼠标位置）获取一条射线（即射线追踪）
+     *
+     * @param \FFI\CData $postion 屏幕位置
+     * @param \FFI\CData $camera 相机2d
+     * @return \FFI\CData 射线
+     */
+    public static function getScreenToWorldRay(\FFI\CData $postion, \FFI\CData $camera): \FFI\CData
+    {
+        return self::ffi()->GetScreenToWorldRay($postion, $camera);
+    }
+
+    /**
+     * 在视口内从屏幕位置（如鼠标位置）获取一条射线（即射线追踪）
+     *
+     * @param \FFI\CData $postion 屏幕位置
+     * @param \FFI\CData $camera 相机
+     * @param integer $width 视口宽度
+     * @param integer $height 视口高度
+     * @return \FFI\CData 射线
+     */
+    public static function getScreenToWorldRayEx(\FFI\CData $postion, \FFI\CData $camera, int $width, int $height): \FFI\CData
+    {
+        return self::ffi()->GetScreenToWorldRayEx($postion, $camera, $width, $height);
+    }
+
+    /**
+     * 获取 3D 世界空间位置在屏幕空间中的位置
+     *
+     * @param \FFI\CData $postion 世界空间位置
+     * @param \FFI\CData $camera 相机
+     * @return \FFI\CData 屏幕空间位置
+     */
+    public static function getWorldToScreen(\FFI\CData $postion, \FFI\CData $camera): \FFI\CData
+    {
+        return self::ffi()->GetWorldToScreen($postion, $camera);
+    }
+
+    /**
+     * 获取 3D 世界空间位置在指定视口尺寸下的屏幕空间位置
+     *
+     * @param \FFI\CData $postion 世界空间位置
+     * @param \FFI\CData $camera 相机
+     * @param integer $width 视口宽度
+     * @param integer $height 视口高度
+     * @return \FFI\CData 屏幕空间位置
+     */
+    public static function getWorldToScreenEx(\FFI\CData $postion, \FFI\CData $camera, int $width, int $height): \FFI\CData
+    {
+        return self::ffi()->GetWorldToScreenEx($postion, $camera, $width, $height);
+    }
+
+    /**
+     * 获取 2D 相机世界空间位置在屏幕空间中的位置
+     *
+     * @param \FFI\CData $postion 世界空间位置
+     * @param \FFI\CData $camera 相机2d
+     * @return \FFI\CData 屏幕空间位置
+     */
+    public static function getWorldToScreen2D(\FFI\CData $postion, \FFI\CData $camera): \FFI\CData
+    {
+        return self::ffi()->GetWorldToScreen2D($postion, $camera);
+    }
+
+    /**
+     * 获取 2D 相机屏幕空间位置在世界空间中的位置
+     *
+     * @param \FFI\CData $postion 屏幕空间位置
+     * @param \FFI\CData $camera 相机2d
+     * @return \FFI\CData 世界空间位置
+     */
+    public static function getScreenToWorld2D(\FFI\CData $postion, \FFI\CData $camera): \FFI\CData
+    {
+        return self::ffi()->GetScreenToWorld2D($postion, $camera);
+    }
+
+    /**
+     * 获取相机的变换矩阵（视图矩阵）
+     *
+     * @param \FFI\CData $camera 相机
+     * @return \FFI\CData 变换矩阵
+     */
+    public static function getCameraMatrix(\FFI\CData $camera): \FFI\CData
+    {
+        return self::ffi()->GetCameraMatrix($camera);
+    }
+
+    /**
+     * 获取 2D 相机的变换矩阵
+     *
+     * @param \FFI\CData $camera 相机2d
+     * @return \FFI\CData 变换矩阵
+     */
+    public static function getCameraMatrix2D(\FFI\CData $camera): \FFI\CData
+    {
+        return self::ffi()->GetCameraMatrix2D($camera);
+    }
+
+    /**
+     * 设置目标帧率（最大值）
+     *
+     * @param integer $fps
+     * @return void
+     */
+    public static function setTargetFPS(int $fps): void
+    {
+        self::ffi()->SetTargetFPS($fps);
+    }
+
+    /**
+     * 获取上一帧绘制所用的时间（以秒为单位，即增量时间）
+     *
+     * @return float
+     */
+    public static function getFrameTime(): float
+    {
+        return self::ffi()->GetFrameTime();
+    }
+
+    /**
+     * 获取自initWindow()调用以来经过的时间（以秒为单位）
+     *
+     * @return float
+     */
+    public static function getTime(): float
+    {
+        return self::ffi()->GetTime();
+    }
+
+    /**
+     * 获取当前帧率
+     *
+     * @return integer
+     */
+    public static function getFPS(): int
+    {
+        return self::ffi()->GetFPS();
+    }
+
+    /**
+     * 交换后缓冲区和前缓冲区（屏幕绘制）
+     *
+     * @return void
+     */
+    public static function swapScreenBuffer(): void
+    {
+        self::ffi()->SwapScreenBuffer();
+    }
+
+    /**
+     * 注册所有输入事件
+     *
+     * @return void
+     */
+    public static function pollInputEvents(): void
+    {
+        self::ffi()->PollInputEvents();
+    }
+
+    /**
+     * 等待一段时间（暂停程序执行）
+     *
+     * @param float $time 等待时间（以秒为单位）
+     * @return void
+     */
+    public static function waitTime(float $time): void
+    {
+        self::ffi()->WaitTime($time);
+    }
+
+    /**
+     * 设置随机数生成器的种子
+     *
+     * @param integer $seed 种子值
+     * @return void
+     */
+    public static function setRandomSeed(int $seed): void
+    {
+        self::ffi()->SetRandomSeed($seed);
+    }
+
+    /**
+     * 加载随机值序列，无重复值
+     *
+     * @param integer $min 最小值
+     * @param integer $max 最大值
+     * @return \FFI\CData 随机值序列
+     */
+    public static function getRandomValue(int $min, int $max): \FFI\CData
+    {
+        return self::ffi()->GetRandomValue($min, $max);
+    }
+
+    /**
+     * 卸载随机值序列
+     *
+     * @param \FFI\CData $sequence
+     * @return void
+     */
+    public static function unloadRandomSequence(\FFI\CData $sequence): void
+    {
+        self::ffi()->UnloadRandomSequence($sequence);
+    }
+
+    /**
+     * 对当前屏幕进行截图（文件名扩展名定义格式）
+     *
+     * @param string $fileName 截图文件名
+     * @return void
+     */
+    public static function takeScreenshot(string $fileName): void
+    {
+        self::ffi()->TakeScreenshot($fileName);
+    }
+
+    /**
+     * 设置初始化配置标志（查看 FLAGS）
+     *
+     * @param integer $flags 配置标志
+     * @return void
+     */
+    public static function setConfigFlags(int $flags): void
+    {
+        self::ffi()->SetConfigFlags($flags);
+    }
+
+    /**
+     * 使用默认系统浏览器打开 URL（如果可用）
+     *
+     * @param string $url
+     * @return void
+     */
+    public static function openURL(string $url): void
+    {
+        self::ffi()->OpenURL($url);
+    }
 }
