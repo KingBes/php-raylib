@@ -121,4 +121,87 @@ class utils extends Base
     {
         self::ffi()->SetSaveFileTextCallback($callback);
     }
+
+    /**
+     * 以字节数组形式加载文件数据（读取）
+     *
+     * @param string $fileName 文件名
+     * @param integer $fileSize 文件大小
+     * @return \FFI\CData 内存指针
+     */
+    public static function loadFileData(string $fileName, int &$fileSize): \FFI\CData
+    {
+        return self::ffi()->LoadFileData($fileName, $fileSize);
+    }
+
+    /**
+     * 卸载由loadFileData()分配的文件数据
+     *
+     * @param \FFI\CData $fileData 内存指针
+     * @return void
+     */
+    public static function unloadFileData(\FFI\CData $fileData): void
+    {
+        self::ffi()->UnloadFileData($fileData);
+    }
+
+    /**
+     * 将字节数组中的数据保存到文件（写入），成功返回true
+     *
+     * @param string $fileName 文件名
+     * @param \FFI\CData $fileData 内存指针
+     * @param integer $fileSize 文件大小
+     * @return boolean true/false
+     */
+    public static function saveFileData(string $fileName, \FFI\CData $fileData, int $fileSize): bool
+    {
+        return self::ffi()->SaveFileData($fileName, $fileData, $fileSize);
+    }
+
+    /**
+     * 将数据导出为代码文件（.h），成功返回true
+     *
+     * @param \FFI\CData $data 内存指针
+     * @param integer $dataSize 内存大小
+     * @param string $fileName 变量名
+     * @return boolean true/false
+     */
+    public static function exportDataAsCode(\FFI\CData $data, int $dataSize, string $fileName): bool
+    {
+        return self::ffi()->ExportDataAsCode($data, $dataSize, $fileName);
+    }
+
+    /**
+     * 从文件中加载文本数据（读取）
+     *
+     * @param string $fileName 文件名
+     * @return string
+     */
+    public static function loadFileText(string $fileName): string
+    {
+        return self::ffi()->LoadFileText($fileName);
+    }
+
+    /**
+     * 卸载由loadFileText()分配的文件文本数据
+     *
+     * @param string $fileText 文件文本数据
+     * @return void
+     */
+    public static function unloadFileText(string $fileText): void
+    {
+        self::ffi()->UnloadFileText($fileText);
+    }
+
+    /**
+     * 将文本数据保存到文件（写入）
+     *
+     * @param string $fileName 文件名
+     * @param string $fileText 文件文本数据
+     * @return boolean true/false
+     */
+    public static function saveFileText(string $fileName, string $fileText): bool
+    {
+        return self::ffi()->SaveFileText($fileName, $fileText);
+    }
 }
