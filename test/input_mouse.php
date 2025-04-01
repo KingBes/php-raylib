@@ -1,25 +1,3 @@
-# php-raylib
-
-🔥 PHP-FFI 绑 定 raylib-v5.5，实 现 享 受 视 频 游 戏 编 程。
-
-`可能完善度不高，欢迎 PR。`
-
-## 依赖
-
-- PHP 7.4+
-- FFI 扩展
-- windows
-- linux
-
-## 安装
-
-```bash
-composer require lxphp/raylib
-```
-
-## 示例
-
-```php
 <?php
 
 include __DIR__ . '/../vendor/autoload.php';
@@ -28,7 +6,7 @@ use Kingbes\Raylib\Core; //核心
 use Kingbes\Raylib\Text; // 文本
 use Kingbes\Raylib\utils; // 工具类
 
-Core::initWindow(800, 450, "Hello World"); //初始化窗口
+Core::initWindow(800, 450, "input mouse"); //初始化窗口
 
 Core::setTargetFPS(60); //设置目标帧率
 
@@ -38,18 +16,30 @@ $white = utils::Color(255, 255, 255);
 // 绿色
 $green = utils::Color(0, 255, 0);
 
+// 是否隐藏光标
+$isCursorHidden  = 0;
+
 // 主循环
 while (!Core::windowShouldClose()) {
-    Core::beginDrawing(); //开始绘制
 
+    if (Core::isKeyPressed(72)) { // H 键
+        if ($isCursorHidden == 0) {
+            Core::hideCursor(); // 隐藏光标
+            $isCursorHidden = 1;
+        } else {
+            Core::showCursor(); // 显示光标
+            $isCursorHidden = 0;
+        }
+    }
+
+    Core::beginDrawing(); //开始绘制
     Core::clearBackground($white); // 清除背景
 
     // 绘制文本
-    Text::drawText("Hello World", 190, 200, 20, $green);
+    Text::drawText("按“H”来切换光标的可见性", 10, 30, 20, $green);
 
     Core::endDrawing(); // 结束绘制
 }
 
 // 关闭窗口
 Core::closeWindow();
-```

@@ -1,25 +1,3 @@
-# php-raylib
-
-🔥 PHP-FFI 绑 定 raylib-v5.5，实 现 享 受 视 频 游 戏 编 程。
-
-`可能完善度不高，欢迎 PR。`
-
-## 依赖
-
-- PHP 7.4+
-- FFI 扩展
-- windows
-- linux
-
-## 安装
-
-```bash
-composer require lxphp/raylib
-```
-
-## 示例
-
-```php
 <?php
 
 include __DIR__ . '/../vendor/autoload.php';
@@ -52,4 +30,3 @@ while (!Core::windowShouldClose()) {
 
 // 关闭窗口
 Core::closeWindow();
-```

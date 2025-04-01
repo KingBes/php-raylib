@@ -1,12 +1,11 @@
 <?php
-
 // 严格模式
 declare(strict_types=1);
 
 namespace Kingbes\Raylib;
 
 /**
- * 核心类
+ * Core类
  */
 class Core extends Base
 {
@@ -530,6 +529,38 @@ class Core extends Base
     public static function disableEventWaiting(): void
     {
         self::ffi()->DisableEventWaiting();
+    }
+
+
+    /**
+     * 交换后缓冲区和前缓冲区（屏幕绘制）
+     *
+     * @return void
+     */
+    public static function swapScreenBuffer(): void
+    {
+        self::ffi()->SwapScreenBuffer();
+    }
+
+    /**
+     * 注册所有输入事件
+     *
+     * @return void
+     */
+    public static function pollInputEvents(): void
+    {
+        self::ffi()->PollInputEvents();
+    }
+
+    /**
+     * 等待一段时间（暂停程序执行）
+     *
+     * @param float $time 等待时间（以秒为单位）
+     * @return void
+     */
+    public static function waitTime(float $time): void
+    {
+        self::ffi()->WaitTime($time);
     }
 
     /**
@@ -1059,36 +1090,7 @@ class Core extends Base
         return self::ffi()->GetFPS();
     }
 
-    /**
-     * 交换后缓冲区和前缓冲区（屏幕绘制）
-     *
-     * @return void
-     */
-    public static function swapScreenBuffer(): void
-    {
-        self::ffi()->SwapScreenBuffer();
-    }
 
-    /**
-     * 注册所有输入事件
-     *
-     * @return void
-     */
-    public static function pollInputEvents(): void
-    {
-        self::ffi()->PollInputEvents();
-    }
-
-    /**
-     * 等待一段时间（暂停程序执行）
-     *
-     * @param float $time 等待时间（以秒为单位）
-     * @return void
-     */
-    public static function waitTime(float $time): void
-    {
-        self::ffi()->WaitTime($time);
-    }
 
     /**
      * 设置随机数生成器的种子
@@ -1155,5 +1157,877 @@ class Core extends Base
     public static function openURL(string $url): void
     {
         self::ffi()->OpenURL($url);
+    }
+
+    /**
+     * 以字节数组形式加载文件数据（读取）
+     *
+     * @param string $fileName 文件名
+     * @param integer $fileSize 文件大小
+     * @return \FFI\CData 内存指针
+     */
+    public static function loadFileData(string $fileName, int &$fileSize): \FFI\CData
+    {
+        return self::ffi()->LoadFileData($fileName, $fileSize);
+    }
+
+    /**
+     * 卸载由loadFileData()分配的文件数据
+     *
+     * @param \FFI\CData $fileData 内存指针
+     * @return void
+     */
+    public static function unloadFileData(\FFI\CData $fileData): void
+    {
+        self::ffi()->UnloadFileData($fileData);
+    }
+
+    /**
+     * 将字节数组中的数据保存到文件（写入），成功返回true
+     *
+     * @param string $fileName 文件名
+     * @param \FFI\CData $fileData 内存指针
+     * @param integer $fileSize 文件大小
+     * @return boolean true/false
+     */
+    public static function saveFileData(string $fileName, \FFI\CData $fileData, int $fileSize): bool
+    {
+        return self::ffi()->SaveFileData($fileName, $fileData, $fileSize);
+    }
+
+    /**
+     * 将数据导出为代码文件（.h），成功返回true
+     *
+     * @param \FFI\CData $data 内存指针
+     * @param integer $dataSize 内存大小
+     * @param string $fileName 变量名
+     * @return boolean true/false
+     */
+    public static function exportDataAsCode(\FFI\CData $data, int $dataSize, string $fileName): bool
+    {
+        return self::ffi()->ExportDataAsCode($data, $dataSize, $fileName);
+    }
+
+    /**
+     * 从文件中加载文本数据（读取）
+     *
+     * @param string $fileName 文件名
+     * @return string
+     */
+    public static function loadFileText(string $fileName): string
+    {
+        return self::ffi()->LoadFileText($fileName);
+    }
+
+    /**
+     * 卸载由loadFileText()分配的文件文本数据
+     *
+     * @param string $fileText 文件文本数据
+     * @return void
+     */
+    public static function unloadFileText(string $fileText): void
+    {
+        self::ffi()->UnloadFileText($fileText);
+    }
+
+    /**
+     * 将文本数据保存到文件（写入）
+     *
+     * @param string $fileName 文件名
+     * @param string $fileText 文件文本数据
+     * @return boolean true/false 
+     */
+    public static function saveFileText(string $fileName, string $fileText): bool
+    {
+        return self::ffi()->SaveFileText($fileName, $fileText);
+    }
+
+    /**
+     * 检查文件是否存在
+     *
+     * @param string $fileName 文件名
+     * @return boolean true/false
+     */
+    public static function fileExists(string $fileName): bool
+    {
+        return self::ffi()->FileExists($fileName);
+    }
+
+    /**
+     * 检查目录是否存在
+     *
+     * @param string $directory 目录名
+     * @return boolean true/false
+     */
+    public static function directoryExists(string $directory): bool
+    {
+        return self::ffi()->DirectoryExists($directory);
+    }
+
+    /**
+     * 检查文件扩展名（包括点号：.png, .wav）
+     *
+     * @param string $fileName 文件名
+     * @param string $extension 文件扩展名
+     * @return boolean true/false
+     */
+    public static function isFileExtension(string $fileName, string $extension): bool
+    {
+        return self::ffi()->IsFileExtension($fileName, $extension);
+    }
+
+    /**
+     * 获取文件的字节长度（注意: GetFileSize()与windows.h冲突）
+     *
+     * @param string $fileName 文件名
+     * @return integer 文件大小
+     */
+    public static function getFileLength(string $fileName): int
+    {
+        return self::ffi()->GetFileLength($fileName);
+    }
+
+    /**
+     * 获取文件名中扩展名的指针（包括点号: '.png'）
+     *
+     * @param string $fileName 文件名
+     * @return string 文件扩展名
+     */
+    public static function getFileExtension(string $fileName): string
+    {
+        return self::ffi()->GetFileExtension($fileName);
+    }
+
+    /**
+     * 获取路径字符串中的文件名指针
+     *
+     * @param string $fileName 文件名
+     * @return string 文件名
+     */
+    public static function getFileName(string $fileName): string
+    {
+        return self::ffi()->GetFileName($fileName);
+    }
+
+    /**
+     * 获取不带扩展名的文件名（使用静态字符串）
+     *
+     * @param string $filePath 文件名
+     * @return string 文件名
+     */
+    public static function getFileNameWithoutExt(string $filePath): string
+    {
+        return self::ffi()->GetFileNameWithoutExt($filePath);
+    }
+
+    /**
+     * 获取包含路径的文件名的完整路径（使用静态字符串）
+     *
+     * @param string $filePath 文件名
+     * @return string 文件名
+     */
+    public static function getDirectoryPath(string $filePath): string
+    {
+        return self::ffi()->GetDirectoryPath($filePath);
+    }
+
+    /**
+     * 获取给定路径的上一级目录路径（使用静态字符串）
+     *
+     * @param string $filePath 文件名
+     * @return string 文件名
+     */
+    public static function getPrevDirectoryPath(string $filePath): string
+    {
+        return self::ffi()->GetPrevDirectoryPath($filePath);
+    }
+
+    /**
+     * 获取当前工作目录（使用静态字符串）
+     *
+     * @return string
+     */
+    public static function getWorkingDirectory(): string
+    {
+        return self::ffi()->GetWorkingDirectory();
+    }
+
+    /**
+     * 获取运行中应用程序的目录（使用静态字符串）
+     *
+     * @return string
+     */
+    public static function getApplicationDirectory(): string
+    {
+        return self::ffi()->GetApplicationDirectory();
+    }
+    /**
+     * 创建目录（包括请求的完整路径），成功返回0
+     *
+     * @param string $dirPath 目录路径
+     * @return int
+     */
+    public static function makeDirectory(string $dirPath): int
+    {
+        return self::ffi()->MakeDirectory($dirPath);
+    }
+
+    /**
+     * 更改工作目录，成功返回true
+     *
+     * @param string $dir 目录
+     * @return bool
+     */
+    public static function changeDirectory(string $dir): bool
+    {
+        return self::ffi()->ChangeDirectory($dir);
+    }
+
+    /**
+     * 检查给定路径是文件还是目录
+     *
+     * @param string $path 路径
+     * @return bool
+     */
+    public static function isPathFile(string $path): bool
+    {
+        return self::ffi()->IsPathFile($path);
+    }
+
+    /**
+     * 检查文件名是否对平台/操作系统有效
+     *
+     * @param string $fileName 文件名
+     * @return bool
+     */
+    public static function isFileNameValid(string $fileName): bool
+    {
+        return self::ffi()->IsFileNameValid($fileName);
+    }
+
+    /**
+     * 加载目录中的文件路径
+     *
+     * @param string $dirPath 目录路径
+     * @return \FFI\CData
+     */
+    public static function loadDirectoryFiles(string $dirPath): \FFI\CData
+    {
+        return self::ffi()->LoadDirectoryFiles($dirPath);
+    }
+
+    /**
+     * 加载目录中的文件路径，并进行扩展名过滤和递归目录扫描。在过滤字符串中使用 'DIR' 可将目录包含在结果中
+     *
+     * @param string $basePath 目录路径
+     * @param string $filter 过滤字符串
+     * @param bool $scanSubdirs 是否扫描子目录
+     * @return \FFI\CData
+     */
+    public static function loadDirectoryFilesEx(string $basePath, string $filter, bool $scanSubdirs): \FFI\CData
+    {
+        return self::ffi()->LoadDirectoryFilesEx($basePath, $filter, $scanSubdirs);
+    }
+
+    /**
+     * 卸载文件路径
+     *
+     * @param \FFI\CData $files 文件路径列表
+     * @return void
+     */
+    public static function unloadDirectoryFiles(\FFI\CData $files): void
+    {
+        self::ffi()->UnloadDirectoryFiles($files);
+    }
+
+    /**
+     * 检查是否有文件被拖放到窗口中
+     *
+     * @return bool
+     */
+    public static function isFileDropped(): bool
+    {
+        return self::ffi()->IsFileDropped();
+    }
+
+    /**
+     * 加载被拖放的文件路径
+     *
+     * @return \FFI\CData
+     */
+    public static function loadDroppedFiles(): \FFI\CData
+    {
+        return self::ffi()->LoadDroppedFiles();
+    }
+
+    /**
+     * 卸载被拖放的文件路径
+     *
+     * @param \FFI\CData $files 文件路径列表
+     * @return void
+     */
+    public static function unloadDroppedFiles(\FFI\CData $files): void
+    {
+        self::ffi()->UnloadDroppedFiles($files);
+    }
+
+    /**
+     * 获取文件的修改时间（最后写入时间）
+     *
+     * @param string $fileName 文件名
+     * @return int
+     */
+    public static function getFileModTime(string $fileName): int
+    {
+        return self::ffi()->GetFileModTime($fileName);
+    }
+
+    /**
+     * 压缩数据（DEFLATE算法），内存必须使用MemFree()释放
+     *
+     * @param string $data 数据
+     * @param int $dataSize 数据大小
+     * @param int &$compDataSize 压缩数据大小
+     * @return \FFI\CData
+     */
+    public static function compressData(string $data, int $dataSize, int &$compDataSize): \FFI\CData
+    {
+        return self::ffi()->CompressData($data, $dataSize, \FFI::addr(\FFI::new('int')));
+    }
+
+    /**
+     * 解压缩数据（DEFLATE算法），内存必须使用MemFree()释放
+     *
+     * @param string $compData 压缩数据
+     * @param int $compDataSize 压缩数据大小
+     * @param int &$dataSize 数据大小
+     * @return \FFI\CData
+     */
+    public static function decompressData(string $compData, int $compDataSize, int &$dataSize): \FFI\CData
+    {
+        return self::ffi()->DecompressData($compData, $compDataSize, \FFI::addr(\FFI::new('int')));
+    }
+
+    /**
+     * 将数据编码为Base64字符串，内存必须使用MemFree()释放
+     *
+     * @param string $data 数据
+     * @param int $dataSize 数据大小
+     * @param int &$outputSize 输出大小
+     * @return \FFI\CData
+     */
+    public static function encodeDataBase64(string $data, int $dataSize, int &$outputSize): \FFI\CData
+    {
+        return self::ffi()->EncodeDataBase64($data, $dataSize, \FFI::addr(\FFI::new('int')));
+    }
+
+    /**
+     * 解码Base64字符串数据，内存必须使用MemFree()释放
+     *
+     * @param string $data 数据
+     * @param int &$outputSize 输出大小
+     * @return \FFI\CData
+     */
+    public static function decodeDataBase64(string $data, int &$outputSize): \FFI\CData
+    {
+        return self::ffi()->DecodeDataBase64($data, \FFI::addr(\FFI::new('int')));
+    }
+
+    /**
+     * 检查某个键是否被按下一次
+     *
+     * @param int $key 键
+     * @return bool
+     */
+    public static function isKeyPressed(int $key): bool
+    {
+        return self::ffi()->IsKeyPressed($key);
+    }
+
+    /**
+     * 检查某个键是否再次被按下
+     *
+     * @param int $key 键
+     * @return bool
+     */
+    public static function isKeyPressedRepeat(int $key): bool
+    {
+        return self::ffi()->IsKeyPressedRepeat($key);
+    }
+
+    /**
+     * 检查某个键是否正在被按下
+     *
+     * @param int $key 键
+     * @return bool
+     */
+    public static function isKeyDown(int $key): bool
+    {
+        return self::ffi()->IsKeyDown($key);
+    }
+
+    /**
+     * 检查某个键是否被释放一次
+     *
+     * @param int $key 键
+     * @return bool
+     */
+    public static function isKeyReleased(int $key): bool
+    {
+        return self::ffi()->IsKeyReleased($key);
+    }
+
+    /**
+     * 检查某个键是否未被按下
+     *
+     * @param int $key 键
+     * @return bool
+     */
+    public static function isKeyUp(int $key): bool
+    {
+        return self::ffi()->IsKeyUp($key);
+    }
+
+    /**
+     * 获取按下的键（键码），多次调用以处理排队的键，队列空时返回 0
+     *
+     * @return int
+     */
+    public static function getKeyPressed(): int
+    {
+        return self::ffi()->GetKeyPressed();
+    }
+
+    /**
+     * 获取按下的字符（Unicode），多次调用以处理排队的字符，队列空时返回 0
+     *
+     * @return int
+     */
+    public static function getCharPressed(): int
+    {
+        return self::ffi()->GetCharPressed();
+    }
+
+    /**
+     * 设置一个自定义键来退出程序（默认是 ESC）
+     *
+     * @param int $key 键
+     * @return void
+     */
+    public static function setExitKey(int $key): void
+    {
+        self::ffi()->SetExitKey($key);
+    }
+
+    /**
+     * 检查某个游戏手柄是否可用
+     *
+     * @param int $gamepad 游戏手柄
+     * @return bool
+     */
+    public static function isGamepadAvailable(int $gamepad): bool
+    {
+        return self::ffi()->IsGamepadAvailable($gamepad);
+    }
+
+    /**
+     * 获取游戏手柄的内部名称 ID
+     *
+     * @param int $gamepad 游戏手柄
+     * @return string
+     */
+    public static function getGamepadName(int $gamepad): string
+    {
+        return self::ffi()->GetGamepadName($gamepad);
+    }
+
+    /**
+     * 检查游戏手柄的某个按钮是否被按下一次
+     *
+     * @param int $gamepad 游戏手柄
+     * @param int $button 按钮
+     * @return bool
+     */
+    public static function isGamepadButtonPressed(int $gamepad, int $button): bool
+    {
+        return self::ffi()->IsGamepadButtonPressed($gamepad, $button);
+    }
+
+    /**
+     * 检查游戏手柄的某个按钮是否正在被按下
+     *
+     * @param int $gamepad 游戏手柄
+     * @param int $button 按钮
+     * @return bool
+     */
+    public static function isGamepadButtonDown(int $gamepad, int $button): bool
+    {
+        return self::ffi()->IsGamepadButtonDown($gamepad, $button);
+    }
+
+    /**
+     * 检查游戏手柄的某个按钮是否被释放一次
+     *
+     * @param int $gamepad 游戏手柄
+     * @param int $button 按钮
+     * @return bool
+     */
+    public static function isGamepadButtonReleased(int $gamepad, int $button): bool
+    {
+        return self::ffi()->IsGamepadButtonReleased($gamepad, $button);
+    }
+
+    /**
+     * 检查游戏手柄的某个按钮是否未被按下
+     *
+     * @param int $gamepad 游戏手柄
+     * @param int $button 按钮
+     * @return bool
+     */
+    public static function isGamepadButtonUp(int $gamepad, int $button): bool
+    {
+        return self::ffi()->IsGamepadButtonUp($gamepad, $button);
+    }
+
+    /**
+     * 获取最后按下的游戏手柄按钮
+     *
+     * @return int
+     */
+    public static function getGamepadButtonPressed(): int
+    {
+        return self::ffi()->GetGamepadButtonPressed();
+    }
+
+    /**
+     * 获取某个游戏手柄的轴数量
+     *
+     * @param int $gamepad 游戏手柄
+     * @return int
+     */
+    public static function getGamepadAxisCount(int $gamepad): int
+    {
+        return self::ffi()->GetGamepadAxisCount($gamepad);
+    }
+
+    /**
+     * 获取某个游戏手柄的某个轴的移动值
+     *
+     * @param int $gamepad 游戏手柄
+     * @param int $axis 轴
+     * @return float
+     */
+    public static function getGamepadAxisMovement(int $gamepad, int $axis): float
+    {
+        return self::ffi()->GetGamepadAxisMovement($gamepad, $axis);
+    }
+
+    /**
+     * 设置内部游戏手柄映射（SDL_GameControllerDB）
+     *
+     * @param string $mappings 映射
+     * @return int
+     */
+    public static function setGamepadMappings(string $mappings): int
+    {
+        return self::ffi()->SetGamepadMappings($mappings);
+    }
+
+    /**
+     * 设置游戏手柄两个马达的震动（持续时间以秒为单位）
+     *
+     * @param int $gamepad 游戏手柄
+     * @param float $leftMotor 左马达
+     * @param float $rightMotor 右马达
+     * @param float $duration 持续时间
+     * @return void
+     */
+    public static function setGamepadVibration(int $gamepad, float $leftMotor, float $rightMotor, float $duration): void
+    {
+        self::ffi()->SetGamepadVibration($gamepad, $leftMotor, $rightMotor, $duration);
+    }
+
+    /**
+     * 检查某个鼠标按钮是否被按下一次
+     *
+     * @param int $button 按钮
+     * @return bool
+     */
+    public static function isMouseButtonPressed(int $button): bool
+    {
+        return self::ffi()->IsMouseButtonPressed($button);
+    }
+
+    /**
+     * 检查某个鼠标按钮是否正在被按下
+     *
+     * @param int $button 按钮
+     * @return bool
+     */
+    public static function isMouseButtonDown(int $button): bool
+    {
+        return self::ffi()->IsMouseButtonDown($button);
+    }
+
+    /**
+     * 检查某个鼠标按钮是否被释放一次
+     *
+     * @param int $button 按钮
+     * @return bool
+     */
+    public static function isMouseButtonReleased(int $button): bool
+    {
+        return self::ffi()->IsMouseButtonReleased($button);
+    }
+
+    /**
+     * 检查某个鼠标按钮是否未被按下
+     *
+     * @param int $button 按钮
+     * @return bool
+     */
+    public static function isMouseButtonUp(int $button): bool
+    {
+        return self::ffi()->IsMouseButtonUp($button);
+    }
+
+    /**
+     * 获取鼠标的 X 坐标
+     *
+     * @return int
+     */
+    public static function getMouseX(): int
+    {
+        return self::ffi()->GetMouseX();
+    }
+
+    /**
+     * 获取鼠标的 Y 坐标
+     *
+     * @return int
+     */
+    public static function getMouseY(): int
+    {
+        return self::ffi()->GetMouseY();
+    }
+
+    /**
+     * 获取鼠标的 XY 坐标
+     *
+     * @return \FFI\CData 返回一个 Vector2 结构体的 CData 对象
+     */
+    public static function getMousePosition(): \FFI\CData
+    {
+        return self::ffi()->GetMousePosition();
+    }
+
+    /**
+     * 获取两帧之间鼠标的移动增量
+     *
+     * @return \FFI\CData 返回一个 Vector2 结构体的 CData 对象
+     */
+    public static function getMouseDelta(): \FFI\CData
+    {
+        return self::ffi()->GetMouseDelta();
+    }
+
+    /**
+     * 设置鼠标的 XY 坐标
+     *
+     * @param int $x x坐标
+     * @param int $y y坐标
+     * @return void
+     */
+    public static function setMousePosition(int $x, int $y): void
+    {
+        self::ffi()->SetMousePosition($x, $y);
+    }
+
+    /**
+     * 设置鼠标的偏移量
+     *
+     * @param int $offsetX x方向偏移量
+     * @param int $offsetY y方向偏移量
+     * @return void
+     */
+    public static function setMouseOffset(int $offsetX, int $offsetY): void
+    {
+        self::ffi()->SetMouseOffset($offsetX, $offsetY);
+    }
+
+    /**
+     * 设置鼠标的缩放比例
+     *
+     * @param float $scaleX x方向缩放比例
+     * @param float $scaleY y方向缩放比例
+     * @return void
+     */
+    public static function setMouseScale(float $scaleX, float $scaleY): void
+    {
+        self::ffi()->SetMouseScale($scaleX, $scaleY);
+    }
+
+    /**
+     * 获取鼠标滚轮在 X 或 Y 方向上的最大移动量
+     *
+     * @return float
+     */
+    public static function getMouseWheelMove(): float
+    {
+        return self::ffi()->GetMouseWheelMove();
+    }
+
+    /**
+     * 获取鼠标滚轮在 X 和 Y 方向上的移动量
+     *
+     * @return \FFI\CData 返回一个 Vector2 结构体的 CData 对象
+     */
+    public static function getMouseWheelMoveV(): \FFI\CData
+    {
+        return self::ffi()->GetMouseWheelMoveV();
+    }
+
+    /**
+     * 设置鼠标光标样式
+     *
+     * @param int $cursor 光标样式
+     * @return void
+     */
+    public static function setMouseCursor(int $cursor): void
+    {
+        self::ffi()->SetMouseCursor($cursor);
+    }
+
+    /**
+     * 获取触摸点 0 的 X 坐标（相对于屏幕尺寸）
+     *
+     * @return int
+     */
+    public static function getTouchX(): int
+    {
+        return self::ffi()->GetTouchX();
+    }
+
+    /**
+     * 获取触摸点 0 的 Y 坐标（相对于屏幕尺寸）
+     *
+     * @return int
+     */
+    public static function getTouchY(): int
+    {
+        return self::ffi()->GetTouchY();
+    }
+
+    /**
+     * 获取指定触摸点索引的 XY 坐标（相对于屏幕尺寸）
+     *
+     * @param int $index 触摸点索引
+     * @return \FFI\CData 返回一个 Vector2 结构体的 CData 对象
+     */
+    public static function getTouchPosition(int $index): \FFI\CData
+    {
+        return self::ffi()->GetTouchPosition($index);
+    }
+
+    /**
+     * 获取指定索引的触摸点标识符
+     *
+     * @param int $index 触摸点索引
+     * @return int
+     */
+    public static function getTouchPointId(int $index): int
+    {
+        return self::ffi()->GetTouchPointId($index);
+    }
+
+    /**
+     * 获取触摸点的数量
+     *
+     * @return int
+     */
+    public static function getTouchPointCount(): int
+    {
+        return self::ffi()->GetTouchPointCount();
+    }
+    /**
+     * 使用标志启用一组手势
+     *
+     * @param int $flags 标志
+     * @return void
+     */
+    public static function setGesturesEnabled(int $flags): void
+    {
+        self::ffi()->SetGesturesEnabled($flags);
+    }
+
+    /**
+     * 检查是否检测到某个手势
+     *
+     * @param int $gesture 手势
+     * @return bool
+     */
+    public static function isGestureDetected(int $gesture): bool
+    {
+        return self::ffi()->IsGestureDetected($gesture);
+    }
+
+    /**
+     * 获取最新检测到的手势
+     *
+     * @return int
+     */
+    public static function getGestureDetected(): int
+    {
+        return self::ffi()->GetGestureDetected();
+    }
+
+    /**
+     * 获取手势按住的持续时间（以秒为单位）
+     *
+     * @return float
+     */
+    public static function getGestureHoldDuration(): float
+    {
+        return self::ffi()->GetGestureHoldDuration();
+    }
+
+    /**
+     * 获取手势拖动向量
+     *
+     * @return \FFI\CData 返回一个 Vector2 结构体的 CData 对象
+     */
+    public static function getGestureDragVector(): \FFI\CData
+    {
+        return self::ffi()->GetGestureDragVector();
+    }
+
+    /**
+     * 获取手势拖动角度
+     *
+     * @return float
+     */
+    public static function getGestureDragAngle(): float
+    {
+        return self::ffi()->GetGestureDragAngle();
+    }
+
+    /**
+     * 获取手势捏合的增量
+     *
+     * @return \FFI\CData 返回一个 Vector2 结构体的 CData 对象
+     */
+    public static function getGesturePinchVector(): \FFI\CData
+    {
+        return self::ffi()->GetGesturePinchVector();
+    }
+
+    /**
+     * 获取手势捏合角度
+     *
+     * @return float
+     */
+    public static function getGesturePinchAngle(): float
+    {
+        return self::ffi()->GetGesturePinchAngle();
     }
 }
