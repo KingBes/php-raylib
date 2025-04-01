@@ -14,7 +14,7 @@
 ## 安装
 
 ```bash
-composer require KingBes/raylib
+composer require kingbes/raylib
 ```
 
 ## 示例
