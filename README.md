@@ -14,7 +14,7 @@
 ## 安装
 
 ```bash
-composer require lxphp/raylib
+composer require KingBes/raylib
 ```
 
 ## 示例
