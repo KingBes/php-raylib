@@ -49,9 +49,12 @@ abstract class Base
         } else if (PHP_OS_FAMILY === 'Linux') {
             // 返回 Linux 系统下的 Raylib 共享库文件路径
             return dirname(__DIR__) . '/build/lib/Linux/libraylib.so';
+        } elseif (PHP_OS_FAMILY === 'Darwin') {
+            // 返回 macOS 系统下的 Raylib 共享库文件路径
+            return dirname(__DIR__) . '/build/lib/macos/libraylib.dylib';
         } else {
             // 若当前操作系统不被支持，抛出异常
-            throw new \RuntimeException("Unsupported operating system: " . PHP_OS_FAMILY);
+            throw new \RuntimeException("Unsupported operating system: " . PHP_OS_FAMILY . ": " . PHP_OS . "");
         }
     }
 }

@@ -4,17 +4,17 @@ include __DIR__ . '/../vendor/autoload.php';
 
 use Kingbes\Raylib\Core; //核心
 use Kingbes\Raylib\Text; // 文本
-use Kingbes\Raylib\utils; // 工具类
+use Kingbes\Raylib\Utils; // 工具类
 
 Core::initWindow(800, 450, "Hello World"); //初始化窗口
 
 Core::setTargetFPS(60); //设置目标帧率
 
 // 白色
-$white = utils::Color(255, 255, 255);
+$white = Utils::Color(255, 255, 255);
 
 // 绿色
-$green = utils::Color(0, 255, 0);
+$green = Utils::Color(0, 255, 0);
 
 // 主循环
 while (!Core::windowShouldClose()) {

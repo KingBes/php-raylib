@@ -7,7 +7,7 @@ namespace Kingbes\Raylib;
 /**
  * 工具类
  */
-class utils extends Base
+class Utils extends Base
 {
 
     /**
