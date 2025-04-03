@@ -45,7 +45,7 @@ abstract class Base
         // 判断当前系统是windows还是linux
         if (PHP_OS_FAMILY === 'Windows') {
             // 返回 Windows 系统下的 Raylib 动态链接库文件路径
-            return dirname(__DIR__) . '/build/lib/Windows/raylib.dll';
+            return dirname(__DIR__) . '/build/lib/Windows/libraylib.dll';
         } else if (PHP_OS_FAMILY === 'Linux') {
             // 返回 Linux 系统下的 Raylib 共享库文件路径
             return dirname(__DIR__) . '/build/lib/Linux/libraylib.so';
