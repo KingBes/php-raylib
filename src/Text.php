@@ -473,4 +473,233 @@ class Text extends Base
         $utf8Bytes = self::ffi()->CodepointToUTF8($codepoint, \FFI::addr($utf8Size));
         return \FFI::string($utf8Bytes, $utf8Size);
     }
+
+    //### 文本字符串管理函数（非UTF-8，仅字节字符）
+    //> 注意：部分函数会分配内存，使用时需谨慎管理！
+
+    /**
+     * 拷贝字符串，返回复制的字节数
+     *
+     * @param string $src 源字符串
+     * @return int 复制的字节数
+     */
+    public static function textCopy(string $src): int
+    {
+        $dst = str_repeat("\0", strlen($src) + 1); // 创建一个足够大的目标字符串缓冲区
+        $result = self::ffi()->TextCopy($dst, $src);
+        return $result;
+    }
+
+    /**
+     * 检查字符串是否相等
+     *
+     * @param string $text1 字符串1
+     * @param string $text2 字符串2
+     * @return bool 是否相等
+     */
+    public static function textIsEqual(string $text1, string $text2): bool
+    {
+        return self::ffi()->TextIsEqual($text1, $text2);
+    }
+
+    /**
+     * 获取文本长度（检测'\0'结尾）
+     *
+     * @param string $text 文本
+     * @return int 文本长度
+     */
+    public static function textLength(string $text): int
+    {
+        return self::ffi()->TextLength($text);
+    }
+
+    /**
+     * 格式化文本（支持变量，类似sprintf风格）
+     *
+     * @param string $text 文本格式
+     * @param mixed ...$args 可变参数列表
+     * @return string 格式化后的文本
+     */
+    public static function textFormat(string $text, ...$args): string
+    {
+        // 使用vsprintf实现类似的格式化功能
+        return vsprintf($text, $args);
+    }
+
+    /**
+     * 截取子字符串
+     *
+     * @param string $text 原始文本
+     * @param int $position 起始位置
+     * @param int $length 长度
+     * @return string 子字符串
+     */
+    public static function textSubtext(string $text, int $position, int $length): string
+    {
+        return substr($text, $position, $length);
+    }
+
+    /**
+     * 替换文本内容（警告：必须释放内存！）
+     *
+     * @param string $text 原始文本
+     * @param string $replace 待替换的内容
+     * @param string $by 替换为的内容
+     * @return string 替换后的新文本
+     */
+    public static function textReplace(string $text, string $replace, string $by): string
+    {
+        $result = self::ffi()->TextReplace($text, $replace, $by);
+        $strResult = (string)$result; // 转换结果为字符串
+        // 注意：这里假设原生函数内部处理了内存管理
+        return $strResult;
+    }
+
+    /**
+     * 插入文本到指定位置（警告：必须释放内存！）
+     *
+     * @param string $text 原始文本
+     * @param string $insert 插入的文本
+     * @param int $position 插入的位置
+     * @return string 插入后的新文本
+     */
+    public static function textInsert(string $text, string $insert, int $position): string
+    {
+        $result = self::ffi()->TextInsert($text, $insert, $position);
+        $strResult = (string)$result; // 转换结果为字符串
+        // 注意：这里假设原生函数内部处理了内存管理
+        return $strResult;
+    }
+
+    /**
+     * 用分隔符连接多个文本
+     *
+     * @param array $textList 文本数组
+     * @param string $delimiter 分隔符
+     * @return string 连接后的文本
+     */
+    public static function textJoin(array $textList, string $delimiter): string
+    {
+        // 使用implode实现连接功能
+        return implode($delimiter, $textList);
+    }
+
+    /**
+     * 按分隔符分割文本
+     *
+     * @param string $text 文本
+     * @param string $delimiter 分隔符
+     * @return array 分割后的文本数组
+     */
+    public static function textSplit(string $text, string $delimiter): array
+    {
+        // 使用explode实现分割功能
+        return explode($delimiter, $text);
+    }
+
+    /**
+     * 追加文本到指定位置并移动光标
+     *
+     * @param string &$text 目标文本引用
+     * @param string $append 追加的文本
+     * @param int &$position 光标位置引用
+     * @return void
+     */
+    public static function textAppend(string &$text, string $append, int &$position): void
+    {
+        // PHP中直接操作字符串即可
+        $text = substr_replace($text, $append, $position);
+        $position += strlen($append);
+    }
+
+    /**
+     * 查找文本首次出现位置
+     *
+     * @param string $text 原始文本
+     * @param string $find 待查找的文本
+     * @return int 找到的位置，未找到返回-1
+     */
+    public static function textFindIndex(string $text, string $find): int
+    {
+        return strpos($text, $find) !== false ? strpos($text, $find) : -1;
+    }
+
+    /**
+     * 获取大写版本字符串
+     *
+     * @param string $text 文本
+     * @return string 大写版本的文本
+     */
+    public static function textToUpper(string $text): string
+    {
+        return strtoupper($text);
+    }
+
+    /**
+     * 获取小写版本字符串
+     *
+     * @param string $text 文本
+     * @return string 小写版本的文本
+     */
+    public static function textToLower(string $text): string
+    {
+        return strtolower($text);
+    }
+
+    /**
+     * 转换为帕斯卡命名法
+     *
+     * @param string $text 文本
+     * @return string 帕斯卡命名法的文本
+     */
+    public static function textToPascal(string $text): string
+    {
+        return ucfirst(preg_replace_callback('/_([a-z])/', function ($match) {
+            return strtoupper($match[1]);
+        }, strtolower($text)));
+    }
+
+    /**
+     * 转换为蛇形命名法
+     *
+     * @param string $text 文本
+     * @return string 蛇形命名法的文本
+     */
+    public static function textToSnake(string $text): string
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $text));
+    }
+
+    /**
+     * 转换为驼峰命名法
+     *
+     * @param string $text 文本
+     * @return string 驼峰命名法的文本
+     */
+    public static function textToCamel(string $text): string
+    {
+        return lcfirst(str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $text))));
+    }
+
+    /**
+     * 将文本转为整数值（不支持负数）
+     *
+     * @param string $text 文本
+     * @return int 整数值
+     */
+    public static function textToInteger(string $text): int
+    {
+        return intval($text);
+    }
+
+    /**
+     * 将文本转为浮点值（不支持负数）
+     *
+     * @param string $text 文本
+     * @return float 浮点值
+     */
+    public static function textToFloat(string $text): float
+    {
+        return floatval($text);
+    }
 }

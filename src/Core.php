@@ -1,4 +1,5 @@
 <?php
+
 // 严格模式
 declare(strict_types=1);
 
@@ -1188,8 +1189,6 @@ class Core extends Base
     {
         self::ffi()->OpenURL($url);
     }
-
-    //### 注意：以下函数在[utils]模块中实现
 
     /**
      * 输出日志信息（LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...）

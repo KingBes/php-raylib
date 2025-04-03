@@ -1,1 +1,0 @@
-gcc -shared -o libraylib.dll *.o -Wl,--out-implib,libraylib.a -lopengl32 -lgdi32 -lwinmm -static
