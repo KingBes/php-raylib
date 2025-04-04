@@ -41,13 +41,18 @@ class Text extends Base
      * @param int $codepointCount 字符点数量
      * @return \FFI\CData 返回Font对象
      */
-    public static function loadFontEx(string $fileName, int $fontSize, ?array &$codepoints = null, int $codepointCount = 0): \FFI\CData
+    public static function loadFontEx(string $fileName, int $fontSize, ?array $codepoints = null, int $codepointCount = 0): \FFI\CData
     {
-        if ($codepoints === null) {
-            $codepoints = [];
-            $codepointCount = 0;
+        if ($codepoints !== null) {
+            $codepointCount = count($codepoints); // 获取数组长度
+            $cCodepoints = self::ffi()->new("int[$codepointCount]"); // 创建C指针数组
+            foreach ($codepoints as $i => $cp) {
+                $cCodepoints[$i] = $cp; // 将PHP数组元素赋值给C指针数组
+            }
+        } else {
+            $cCodepoints = null; // 如果没有传入字符点，则设置为null
         }
-        return self::ffi()->LoadFontEx($fileName, $fontSize, $codepoints, $codepointCount);
+        return self::ffi()->LoadFontEx($fileName, $fontSize, $cCodepoints, $codepointCount);
     }
 
     /**
@@ -377,18 +382,13 @@ class Text extends Base
      * 从UTF-8文本加载所有码位（通过参数返回数量）
      *
      * @param string $text UTF-8文本
-     * @return array 返回码位数组和数量
+     * @return \FFI\CData 返回码位数组
      */
-    public static function loadCodepoints(string $text): array
+    public static function loadCodepoints(string $text): \FFI\CData
     {
-        $count = 0;
-        $codepoints = self::ffi()->LoadCodepoints($text, \FFI::addr($count));
-        $result = [];
-        for ($i = 0; $i < $count; $i++) {
-            $result[] = $codepoints[$i];
-        }
-        self::unloadCodepoints($codepoints); // 卸载码位数据，避免内存泄漏
-        return [$result, $count];
+        $cIntArr = self::ffi()->new("int[1]"); // 创建一个C指针数组用于存储长度
+        $cIntArr[0] = 0; // 初始化长度为0
+        return self::ffi()->LoadCodepoints($text, $cIntArr);
     }
 
     /**
