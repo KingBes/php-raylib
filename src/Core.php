@@ -1339,13 +1339,17 @@ class Core extends Base
      * 以字节数组形式加载文件数据（读取）
      *
      * @param string $fileName 文件路径
-     * @return \FFI\CData 包含文件数据（作为字符串）和数据大小
+     * @return array 包含文件数据（作为字符串）和数据大小
      */
-    public static function loadFileData(string $fileName): \FFI\CData
+    public static function loadFileData(string $fileName): array
     {
-        $fileSize = filesize($fileName);
-        $dataSize = self::ffi()->new("int[{$fileSize}]");
-        return self::ffi()->LoadFileData($fileName, $dataSize);
+        // $fileSize = filesize($fileName);
+        $dataSize = self::ffi()->new("int[1]");
+        $data = self::ffi()->LoadFileData($fileName, $dataSize);
+        return [
+            'data' => $data,
+            'size' => $dataSize[0]
+        ];
     }
 
     /**

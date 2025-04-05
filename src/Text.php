@@ -72,19 +72,15 @@ class Text extends Base
      * 从内存缓冲区加载字体(fileType指扩展名如.ttf)
      *
      * @param string $fileType 文件类型
-     * @param string $fileData 文件数据
+     * @param \FFI\CData $fileData 文件数据
      * @param int $dataSize 数据大小
      * @param int $fontSize 字体大小
      * @param array|null &$codepoints 字符点数组引用
      * @param int $codepointCount 字符点数量
      * @return \FFI\CData 返回Font对象
      */
-    public static function loadFontFromMemory(string $fileType, string $fileData, int $dataSize, int $fontSize, ?array &$codepoints = null, int $codepointCount = 0): \FFI\CData
+    public static function loadFontFromMemory(string $fileType, \FFI\CData $fileData, int $dataSize, int $fontSize, \FFI\CData $codepoints, int $codepointCount = 0): \FFI\CData
     {
-        if ($codepoints === null) {
-            $codepoints = [];
-            $codepointCount = 0;
-        }
         return self::ffi()->LoadFontFromMemory($fileType, $fileData, $dataSize, $fontSize, $codepoints, $codepointCount);
     }
 
@@ -382,13 +378,17 @@ class Text extends Base
      * 从UTF-8文本加载所有码位（通过参数返回数量）
      *
      * @param string $text UTF-8文本
-     * @return \FFI\CData 返回码位数组
+     * @return array 返回码位数组
      */
-    public static function loadCodepoints(string $text): \FFI\CData
+    public static function loadCodepoints(string $text): array
     {
-        $cIntArr = self::ffi()->new("int[1]"); // 创建一个C指针数组用于存储长度
-        $cIntArr[0] = 0; // 初始化长度为0
-        return self::ffi()->LoadCodepoints($text, $cIntArr);
+        $count = mb_strlen($text, 'UTF-8'); // 获取UTF-8文本长度
+        $count = self::ffi()->new("int[{$count}]"); // 创建一个C指针数组用于存储长度
+        $data = self::ffi()->LoadCodepoints($text, $count);
+        return [
+            'data' => $data, // 获取UTF-8文本
+            'count' => $count[0] // 获取长度
+        ];
     }
 
     /**

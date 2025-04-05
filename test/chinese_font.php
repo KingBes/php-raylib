@@ -18,39 +18,52 @@ Core::setTargetFPS(60); //设置目标帧率
 
 // 读取字体文件
 $fileData = Core::loadFileData(
-    __DIR__ . DIRECTORY_SEPARATOR . "AlimamaFangYuanTiVF-Thin.ttf",
+    // 字体文件路径
+    __DIR__ . DIRECTORY_SEPARATOR . "AlimamaFangYuanTiVF-Thin.ttf"
 );
 
-var_dump($fileData);
+$text = "这个是中文文本"; // 中文文本
 
-$text = "使用中文字体";
-
+// 加载字体码位
 $codepoints = Text::loadCodepoints($text);
 
-// $font = Text::loadFontFromMemory(".ttf", $fileData, 0, $codepoints);
+// 从内存加载字体
+$font = Text::loadFontFromMemory(
+    ".ttf",
+    $fileData["data"],
+    $fileData["size"],
+    32,
+    $codepoints["data"],
+    $codepoints["count"]
+);
 
-// if (Text::isFontValid($font) == false) {
-//     // 如果字体加载失败，抛出异常
-//     throw new \Exception("无法加载系统字体，请检查路径是否正确！");
-// }
+// 释放码点表
+Text::unloadCodepoints($codepoints["data"]);
 
-// // 白色
-// $white = Utils::color(255, 255, 255);
+if (Text::isFontValid($font) == false) {
+    // 如果字体加载失败，抛出异常
+    throw new \Exception("无法加载系统字体，请检查路径是否正确！");
+}
 
-// $gray = Utils::color(200, 200, 200); // 灰色
+// 白色
+$white = Utils::color(255, 255, 255);
 
-// $textPosition  = Utils::vector2(0, 0); // 文本位置
+$red = Utils::color(255, 0, 0); // 红色
 
-// // 主循环
-// while (!Core::windowShouldClose()) {
-//     Core::beginDrawing(); //开始绘制
-//     Core::clearBackground($white); //清楚背景色
+$textPosition  = Utils::vector2(100, 100); // 文本位置
 
-//     Text::drawTextEx($font, $text, $textPosition, 24, 2, $gray); // 绘制提示文本
+// 主循环
+while (!Core::windowShouldClose()) {
+    Core::beginDrawing(); //开始绘制
+    Core::clearBackground($white); //清楚背景色
 
-//     Core::endDrawing(); //结束绘制
-// }
+    Text::drawTextEx($font, $text, $textPosition, 32, 2, $red); // 绘制提示文本
 
-// Text::unloadFont($font); // 卸载字体
+    Core::endDrawing(); //结束绘制
+}
+// 释放字体文件内容
+// Text::unloadFontData($fileData["data"], $fileData["size"]); // 释放字体文件内容
+// 释放字体
+Text::unloadFont($font); // 卸载字体
 
 Core::closeWindow(); // 关闭窗口
