@@ -61,9 +61,8 @@ while (!Core::windowShouldClose()) {
 
     Core::endDrawing(); //结束绘制
 }
-// 释放字体文件内容
-// Text::unloadFontData($fileData["data"], $fileData["size"]); // 释放字体文件内容
-// 释放字体
+
+
 Text::unloadFont($font); // 卸载字体
 
 Core::closeWindow(); // 关闭窗口
