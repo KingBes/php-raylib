@@ -3,86 +3,70 @@
 require dirname(dirname(__DIR__)) . "/vendor/autoload.php";
 
 use Kingbes\Raylib\Core;
+use Kingbes\Raylib\Base;
 
 use \FFI\CData;
 
-class webview
+class webview extends Base
 {
-
-    private \FFI $ffi;
-
-    public function __construct()
+    public static function create($debug = 0, &$window = null): CData
     {
-        $h = <<<CLANG
-typedef void *webview_t;
-webview_t webview_create(int debug, void *window);
-int webview_navigate(webview_t w, const char *url);
-void *webview_get_window(webview_t w);
-int webview_run(webview_t w);
-int webview_terminate(webview_t w);
-CLANG;
-        $this->ffi = \FFI::cdef(
-            $h,
-            __DIR__ . "/webview.dll"
-        );
+        return self::ffi()->webview_create($debug, $window);
     }
 
-    public function create($debug = 0, &$window = null): CData
+    public static function n(CData $wb, string $url): int
     {
-        return $this->ffi->webview_create($debug, $window);
+        return self::ffi()->webview_navigate($wb, $url);
     }
 
-    public function n(CData $wb, string $url): int
+    public static function win(CData $wb): CData
     {
-        return $this->ffi->webview_navigate($wb, $url);
+        return self::ffi()->webview_get_window($wb);
     }
 
-    public function win(CData $wb): CData
+    public static function run(CData $wb): int
     {
-        return $this->ffi->webview_get_window($wb);
+        return self::ffi()->webview_run($wb);
     }
 
-    public function run(CData $wb): int
+    public static function terminate(CData $wb): int
     {
-        return $this->ffi->webview_run($wb);
-    }
-
-    public function terminate(CData $wb): int
-    {
-        return $this->ffi->webview_terminate($wb);
+        return self::ffi()->webview_terminate($wb);
     }
 }
 
-$webview = new webview();
+// $webview = new webview();
 
 Core::initWindow(800, 450, "Hello World"); //初始化窗口
 
 $win = Core::getWindowHandle();
 
-$wb = $webview->create(0, $win);
+var_dump($win);
 
-$res = $webview->n($wb, "http://www.baidu.com/");
+$wb = webview::create(0, $win);
 
-/* $webview->run($wb);
+$res = webview::n($wb, "http://www.baidu.com/");
 
-$webview->terminate($wb); */
+webview::run($wb);
 
-var_dump($res);
+webview::terminate($wb);
 
-var_dump($win == $webview->win($wb) ? true : false);
+// var_dump($res);
 
-Core::setTargetFPS(60); //设置目标帧率
+// var_dump($win == $webview->win($wb) ? true : false);
 
-// Core::OpenURL("http://www.baidu.com/");
+// Core::setTargetFPS(60); //设置目标帧率
 
-// 主循环
-while (!Core::windowShouldClose()) {
-    Core::beginDrawing(); //开始绘制
-    
-    // Core::enableEventWaiting();
+// // Core::OpenURL("http://www.baidu.com/");
 
-    Core::endDrawing(); // 结束绘制
-}
+// // 主循环
+// while (!Core::windowShouldClose()) {
+//     Core::beginDrawing(); //开始绘制
 
-// 关闭窗口
-Core::closeWindow();
+//     // Core::enableEventWaiting();
+
+//     Core::endDrawing(); // 结束绘制
+// }
+
+// // 关闭窗口
+// Core::closeWindow();
