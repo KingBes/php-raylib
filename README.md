@@ -2,6 +2,8 @@
 
 🔥 PHP-FFI 绑 定 raylib-v5.5，实 现 享 受 视 频 游 戏 编 程。
 
+[![php-raylib](https://apiv1.oschina.net/MjAyMi8xLzE2/gtags/v1/action/shard?type=1&id=75836)](https://www.oschina.net/p/php-raylib)
+
 `可能完善度不高，欢迎 PR。`
 
 [文档](http://raylib.kllxs.top/)
