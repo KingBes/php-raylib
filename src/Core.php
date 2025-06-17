@@ -10,8 +10,6 @@ use Kingbes\Raylib\Utils\Image;
 use Kingbes\Raylib\Utils\Vector2;
 use Kingbes\Raylib\Utils\Color;
 use Kingbes\Raylib\Utils\Camera2D;
-use Kingbes\Raylib\Utils\Camera3D;
-
 
 /**
  * Core类
@@ -676,12 +674,12 @@ class Core extends Base
     /**
      * 开启自定义3D相机模式
      *
-     * @param Camera3D $camera 相机配置
+     * @param \FFI\CData $camera 相机配置
      * @return void
      */
-    public static function beginMode3D(Camera3D $camera): void
+    public static function beginMode3D(\FFI\CData $camera): void
     {
-        self::ffi()->BeginMode3D($camera->ptr());
+        self::ffi()->BeginMode3D($camera);
     }
 
     /**

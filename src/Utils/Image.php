@@ -15,15 +15,18 @@ class Image extends Base
     /**
      * 构造函数
      *
+     * @param string $source 图像字符串路径
      */
-    public function __construct() {}
+    public function __construct(string $source = "")
+    {
+        if ($source !== "") {
+            $this->CData = self::ffi()->LoadImage($source);
+        }
+    }
 
     public function __call($name, $arguments): CData
     {
         if ($name === "ptr") {
-            if (!isset($this->CData)) {
-                throw new \Exception("Image->CData 未被赋值");
-            }
             return $this->CData;
         } else {
             throw new \Exception("Image 类不支持 {$name} 方法");

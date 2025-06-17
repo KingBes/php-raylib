@@ -23,13 +23,13 @@ class Camera2D extends Base
     public function __construct(CData|array|null $source = null)
     {
         if (is_array($source)) {
-            $this->offset = $source['offset'];
-            $this->target = $source['target'];
-            $this->rotation = $source['rotation'];
-            $this->zoom = $source['zoom'];
+            $this->offset = $source['offset'] ?? new Vector2();
+            $this->target = $source['target'] ?? new Vector2();
+            $this->rotation = $source['rotation'] ?? 0;
+            $this->zoom = $source['zoom'] ?? 1;
         } elseif ($source instanceof CData) {
-            $this->offset = $source->offset;
-            $this->target = $source->target;
+            $this->offset = new Vector2($source->offset);
+            $this->target = new Vector2($source->target);
             $this->rotation = $source->rotation;
             $this->zoom = $source->zoom;
         }
