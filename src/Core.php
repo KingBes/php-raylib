@@ -5,12 +5,6 @@ declare(strict_types=1);
 
 namespace Kingbes\Raylib;
 
-use \FFI\CData;
-use Kingbes\Raylib\Utils\Image;
-use Kingbes\Raylib\Utils\Vector2;
-use Kingbes\Raylib\Utils\Color;
-use Kingbes\Raylib\Utils\Camera2D;
-
 /**
  * Core类
  */
@@ -207,28 +201,24 @@ class Core extends Base
     /**
      * 设置窗口图标（单张RGBA 32位图像）
      *
-     * @param Image $image 图像数据
+     * @param \FFI\CData $image 图像数据
      * @return void
      */
-    public static function setWindowIcon(Image $image): void
+    public static function setWindowIcon(\FFI\CData $image): void
     {
-        self::ffi()->SetWindowIcon($image->ptr());
+        self::ffi()->SetWindowIcon($image);
     }
 
     /**
      * 设置窗口图标（多张RGBA 32位图像）
      *
-     * @param Image[] $images 图像数组
+     * @param \FFI\CData $images 图像数组
+     * @param integer $count 数组中的图像数量
      * @return void
      */
-    public static function setWindowIcons(array $images): void
+    public static function setWindowIcons(\FFI\CData $images, int $count): void
     {
-        $count = count($images);
-        $c_images = self::ffi()->new("Image[$count]");
-        foreach ($images as $key => $image) {
-            $c_images[$key] = $image->ptr();
-        }
-        self::ffi()->SetWindowIcons($c_images, $count);
+        self::ffi()->SetWindowIcons($images, $count);
     }
 
     /**
@@ -325,9 +315,9 @@ class Core extends Base
     /**
      * 获取原生窗口句柄
      *
-     * @return CData 原生窗口句柄
+     * @return \FFI\CData 原生窗口句柄
      */
-    public static function getWindowHandle(): CData
+    public static function getWindowHandle(): \FFI\CData
     {
         return self::ffi()->GetWindowHandle();
     }
@@ -396,15 +386,11 @@ class Core extends Base
      * 获取指定显示器的位置
      *
      * @param integer $monitor 显示器编号
-     * @return Vector2 显示器位置
+     * @return \FFI\CData 显示器位置
      */
-    public static function getMonitorPosition(int $monitor): Vector2
+    public static function getMonitorPosition(int $monitor): \FFI\CData
     {
-        $res = self::ffi()->GetMonitorPosition($monitor);
-        return new Vector2([
-            'x' => $res->x,
-            'y' => $res->y,
-        ]);
+        return self::ffi()->GetMonitorPosition($monitor);
     }
 
     /**
@@ -465,29 +451,21 @@ class Core extends Base
     /**
      * 获取窗口在显示器上的XY位置
      *
-     * @return Vector2 窗口位置
+     * @return \FFI\CData 窗口位置
      */
-    public static function getWindowPosition(): Vector2
+    public static function getWindowPosition(): \FFI\CData
     {
-        $res = self::ffi()->GetWindowPosition();
-        return new Vector2([
-            'x' => $res->x,
-            'y' => $res->y,
-        ]);
+        return self::ffi()->GetWindowPosition();
     }
 
     /**
      * 获取窗口DPI缩放因子
      *
-     * @return Vector2 DPI缩放因子
+     * @return \FFI\CData DPI缩放因子
      */
-    public static function getWindowScaleDPI(): Vector2
+    public static function getWindowScaleDPI(): \FFI\CData
     {
-        $res = self::ffi()->GetWindowScaleDPI();
-        return new Vector2([
-            'x' => $res->x,
-            'y' => $res->y,
-        ]);
+        return self::ffi()->GetWindowScaleDPI();
     }
 
     /**
@@ -525,14 +503,11 @@ class Core extends Base
     /**
      * 获取剪贴板图像
      *
-     * @return Image 剪贴板图像数据
+     * @return \FFI\CData 剪贴板图像数据
      */
-    public static function getClipboardImage(): Image
+    public static function getClipboardImage(): \FFI\CData
     {
-        $res = self::ffi()->GetClipboardImage();
-        $image = new Image();
-        $image->CData = $res;
-        return $image;
+        return self::ffi()->GetClipboardImage();
     }
 
     /**
@@ -622,12 +597,12 @@ class Core extends Base
     /**
      * 设置背景颜色（帧缓冲清除颜色）
      *
-     * @param Color $color 背景颜色
+     * @param \FFI\CData $color 背景颜色
      * @return void
      */
-    public static function clearBackground(Color $color): void
+    public static function clearBackground(\FFI\CData $color): void
     {
-        self::ffi()->ClearBackground($color->ptr());
+        self::ffi()->ClearBackground($color);
     }
 
     /**
@@ -653,12 +628,12 @@ class Core extends Base
     /**
      * 开启自定义2D相机模式
      *
-     * @param Camera2D $camera 相机配置
+     * @param \FFI\CData $camera 相机配置
      * @return void
      */
-    public static function beginMode2D(Camera2D $camera): void
+    public static function beginMode2D(\FFI\CData $camera): void
     {
-        self::ffi()->BeginMode2D($camera->ptr());
+        self::ffi()->BeginMode2D($camera);
     }
 
     /**
