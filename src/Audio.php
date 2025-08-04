@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace Kingbes\Raylib;
 
+use \FFI\CData;
+
 /**
  * Audio类
  */
@@ -69,9 +71,9 @@ class Audio extends Base
      * 从文件加载Wave数据
      *
      * @param string $fileName 文件名
-     * @return \FFI\CData Wave对象
+     * @return CData Wave对象
      */
-    public static function loadWave(string $fileName): \FFI\CData
+    public static function loadWave(string $fileName): CData
     {
         return self::ffi()->LoadWave($fileName);
     }
@@ -80,11 +82,11 @@ class Audio extends Base
      * 从内存加载Wave（fileType为扩展名，如.wav）
      *
      * @param string $fileType 文件类型（例如".wav"）
-     * @param \FFI\CData $fileData 文件数据
+     * @param CData $fileData 文件数据
      * @param int $dataSize 数据大小
-     * @return \FFI\CData Wave对象
+     * @return CData Wave对象
      */
-    public static function loadWaveFromMemory(string $fileType, \FFI\CData $fileData, int $dataSize): \FFI\CData
+    public static function loadWaveFromMemory(string $fileType, CData $fileData, int $dataSize): CData
     {
         return self::ffi()->LoadWaveFromMemory($fileType, $fileData, $dataSize);
     }
@@ -92,10 +94,10 @@ class Audio extends Base
     /**
      * 检查Wave数据有效性
      *
-     * @param \FFI\CData $wave Wave对象
+     * @param CData $wave Wave对象
      * @return bool 是否有效
      */
-    public static function isWaveValid(\FFI\CData $wave): bool
+    public static function isWaveValid(CData $wave): bool
     {
         return self::ffi()->IsWaveValid($wave);
     }
@@ -104,9 +106,9 @@ class Audio extends Base
      * 从文件加载声音
      *
      * @param string $fileName 文件名
-     * @return \FFI\CData Sound对象
+     * @return CData Sound对象
      */
-    public static function loadSound(string $fileName): \FFI\CData
+    public static function loadSound(string $fileName): CData
     {
         return self::ffi()->LoadSound($fileName);
     }
@@ -114,10 +116,10 @@ class Audio extends Base
     /**
      * 从Wave数据加载声音
      *
-     * @param \FFI\CData $wave Wave对象
-     * @return \FFI\CData Sound对象
+     * @param CData $wave Wave对象
+     * @return CData Sound对象
      */
-    public static function loadSoundFromWave(\FFI\CData $wave): \FFI\CData
+    public static function loadSoundFromWave(CData $wave): CData
     {
         return self::ffi()->LoadSoundFromWave($wave);
     }
@@ -125,10 +127,10 @@ class Audio extends Base
     /**
      * 创建共享样本数据的声音别名
      *
-     * @param \FFI\CData $source Sound对象
-     * @return \FFI\CData Sound对象（别名）
+     * @param CData $source Sound对象
+     * @return CData Sound对象（别名）
      */
-    public static function loadSoundAlias(\FFI\CData $source): \FFI\CData
+    public static function loadSoundAlias(CData $source): CData
     {
         return self::ffi()->LoadSoundAlias($source);
     }
@@ -136,10 +138,10 @@ class Audio extends Base
     /**
      * 检查声音有效性
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @return bool 是否有效
      */
-    public static function isSoundValid(\FFI\CData $sound): bool
+    public static function isSoundValid(CData $sound): bool
     {
         return self::ffi()->IsSoundValid($sound);
     }
@@ -147,12 +149,12 @@ class Audio extends Base
     /**
      * 更新声音缓冲区数据
      *
-     * @param \FFI\CData $sound Sound对象
-     * @param \FFI\CData $data 数据指针
+     * @param CData $sound Sound对象
+     * @param CData $data 数据指针
      * @param int $sampleCount 样本数量
      * @return void
      */
-    public static function updateSound(\FFI\CData $sound, \FFI\CData $data, int $sampleCount): void
+    public static function updateSound(CData $sound, CData $data, int $sampleCount): void
     {
         self::ffi()->UpdateSound($sound, $data, $sampleCount);
     }
@@ -160,10 +162,10 @@ class Audio extends Base
     /**
      * 卸载Wave数据
      *
-     * @param \FFI\CData $wave Wave对象
+     * @param CData $wave Wave对象
      * @return void
      */
-    public static function unloadWave(\FFI\CData $wave): void
+    public static function unloadWave(CData $wave): void
     {
         self::ffi()->UnloadWave($wave);
     }
@@ -171,10 +173,10 @@ class Audio extends Base
     /**
      * 卸载声音
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @return void
      */
-    public static function unloadSound(\FFI\CData $sound): void
+    public static function unloadSound(CData $sound): void
     {
         self::ffi()->UnloadSound($sound);
     }
@@ -182,10 +184,10 @@ class Audio extends Base
     /**
      * 卸载声音别名（不释放样本数据）
      *
-     * @param \FFI\CData $alias Sound对象（别名）
+     * @param CData $alias Sound对象（别名）
      * @return void
      */
-    public static function unloadSoundAlias(\FFI\CData $alias): void
+    public static function unloadSoundAlias(CData $alias): void
     {
         self::ffi()->UnloadSoundAlias($alias);
     }
@@ -193,11 +195,11 @@ class Audio extends Base
     /**
      * 导出Wave数据到文件
      *
-     * @param \FFI\CData $wave Wave对象
+     * @param CData $wave Wave对象
      * @param string $fileName 文件名
      * @return bool 是否成功
      */
-    public static function exportWave(\FFI\CData $wave, string $fileName): bool
+    public static function exportWave(CData $wave, string $fileName): bool
     {
         return self::ffi()->ExportWave($wave, $fileName);
     }
@@ -205,11 +207,11 @@ class Audio extends Base
     /**
      * 将Wave采样数据导出为C代码(.h)
      *
-     * @param \FFI\CData $wave Wave对象
+     * @param CData $wave Wave对象
      * @param string $fileName 文件名
      * @return bool 是否成功
      */
-    public static function exportWaveAsCode(\FFI\CData $wave, string $fileName): bool
+    public static function exportWaveAsCode(CData $wave, string $fileName): bool
     {
         return self::ffi()->ExportWaveAsCode($wave, $fileName);
     }
@@ -219,10 +221,10 @@ class Audio extends Base
     /**
      * 播放声音
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @return void
      */
-    public static function playSound(\FFI\CData $sound): void
+    public static function playSound(CData $sound): void
     {
         self::ffi()->PlaySound($sound);
     }
@@ -230,10 +232,10 @@ class Audio extends Base
     /**
      * 停止播放声音
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @return void
      */
-    public static function stopSound(\FFI\CData $sound): void
+    public static function stopSound(CData $sound): void
     {
         self::ffi()->StopSound($sound);
     }
@@ -241,10 +243,10 @@ class Audio extends Base
     /**
      * 暂停声音
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @return void
      */
-    public static function pauseSound(\FFI\CData $sound): void
+    public static function pauseSound(CData $sound): void
     {
         self::ffi()->PauseSound($sound);
     }
@@ -252,10 +254,10 @@ class Audio extends Base
     /**
      * 恢复暂停的声音
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @return void
      */
-    public static function resumeSound(\FFI\CData $sound): void
+    public static function resumeSound(CData $sound): void
     {
         self::ffi()->ResumeSound($sound);
     }
@@ -263,10 +265,10 @@ class Audio extends Base
     /**
      * 检查声音是否正在播放
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @return bool 是否正在播放
      */
-    public static function isSoundPlaying(\FFI\CData $sound): bool
+    public static function isSoundPlaying(CData $sound): bool
     {
         return self::ffi()->IsSoundPlaying($sound);
     }
@@ -274,11 +276,11 @@ class Audio extends Base
     /**
      * 设置声音音量（1.0为最大）
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @param float $volume 音量值，范围通常为0.0到1.0
      * @return void
      */
-    public static function setSoundVolume(\FFI\CData $sound, float $volume): void
+    public static function setSoundVolume(CData $sound, float $volume): void
     {
         self::ffi()->SetSoundVolume($sound, $volume);
     }
@@ -286,11 +288,11 @@ class Audio extends Base
     /**
      * 设置声音音高（1.0为基础值）
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @param float $pitch 音高值
      * @return void
      */
-    public static function setSoundPitch(\FFI\CData $sound, float $pitch): void
+    public static function setSoundPitch(CData $sound, float $pitch): void
     {
         self::ffi()->SetSoundPitch($sound, $pitch);
     }
@@ -298,11 +300,11 @@ class Audio extends Base
     /**
      * 设置声音声像（0.5为居中）
      *
-     * @param \FFI\CData $sound Sound对象
+     * @param CData $sound Sound对象
      * @param float $pan 声像值，范围通常为0.0到1.0
      * @return void
      */
-    public static function setSoundPan(\FFI\CData $sound, float $pan): void
+    public static function setSoundPan(CData $sound, float $pan): void
     {
         self::ffi()->SetSoundPan($sound, $pan);
     }
@@ -310,10 +312,10 @@ class Audio extends Base
     /**
      * 复制Wave数据
      *
-     * @param \FFI\CData $wave Wave对象
-     * @return \FFI\CData Wave对象（复制）
+     * @param CData $wave Wave对象
+     * @return CData Wave对象（复制）
      */
-    public static function waveCopy(\FFI\CData $wave): \FFI\CData
+    public static function waveCopy(CData $wave): CData
     {
         return self::ffi()->WaveCopy($wave);
     }
@@ -321,12 +323,12 @@ class Audio extends Base
     /**
      * 裁剪Wave到指定帧范围
      *
-     * @param \FFI\CData &$wave Wave对象引用
+     * @param CData &$wave Wave对象引用
      * @param int $initFrame 初始帧
      * @param int $finalFrame 最终帧
      * @return void
      */
-    public static function waveCrop(\FFI\CData &$wave, int $initFrame, int $finalFrame): void
+    public static function waveCrop(CData &$wave, int $initFrame, int $finalFrame): void
     {
         self::ffi()->WaveCrop($wave, $initFrame, $finalFrame);
     }
@@ -334,13 +336,13 @@ class Audio extends Base
     /**
      * 转换Wave格式
      *
-     * @param \FFI\CData &$wave Wave对象引用
+     * @param CData &$wave Wave对象引用
      * @param int $sampleRate 采样率
      * @param int $sampleSize 采样大小（位数）
      * @param int $channels 声道数
      * @return void
      */
-    public static function waveFormat(\FFI\CData &$wave, int $sampleRate, int $sampleSize, int $channels): void
+    public static function waveFormat(CData &$wave, int $sampleRate, int $sampleSize, int $channels): void
     {
         self::ffi()->WaveFormat($wave, $sampleRate, $sampleSize, $channels);
     }
@@ -348,10 +350,10 @@ class Audio extends Base
     /**
      * 加载Wave采样数据（返回32位浮点数组）
      *
-     * @param \FFI\CData $wave Wave对象
-     * @return \FFI\CData 浮点数组指针
+     * @param CData $wave Wave对象
+     * @return CData 浮点数组指针
      */
-    public static function loadWaveSamples(\FFI\CData $wave): \FFI\CData
+    public static function loadWaveSamples(CData $wave): CData
     {
         return self::ffi()->LoadWaveSamples($wave);
     }
@@ -359,10 +361,10 @@ class Audio extends Base
     /**
      * 卸载Wave采样数据
      *
-     * @param \FFI\CData $samples 浮点数组指针
+     * @param CData $samples 浮点数组指针
      * @return void
      */
-    public static function unloadWaveSamples(\FFI\CData $samples): void
+    public static function unloadWaveSamples(CData $samples): void
     {
         self::ffi()->UnloadWaveSamples($samples);
     }
@@ -373,9 +375,9 @@ class Audio extends Base
      * 从文件加载音乐流
      *
      * @param string $fileName 文件名
-     * @return \FFI\CData Music对象
+     * @return CData Music对象
      */
-    public static function loadMusicStream(string $fileName): \FFI\CData
+    public static function loadMusicStream(string $fileName): CData
     {
         return self::ffi()->LoadMusicStream($fileName);
     }
@@ -384,11 +386,11 @@ class Audio extends Base
      * 从内存加载音乐流
      *
      * @param string $fileType 文件类型（例如".ogg", ".mp3"）
-     * @param \FFI\CData $data 数据指针
+     * @param CData $data 数据指针
      * @param int $dataSize 数据大小
-     * @return \FFI\CData Music对象
+     * @return CData Music对象
      */
-    public static function loadMusicStreamFromMemory(string $fileType, \FFI\CData $data, int $dataSize): \FFI\CData
+    public static function loadMusicStreamFromMemory(string $fileType, CData $data, int $dataSize): CData
     {
         return self::ffi()->LoadMusicStreamFromMemory($fileType, $data, $dataSize);
     }
@@ -396,10 +398,10 @@ class Audio extends Base
     /**
      * 检查音乐流有效性
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return bool 是否有效
      */
-    public static function isMusicValid(\FFI\CData $music): bool
+    public static function isMusicValid(CData $music): bool
     {
         return self::ffi()->IsMusicValid($music);
     }
@@ -407,10 +409,10 @@ class Audio extends Base
     /**
      * 卸载音乐流
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return void
      */
-    public static function unloadMusicStream(\FFI\CData $music): void
+    public static function unloadMusicStream(CData $music): void
     {
         self::ffi()->UnloadMusicStream($music);
     }
@@ -418,10 +420,10 @@ class Audio extends Base
     /**
      * 开始播放音乐
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return void
      */
-    public static function playMusicStream(\FFI\CData $music): void
+    public static function playMusicStream(CData $music): void
     {
         self::ffi()->PlayMusicStream($music);
     }
@@ -429,10 +431,10 @@ class Audio extends Base
     /**
      * 检查音乐是否正在播放
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return bool 是否正在播放
      */
-    public static function isMusicStreamPlaying(\FFI\CData $music): bool
+    public static function isMusicStreamPlaying(CData $music): bool
     {
         return self::ffi()->IsMusicStreamPlaying($music);
     }
@@ -440,10 +442,10 @@ class Audio extends Base
     /**
      * 更新音乐流缓冲区
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return void
      */
-    public static function updateMusicStream(\FFI\CData $music): void
+    public static function updateMusicStream(CData $music): void
     {
         self::ffi()->UpdateMusicStream($music);
     }
@@ -451,10 +453,10 @@ class Audio extends Base
     /**
      * 停止音乐播放
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return void
      */
-    public static function stopMusicStream(\FFI\CData $music): void
+    public static function stopMusicStream(CData $music): void
     {
         self::ffi()->StopMusicStream($music);
     }
@@ -462,10 +464,10 @@ class Audio extends Base
     /**
      * 暂停音乐播放
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return void
      */
-    public static function pauseMusicStream(\FFI\CData $music): void
+    public static function pauseMusicStream(CData $music): void
     {
         self::ffi()->PauseMusicStream($music);
     }
@@ -473,10 +475,10 @@ class Audio extends Base
     /**
      * 恢复暂停的音乐
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return void
      */
-    public static function resumeMusicStream(\FFI\CData $music): void
+    public static function resumeMusicStream(CData $music): void
     {
         self::ffi()->ResumeMusicStream($music);
     }
@@ -484,11 +486,11 @@ class Audio extends Base
     /**
      * 跳转到音乐指定位置（秒）
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @param float $position 位置（秒）
      * @return void
      */
-    public static function seekMusicStream(\FFI\CData $music, float $position): void
+    public static function seekMusicStream(CData $music, float $position): void
     {
         self::ffi()->SeekMusicStream($music, $position);
     }
@@ -496,11 +498,11 @@ class Audio extends Base
     /**
      * 设置音乐音量
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @param float $volume 音量值，范围通常为0.0到1.0
      * @return void
      */
-    public static function setMusicVolume(\FFI\CData $music, float $volume): void
+    public static function setMusicVolume(CData $music, float $volume): void
     {
         self::ffi()->SetMusicVolume($music, $volume);
     }
@@ -508,11 +510,11 @@ class Audio extends Base
     /**
      * 设置音乐音高
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @param float $pitch 音高值
      * @return void
      */
-    public static function setMusicPitch(\FFI\CData $music, float $pitch): void
+    public static function setMusicPitch(CData $music, float $pitch): void
     {
         self::ffi()->SetMusicPitch($music, $pitch);
     }
@@ -520,11 +522,11 @@ class Audio extends Base
     /**
      * 设置音乐声像
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @param float $pan 声像值，范围通常为0.0到1.0
      * @return void
      */
-    public static function setMusicPan(\FFI\CData $music, float $pan): void
+    public static function setMusicPan(CData $music, float $pan): void
     {
         self::ffi()->SetMusicPan($music, $pan);
     }
@@ -532,10 +534,10 @@ class Audio extends Base
     /**
      * 获取音乐总时长（秒）
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return float 总时长（秒）
      */
-    public static function getMusicTimeLength(\FFI\CData $music): float
+    public static function getMusicTimeLength(CData $music): float
     {
         return self::ffi()->GetMusicTimeLength($music);
     }
@@ -543,10 +545,10 @@ class Audio extends Base
     /**
      * 获取当前播放时间（秒）
      *
-     * @param \FFI\CData $music Music对象
+     * @param CData $music Music对象
      * @return float 当前播放时间（秒）
      */
-    public static function getMusicTimePlayed(\FFI\CData $music): float
+    public static function getMusicTimePlayed(CData $music): float
     {
         return self::ffi()->GetMusicTimePlayed($music);
     }
@@ -559,9 +561,9 @@ class Audio extends Base
      * @param int $sampleRate 采样率
      * @param int $sampleSize 采样大小（位数）
      * @param int $channels 声道数
-     * @return \FFI\CData AudioStream对象
+     * @return CData AudioStream对象
      */
-    public static function loadAudioStream(int $sampleRate, int $sampleSize, int $channels): \FFI\CData
+    public static function loadAudioStream(int $sampleRate, int $sampleSize, int $channels): CData
     {
         return self::ffi()->LoadAudioStream($sampleRate, $sampleSize, $channels);
     }
@@ -569,10 +571,10 @@ class Audio extends Base
     /**
      * 检查音频流有效性
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @return bool 是否有效
      */
-    public static function isAudioStreamValid(\FFI\CData $stream): bool
+    public static function isAudioStreamValid(CData $stream): bool
     {
         return self::ffi()->IsAudioStreamValid($stream);
     }
@@ -580,10 +582,10 @@ class Audio extends Base
     /**
      * 卸载音频流
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @return void
      */
-    public static function unloadAudioStream(\FFI\CData $stream): void
+    public static function unloadAudioStream(CData $stream): void
     {
         self::ffi()->UnloadAudioStream($stream);
     }
@@ -591,12 +593,12 @@ class Audio extends Base
     /**
      * 更新音频流缓冲区数据
      *
-     * @param \FFI\CData $stream AudioStream对象
-     * @param \FFI\CData $data 数据指针
+     * @param CData $stream AudioStream对象
+     * @param CData $data 数据指针
      * @param int $frameCount 帧数
      * @return void
      */
-    public static function updateAudioStream(\FFI\CData $stream, \FFI\CData $data, int $frameCount): void
+    public static function updateAudioStream(CData $stream, CData $data, int $frameCount): void
     {
         self::ffi()->UpdateAudioStream($stream, $data, $frameCount);
     }
@@ -604,10 +606,10 @@ class Audio extends Base
     /**
      * 检查音频流缓冲区是否需要填充
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @return bool 是否需要填充
      */
-    public static function isAudioStreamProcessed(\FFI\CData $stream): bool
+    public static function isAudioStreamProcessed(CData $stream): bool
     {
         return self::ffi()->IsAudioStreamProcessed($stream);
     }
@@ -615,10 +617,10 @@ class Audio extends Base
     /**
      * 播放音频流
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @return void
      */
-    public static function playAudioStream(\FFI\CData $stream): void
+    public static function playAudioStream(CData $stream): void
     {
         self::ffi()->PlayAudioStream($stream);
     }
@@ -626,10 +628,10 @@ class Audio extends Base
     /**
      * 暂停音频流
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @return void
      */
-    public static function pauseAudioStream(\FFI\CData $stream): void
+    public static function pauseAudioStream(CData $stream): void
     {
         self::ffi()->PauseAudioStream($stream);
     }
@@ -637,10 +639,10 @@ class Audio extends Base
     /**
      * 恢复音频流
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @return void
      */
-    public static function resumeAudioStream(\FFI\CData $stream): void
+    public static function resumeAudioStream(CData $stream): void
     {
         self::ffi()->ResumeAudioStream($stream);
     }
@@ -648,10 +650,10 @@ class Audio extends Base
     /**
      * 检查音频流是否正在播放
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @return bool 是否正在播放
      */
-    public static function isAudioStreamPlaying(\FFI\CData $stream): bool
+    public static function isAudioStreamPlaying(CData $stream): bool
     {
         return self::ffi()->IsAudioStreamPlaying($stream);
     }
@@ -659,10 +661,10 @@ class Audio extends Base
     /**
      * 停止音频流
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @return void
      */
-    public static function stopAudioStream(\FFI\CData $stream): void
+    public static function stopAudioStream(CData $stream): void
     {
         self::ffi()->StopAudioStream($stream);
     }
@@ -670,11 +672,11 @@ class Audio extends Base
     /**
      * 设置音频流音量
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @param float $volume 音量值，范围通常为0.0到1.0
      * @return void
      */
-    public static function setAudioStreamVolume(\FFI\CData $stream, float $volume): void
+    public static function setAudioStreamVolume(CData $stream, float $volume): void
     {
         self::ffi()->SetAudioStreamVolume($stream, $volume);
     }
@@ -682,11 +684,11 @@ class Audio extends Base
     /**
      * 设置音频流音高
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @param float $pitch 音高值
      * @return void
      */
-    public static function setAudioStreamPitch(\FFI\CData $stream, float $pitch): void
+    public static function setAudioStreamPitch(CData $stream, float $pitch): void
     {
         self::ffi()->SetAudioStreamPitch($stream, $pitch);
     }
@@ -694,11 +696,11 @@ class Audio extends Base
     /**
      * 设置音频流声像
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @param float $pan 声像值，范围通常为0.0到1.0
      * @return void
      */
-    public static function setAudioStreamPan(\FFI\CData $stream, float $pan): void
+    public static function setAudioStreamPan(CData $stream, float $pan): void
     {
         self::ffi()->SetAudioStreamPan($stream, $pan);
     }
@@ -717,11 +719,11 @@ class Audio extends Base
     /**
      * 设置音频流回调函数（用于请求新数据）
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @param callable $callback 回调函数
      * @return void
      */
-    public static function setAudioStreamCallback(\FFI\CData $stream, callable $callback): void
+    public static function setAudioStreamCallback(CData $stream, callable $callback): void
     {
         self::ffi()->SetAudioStreamCallback($stream, $callback);
     }
@@ -729,11 +731,11 @@ class Audio extends Base
     /**
      * 附加音频流处理器（接收float格式采样）
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @param callable $processor 处理器函数
      * @return void
      */
-    public static function attachAudioStreamProcessor(\FFI\CData $stream, callable $processor): void
+    public static function attachAudioStreamProcessor(CData $stream, callable $processor): void
     {
         self::ffi()->AttachAudioStreamProcessor($stream, $processor);
     }
@@ -741,11 +743,11 @@ class Audio extends Base
     /**
      * 分离音频流处理器
      *
-     * @param \FFI\CData $stream AudioStream对象
+     * @param CData $stream AudioStream对象
      * @param callable $processor 处理器函数
      * @return void
      */
-    public static function detachAudioStreamProcessor(\FFI\CData $stream, callable $processor): void
+    public static function detachAudioStreamProcessor(CData $stream, callable $processor): void
     {
         self::ffi()->DetachAudioStreamProcessor($stream, $processor);
     }
