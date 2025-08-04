@@ -10,7 +10,7 @@
 
 ## 依赖
 
-- PHP 7.4+
+- PHP 8.2+
 - FFI 扩展
 - windows
 - linux
