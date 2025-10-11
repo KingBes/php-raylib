@@ -12,6 +12,12 @@ use \FFI\CData;
  */
 class Utils extends Base
 {
+    // 角度转弧度
+    public const DEG2RAD = 3.14159265358979323846 / 180.0;
+
+    // 弧度转角度
+    public const RAD2DEG = 180.0 / 3.14159265358979323846;
+
     /**
      * 颜色对象
      *
