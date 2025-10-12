@@ -844,7 +844,7 @@ class Core extends Base
      * @param string $uniformName uniform名称
      * @return int uniform位置
      */
-    public static function getShaderLocation(\FFI\CData $shader, string $uniformName): int
+    public static function getShaderLocation(\FFI\CData &$shader, string $uniformName): int
     {
         return self::ffi()->GetShaderLocation($shader, $uniformName);
     }
@@ -872,7 +872,8 @@ class Core extends Base
      */
     public static function setShaderValue(\FFI\CData $shader, int $locIndex, \FFI\CData $value, int $uniformType): void
     {
-        self::ffi()->SetShaderValue($shader, $locIndex, $value, $uniformType);
+        $c_value = self::ffi()::addr($value);
+        self::ffi()->SetShaderValue($shader, $locIndex, $c_value, $uniformType);
     }
 
     /**
@@ -2385,7 +2386,8 @@ class Core extends Base
      */
     public static function updateCamera(\FFI\CData $camera, int $mode): void
     {
-        self::ffi()->UpdateCamera($camera, $mode);
+        $c_camera = self::ffi()::addr($camera);
+        self::ffi()->UpdateCamera($c_camera, $mode);
     }
 
     /**
