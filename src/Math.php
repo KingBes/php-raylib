@@ -7,6 +7,9 @@ namespace Kingbes\Raylib;
 
 use FFI\CData;
 
+/**
+ * 数学类
+ */
 class Math extends Base
 {
     /**
