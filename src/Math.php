@@ -6,6 +6,10 @@ declare(strict_types=1);
 namespace Kingbes\Raylib;
 
 use FFI\CData;
+use Kingbes\Raylib\Utils\Vector2;
+use Kingbes\Raylib\Utils\Matrix;
+use Kingbes\Raylib\Utils\Vector3;
+use Kingbes\Raylib\Utils\Vector4;
 
 /**
  * 数学类

@@ -1637,7 +1637,7 @@ Quaternion QuaternionTransform(Quaternion q, Matrix mat);
 int QuaternionEquals(Quaternion p, Quaternion q);
 void MatrixDecompose(Matrix mat, Vector3 *translation, Quaternion *rotation, Vector3 *scale);
 
-// GUI module
+// GUI module ---------------------------------------------------------------------------------
 // Global gui state control functions
 void GuiEnable(void);                                 // Enable gui controls (global state)
 void GuiDisable(void);                                // Disable gui controls (global state)
@@ -1674,8 +1674,6 @@ char **GuiLoadIcons(const char *fileName, bool loadIconsName); // Load raygui ic
 void GuiDrawIcon(int iconId, int posX, int posY, int pixelSize, Color color); // Draw icon using pixel size at specified position
 #endif
 
-// Utility functions
-int GuiGetTextWidth(const char *text);                // Get text width considering gui style and icon size (if required)
 
 // Controls
 //----------------------------------------------------------------------------------------------------------
@@ -1688,30 +1686,29 @@ int GuiTabBar(Rectangle bounds, const char **text, int count, int *active);     
 int GuiScrollPanel(Rectangle bounds, const char *text, Rectangle content, Vector2 *scroll, Rectangle *view); // Scroll Panel control
 
 // Basic controls set
-int GuiLabel(Rectangle bounds, const char *text);                                            // Label control
+int GuiLabel(Rectangle bounds, const char *text);                                            // Label control, shows text
 int GuiButton(Rectangle bounds, const char *text);                                           // Button control, returns true when clicked
-int GuiLabelButton(Rectangle bounds, const char *text);                                      // Label button control, returns true when clicked
-int GuiToggle(Rectangle bounds, const char *text, bool *active);                             // Toggle Button control
-int GuiToggleGroup(Rectangle bounds, const char *text, int *active);                         // Toggle Group control
-int GuiToggleSlider(Rectangle bounds, const char *text, int *active);                        // Toggle Slider control
+int GuiLabelButton(Rectangle bounds, const char *text);                                      // Label button control, show true when clicked
+int GuiToggle(Rectangle bounds, const char *text, bool *active);                             // Toggle Button control, returns true when active
+int GuiToggleGroup(Rectangle bounds, const char *text, int *active);                         // Toggle Group control, returns active toggle index
+int GuiToggleSlider(Rectangle bounds, const char *text, int *active);                        // Toggle Slider control, returns true when clicked
 int GuiCheckBox(Rectangle bounds, const char *text, bool *checked);                          // Check Box control, returns true when active
-int GuiComboBox(Rectangle bounds, const char *text, int *active);                            // Combo Box control
+int GuiComboBox(Rectangle bounds, const char *text, int *active);                            // Combo Box control, returns selected item index
 
-int GuiDropdownBox(Rectangle bounds, const char *text, int *active, bool editMode);          // Dropdown Box control
-int GuiSpinner(Rectangle bounds, const char *text, int *value, int minValue, int maxValue, bool editMode); // Spinner control
+int GuiDropdownBox(Rectangle bounds, const char *text, int *active, bool editMode);          // Dropdown Box control, returns selected item
+int GuiSpinner(Rectangle bounds, const char *text, int *value, int minValue, int maxValue, bool editMode); // Spinner control, returns selected value
 int GuiValueBox(Rectangle bounds, const char *text, int *value, int minValue, int maxValue, bool editMode); // Value Box control, updates input text with numbers
-int GuiValueBoxFloat(Rectangle bounds, const char *text, char *textValue, float *value, bool editMode); // Value box control for float values
 int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode);                   // Text Box control, updates input text
 
-int GuiSlider(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue); // Slider control
-int GuiSliderBar(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue); // Slider Bar control
-int GuiProgressBar(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue); // Progress Bar control
+int GuiSlider(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue); // Slider control, returns selected value
+int GuiSliderBar(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue); // Slider Bar control, returns selected value
+int GuiProgressBar(Rectangle bounds, const char *textLeft, const char *textRight, float *value, float minValue, float maxValue); // Progress Bar control, shows current progress value
 int GuiStatusBar(Rectangle bounds, const char *text);                                        // Status Bar control, shows info text
 int GuiDummyRec(Rectangle bounds, const char *text);                                         // Dummy control for placeholders
-int GuiGrid(Rectangle bounds, const char *text, float spacing, int subdivs, Vector2 *mouseCell); // Grid control
+int GuiGrid(Rectangle bounds, const char *text, float spacing, int subdivs, Vector2 *mouseCell); // Grid control, returns mouse cell position
 
 // Advance controls set
-int GuiListView(Rectangle bounds, const char *text, int *scrollIndex, int *active);          // List View control
+int GuiListView(Rectangle bounds, const char *text, int *scrollIndex, int *active);          // List View control, returns selected list item index
 int GuiListViewEx(Rectangle bounds, const char **text, int count, int *scrollIndex, int *active, int *focus); // List View with extended parameters
 int GuiMessageBox(Rectangle bounds, const char *title, const char *message, const char *buttons); // Message Box control, displays a message
 int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, const char *buttons, char *text, int textMaxSize, bool *secretViewActive); // Text Input Box control, ask for text, supports secret
@@ -1720,7 +1717,7 @@ int GuiColorPanel(Rectangle bounds, const char *text, Color *color);            
 int GuiColorBarAlpha(Rectangle bounds, const char *text, float *alpha);                      // Color Bar Alpha control
 int GuiColorBarHue(Rectangle bounds, const char *text, float *value);                        // Color Bar Hue control
 int GuiColorPickerHSV(Rectangle bounds, const char *text, Vector3 *colorHsv);                // Color Picker control that avoids conversion to RGB on each call (multiple color controls)
-int GuiColorPanelHSV(Rectangle bounds, const char *text, Vector3 *colorHsv);
+int GuiColorPanelHSV(Rectangle bounds, const char *text, Vector3 *colorHsv);                 // Color Panel control that returns HSV color value, used by GuiColorPickerHSV()
 
 typedef enum {
     ICON_NONE                     = 0,

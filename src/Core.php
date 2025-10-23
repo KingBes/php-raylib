@@ -5,6 +5,23 @@ declare(strict_types=1);
 
 namespace Kingbes\Raylib;
 
+use Kingbes\Raylib\Utils\Image;
+use Kingbes\Raylib\Utils\Vector2;
+use Kingbes\Raylib\Utils\Color;
+use Kingbes\Raylib\Utils\Camera2D;
+use Kingbes\Raylib\Utils\Camera3D;
+use Kingbes\Raylib\Utils\Texture;
+use Kingbes\Raylib\Utils\RenderTexture;
+use Kingbes\Raylib\Utils\Shader;
+use Kingbes\Raylib\Utils\VrStereoConfig;
+use Kingbes\Raylib\Utils\VrDeviceInfo;
+use Kingbes\Raylib\Utils\Ray;
+use Kingbes\Raylib\Utils\Matrix;
+use Kingbes\Raylib\Utils\Vector3;
+use Kingbes\Raylib\Utils\FilePathList;
+use Kingbes\Raylib\Utils\AutomationEventList;
+use Kingbes\Raylib\Utils\AutomationEvent;
+
 /**
  * Core类
  */
@@ -201,24 +218,29 @@ class Core extends Base
     /**
      * 设置窗口图标（单张RGBA 32位图像）
      *
-     * @param \FFI\CData $image 图像数据
+     * @param Image $image 图像数据
      * @return void
      */
-    public static function setWindowIcon(\FFI\CData $image): void
+    public static function setWindowIcon(Image $image): void
     {
-        self::ffi()->SetWindowIcon($image);
+        self::ffi()->SetWindowIcon($image->struct());
     }
 
     /**
      * 设置窗口图标（多张RGBA 32位图像）
      *
-     * @param \FFI\CData $images 图像数组
+     * @param Image[] $images 图像数组
      * @param integer $count 数组中的图像数量
      * @return void
      */
-    public static function setWindowIcons(\FFI\CData $images, int $count): void
+    public static function setWindowIcons(array $images, int $count): void
     {
-        self::ffi()->SetWindowIcons($images, $count);
+        $c_images = self::ffi()->new('struct Image[' . $count . ']');
+        for ($i = 0; $i < $count; $i++) {
+            $c_images[$i] = $images[$i]->struct();
+        }
+
+        self::ffi()->SetWindowIcons(self::ffi()::addr($c_images), $count);
     }
 
     /**
@@ -386,11 +408,12 @@ class Core extends Base
      * 获取指定显示器的位置
      *
      * @param integer $monitor 显示器编号
-     * @return \FFI\CData 显示器位置
+     * @return Vector2 显示器位置
      */
-    public static function getMonitorPosition(int $monitor): \FFI\CData
+    public static function getMonitorPosition(int $monitor): Vector2
     {
-        return self::ffi()->GetMonitorPosition($monitor);
+        $pos = self::ffi()->GetMonitorPosition($monitor);
+        return new Vector2($pos->x, $pos->y);
     }
 
     /**
@@ -451,21 +474,23 @@ class Core extends Base
     /**
      * 获取窗口在显示器上的XY位置
      *
-     * @return \FFI\CData 窗口位置
+     * @return Vector2 窗口位置
      */
-    public static function getWindowPosition(): \FFI\CData
+    public static function getWindowPosition(): Vector2
     {
-        return self::ffi()->GetWindowPosition();
+        $pos = self::ffi()->GetWindowPosition();
+        return new Vector2($pos->x, $pos->y);
     }
 
     /**
      * 获取窗口DPI缩放因子
      *
-     * @return \FFI\CData DPI缩放因子
+     * @return Vector2 DPI缩放因子
      */
-    public static function getWindowScaleDPI(): \FFI\CData
+    public static function getWindowScaleDPI(): Vector2
     {
-        return self::ffi()->GetWindowScaleDPI();
+        $dpi = self::ffi()->GetWindowScaleDPI();
+        return new Vector2($dpi->x, $dpi->y);
     }
 
     /**
@@ -503,11 +528,11 @@ class Core extends Base
     /**
      * 获取剪贴板图像
      *
-     * @return \FFI\CData 剪贴板图像数据
+     * @return Image 剪贴板图像数据
      */
-    public static function getClipboardImage(): \FFI\CData
+    public static function getClipboardImage(): Image
     {
-        return self::ffi()->GetClipboardImage();
+        return new Image(self::ffi()->GetClipboardImage());
     }
 
     /**
@@ -597,12 +622,12 @@ class Core extends Base
     /**
      * 设置背景颜色（帧缓冲清除颜色）
      *
-     * @param \FFI\CData $color 背景颜色
+     * @param Color $color 背景颜色
      * @return void
      */
-    public static function clearBackground(\FFI\CData $color): void
+    public static function clearBackground(Color $color): void
     {
-        self::ffi()->ClearBackground($color);
+        self::ffi()->ClearBackground($color->struct());
     }
 
     /**
@@ -628,12 +653,12 @@ class Core extends Base
     /**
      * 开启自定义2D相机模式
      *
-     * @param \FFI\CData $camera 相机配置
+     * @param Camera2D $camera 相机配置
      * @return void
      */
-    public static function beginMode2D(\FFI\CData $camera): void
+    public static function beginMode2D(Camera2D $camera): void
     {
-        self::ffi()->BeginMode2D($camera);
+        self::ffi()->BeginMode2D($camera->struct());
     }
 
     /**
@@ -649,12 +674,12 @@ class Core extends Base
     /**
      * 开启自定义3D相机模式
      *
-     * @param \FFI\CData $camera 相机配置
+     * @param Camera3D $camera 相机配置
      * @return void
      */
-    public static function beginMode3D(\FFI\CData $camera): void
+    public static function beginMode3D(Camera3D $camera): void
     {
-        self::ffi()->BeginMode3D($camera);
+        self::ffi()->BeginMode3D($camera->struct());
     }
 
     /**
@@ -670,12 +695,12 @@ class Core extends Base
     /**
      * 开始绘制到渲染纹理
      *
-     * @param \FFI\CData $target 渲染纹理目标
+     * @param RenderTexture $target 渲染纹理目标
      * @return void
      */
-    public static function beginTextureMode(\FFI\CData $target): void
+    public static function beginTextureMode(RenderTexture $target): void
     {
-        self::ffi()->BeginTextureMode($target);
+        self::ffi()->BeginTextureMode($target->struct());
     }
 
     /**
@@ -691,12 +716,12 @@ class Core extends Base
     /**
      * 开启自定义着色器绘制
      *
-     * @param \FFI\CData $shader 着色器
+     * @param Shader $shader 着色器
      * @return void
      */
-    public static function beginShaderMode(\FFI\CData $shader): void
+    public static function beginShaderMode(Shader $shader): void
     {
-        self::ffi()->BeginShaderMode($shader);
+        self::ffi()->BeginShaderMode($shader->struct());
     }
 
     /**
@@ -757,12 +782,12 @@ class Core extends Base
     /**
      * 开启VR立体渲染（需要VR模拟器）
      *
-     * @param \FFI\CData $config VR立体配置
+     * @param VrStereoConfig $config VR立体配置
      * @return void
      */
-    public static function beginVrStereoMode(\FFI\CData $config): void
+    public static function beginVrStereoMode(VrStereoConfig $config): void
     {
-        self::ffi()->BeginVrStereoMode($config);
+        self::ffi()->BeginVrStereoMode($config->struct());
     }
 
     /**
@@ -780,23 +805,23 @@ class Core extends Base
     /**
      * 加载VR模拟器设备的立体配置
      *
-     * @param \FFI\CData $device VR设备信息
-     * @return \FFI\CData VR立体配置
+     * @param VrDeviceInfo $device VR设备信息
+     * @return VrStereoConfig VR立体配置
      */
-    public static function loadVrStereoConfig(\FFI\CData $device): \FFI\CData
+    /* public static function loadVrStereoConfig(VrDeviceInfo $device): VrStereoConfig
     {
-        return self::ffi()->LoadVrStereoConfig($device);
-    }
+        return new VrStereoConfig(self::ffi()->LoadVrStereoConfig($device->struct()));
+    } */
 
     /**
      * 卸载VR立体配置
      *
-     * @param \FFI\CData $config VR立体配置
+     * @param VrStereoConfig $config VR立体配置
      * @return void
      */
-    public static function unloadVrStereoConfig(\FFI\CData $config): void
+    public static function unloadVrStereoConfig(VrStereoConfig $config): void
     {
-        self::ffi()->UnloadVrStereoConfig($config);
+        self::ffi()->UnloadVrStereoConfig($config->struct());
     }
 
     //### 着色器管理函数
@@ -807,11 +832,11 @@ class Core extends Base
      *
      * @param string $vsFileName 顶点着色器文件路径
      * @param string $fsFileName 片段着色器文件路径
-     * @return \FFI\CData 着色器对象
+     * @return Shader 着色器对象
      */
-    public static function loadShader(string $vsFileName, string $fsFileName): \FFI\CData
+    public static function loadShader(string $vsFileName, string $fsFileName): Shader
     {
-        return self::ffi()->LoadShader($vsFileName, $fsFileName);
+        return new Shader(self::ffi()->LoadShader($vsFileName, $fsFileName));
     }
 
     /**
@@ -819,113 +844,127 @@ class Core extends Base
      *
      * @param string $vsCode 顶点着色器代码
      * @param string $fsCode 片段着色器代码
-     * @return \FFI\CData 着色器对象
+     * @return Shader 着色器对象
      */
-    public static function loadShaderFromMemory(string $vsCode, string $fsCode): \FFI\CData
+    public static function loadShaderFromMemory(string $vsCode, string $fsCode): Shader
     {
-        return self::ffi()->LoadShaderFromMemory($vsCode, $fsCode);
+        return new Shader(self::ffi()->LoadShaderFromMemory($vsCode, $fsCode));
     }
 
     /**
      * 检查着色器是否有效（已加载到GPU）
      *
-     * @param \FFI\CData $shader 着色器对象
+     * @param Shader $shader 着色器对象
      * @return bool 是否有效
      */
-    public static function isShaderValid(\FFI\CData $shader): bool
+    public static function isShaderValid(Shader $shader): bool
     {
-        return self::ffi()->IsShaderValid($shader);
+        return self::ffi()->IsShaderValid($shader->struct());
     }
 
     /**
      * 获取着色器uniform位置
      *
-     * @param \FFI\CData $shader 着色器对象
+     * @param Shader $shader 着色器对象
      * @param string $uniformName uniform名称
      * @return int uniform位置
      */
-    public static function getShaderLocation(\FFI\CData &$shader, string $uniformName): int
+    public static function getShaderLocation(Shader $shader, string $uniformName): int
     {
-        return self::ffi()->GetShaderLocation($shader, $uniformName);
+        return self::ffi()->GetShaderLocation($shader->struct(), $uniformName);
     }
 
     /**
      * 获取着色器属性位置
      *
-     * @param \FFI\CData $shader 着色器对象
+     * @param Shader $shader 着色器对象
      * @param string $attribName 属性名称
      * @return int 属性位置
      */
-    public static function getShaderLocationAttrib(\FFI\CData $shader, string $attribName): int
+    public static function getShaderLocationAttrib(Shader $shader, string $attribName): int
     {
-        return self::ffi()->GetShaderLocationAttrib($shader, $attribName);
+        return self::ffi()->GetShaderLocationAttrib($shader->struct(), $attribName);
     }
 
     /**
      * 设置着色器uniform值
      *
-     * @param \FFI\CData $shader 着色器对象
+     * @param Shader $shader 着色器对象
      * @param int $locIndex uniform位置索引
-     * @param \FFI\CData $value 值
+     * @param string $value 值
      * @param int $uniformType uniform类型
      * @return void
      */
-    public static function setShaderValue(\FFI\CData $shader, int $locIndex, \FFI\CData $value, int $uniformType): void
+    public static function setShaderValue(Shader $shader, int $locIndex, string $value, int $uniformType): void
     {
-        $c_value = self::ffi()::addr($value);
-        self::ffi()->SetShaderValue($shader, $locIndex, $c_value, $uniformType);
+        $c_value = self::ffi()->new('char[' . strlen($value) . ']');
+        self::ffi()::memcpy($c_value, $value, strlen($value));
+        self::ffi()->SetShaderValue(
+            $shader->struct(),
+            $locIndex,
+            self::ffi()->cast('void*', $c_value),
+            $uniformType
+        );
     }
 
     /**
      * 设置着色器uniform值（向量）
      *
-     * @param \FFI\CData $shader 着色器对象
+     * @param Shader $shader 着色器对象
      * @param int $locIndex uniform位置索引
-     * @param \FFI\CData $value 值
+     * @param string $value 值
      * @param int $uniformType uniform类型
      * @param int $count 向量元素数量
      * @return void
      */
-    public static function setShaderValueV(\FFI\CData $shader, int $locIndex, \FFI\CData $value, int $uniformType, int $count): void
+    public static function setShaderValueV(Shader $shader, int $locIndex, string $value, int $uniformType, int $count): void
     {
-        self::ffi()->SetShaderValueV($shader, $locIndex, $value, $uniformType, $count);
+        $c_value = self::ffi()->new('char[' . strlen($value) . ']');
+        self::ffi()::memcpy($c_value, $value, strlen($value));
+        self::ffi()->SetShaderValueV(
+            $shader->struct(),
+            $locIndex,
+            self::ffi()->cast('void*', $c_value),
+            $uniformType,
+            $count
+        );
     }
 
     /**
      * 设置着色器uniform值（4x4矩阵）
      *
-     * @param \FFI\CData $shader 着色器对象
+     * @param Shader $shader 着色器对象
      * @param int $locIndex uniform位置索引
-     * @param \FFI\CData $mat 矩阵
+     * @param Matrix $mat 矩阵
      * @return void
      */
-    public static function setShaderValueMatrix(\FFI\CData $shader, int $locIndex, \FFI\CData $mat): void
+    public static function setShaderValueMatrix(Shader $shader, int $locIndex, Matrix $mat): void
     {
-        self::ffi()->SetShaderValueMatrix($shader, $locIndex, $mat);
+        self::ffi()->SetShaderValueMatrix($shader->struct(), $locIndex, $mat->struct());
     }
 
     /**
      * 设置着色器纹理uniform值（sampler2d）
      *
-     * @param \FFI\CData $shader 着色器对象
+     * @param Shader $shader 着色器对象
      * @param int $locIndex uniform位置索引
-     * @param \FFI\CData $texture 纹理
+     * @param Texture $texture 纹理
      * @return void
      */
-    public static function setShaderValueTexture(\FFI\CData $shader, int $locIndex, \FFI\CData $texture): void
+    public static function setShaderValueTexture(Shader $shader, int $locIndex, Texture $texture): void
     {
-        self::ffi()->SetShaderValueTexture($shader, $locIndex, $texture);
+        self::ffi()->SetShaderValueTexture($shader->struct(), $locIndex, $texture->struct());
     }
 
     /**
      * 从GPU显存卸载着色器
      *
-     * @param \FFI\CData $shader 着色器对象
+     * @param Shader $shader 着色器对象
      * @return void
      */
-    public static function unloadShader(\FFI\CData $shader): void
+    public static function unloadShader(Shader $shader): void
     {
-        self::ffi()->UnloadShader($shader);
+        self::ffi()->UnloadShader($shader->struct());
     }
 
     //### 屏幕空间相关函数
@@ -933,99 +972,155 @@ class Core extends Base
     /**
      * 获取屏幕位置（如鼠标）对应的世界空间射线
      *
-     * @param \FFI\CData $position 屏幕位置
-     * @param \FFI\CData $camera 相机配置
-     * @return \FFI\CData 射线对象
+     * @param Vector2 $position 屏幕位置
+     * @param Camera3D $camera 相机配置
+     * @return Ray 射线对象
      */
-    public static function getScreenToWorldRay(\FFI\CData $position, \FFI\CData $camera): \FFI\CData
+    public static function getScreenToWorldRay(Vector2 $position, Camera3D $camera): Ray
     {
-        return self::ffi()->GetScreenToWorldRay($position, $camera);
+        $c_ray = self::ffi()->GetScreenToWorldRay($position->struct(), $camera->struct());
+        return new Ray(
+            new Vector3($c_ray->position->x, $c_ray->position->y, $c_ray->position->z),
+            new Vector3($c_ray->direction->x, $c_ray->direction->y, $c_ray->direction->z)
+        );
     }
 
     /**
      * 在视口中获取屏幕位置对应的世界空间射线
      *
-     * @param \FFI\CData $position 屏幕位置
-     * @param \FFI\CData $camera 相机配置
+     * @param Vector2 $position 屏幕位置
+     * @param Camera3D $camera 相机配置
      * @param int $width 视口宽度
      * @param int $height 视口高度
-     * @return \FFI\CData 射线对象
+     * @return Ray 射线对象
      */
-    public static function getScreenToWorldRayEx(\FFI\CData $position, \FFI\CData $camera, int $width, int $height): \FFI\CData
+    public static function getScreenToWorldRayEx(Vector2 $position, Camera3D $camera, int $width, int $height): Ray
     {
-        return self::ffi()->GetScreenToWorldRayEx($position, $camera, $width, $height);
+        $c_ray = self::ffi()->GetScreenToWorldRayEx($position->struct(), $camera->struct(), $width, $height);
+        return new Ray(
+            new Vector3($c_ray->position->x, $c_ray->position->y, $c_ray->position->z),
+            new Vector3($c_ray->direction->x, $c_ray->direction->y, $c_ray->direction->z)
+        );
     }
 
     /**
      * 将3D世界坐标转换为屏幕空间坐标
      *
-     * @param \FFI\CData $position 3D世界坐标
-     * @param \FFI\CData $camera 相机配置
-     * @return \FFI\CData 2D屏幕坐标
+     * @param Vector3 $position 3D世界坐标
+     * @param Camera3D $camera 相机配置
+     * @return Vector2 2D屏幕坐标
      */
-    public static function getWorldToScreen(\FFI\CData $position, \FFI\CData $camera): \FFI\CData
+    public static function getWorldToScreen(Vector3 $position, Camera3D $camera): Vector2
     {
-        return self::ffi()->GetWorldToScreen($position, $camera);
+        $c_vec2 = self::ffi()->GetWorldToScreen(
+            $position->struct(),
+            $camera->struct()
+        );
+        return new Vector2($c_vec2->x, $c_vec2->y);
     }
 
     /**
      * 在视口中将3D世界坐标转换为屏幕空间坐标
      *
-     * @param \FFI\CData $position 3D世界坐标
-     * @param \FFI\CData $camera 相机配置
+     * @param Vector3 $position 3D世界坐标
+     * @param Camera3D $camera 相机配置
      * @param int $width 视口宽度
      * @param int $height 视口高度
-     * @return \FFI\CData 2D屏幕坐标
+     * @return Vector2 2D屏幕坐标
      */
-    public static function getWorldToScreenEx(\FFI\CData $position, \FFI\CData $camera, int $width, int $height): \FFI\CData
+    public static function getWorldToScreenEx(Vector3 $position, Camera3D $camera, int $width, int $height): Vector2
     {
-        return self::ffi()->GetWorldToScreenEx($position, $camera, $width, $height);
+        $c_vec2 = self::ffi()->GetWorldToScreenEx(
+            $position->struct(),
+            $camera->struct(),
+            $width,
+            $height
+        );
+        return new Vector2($c_vec2->x, $c_vec2->y);
     }
 
     /**
      * 将2D相机世界坐标转换为屏幕空间坐标
      *
-     * @param \FFI\CData $position 2D世界坐标
-     * @param \FFI\CData $camera 2D相机配置
-     * @return \FFI\CData 2D屏幕坐标
+     * @param Vector2 $position 2D世界坐标
+     * @param Camera2D $camera 2D相机配置
+     * @return Vector2 2D屏幕坐标
      */
-    public static function getWorldToScreen2D(\FFI\CData $position, \FFI\CData $camera): \FFI\CData
+    public static function getWorldToScreen2D(Vector2 $position, Camera2D $camera): Vector2
     {
-        return self::ffi()->GetWorldToScreen2D($position, $camera);
+        $c_vec2 = self::ffi()->GetWorldToScreen2D($position->struct(), $camera->struct());
+        return new Vector2($c_vec2->x, $c_vec2->y);
     }
 
     /**
      * 将2D相机屏幕坐标转换为世界空间坐标
      *
-     * @param \FFI\CData $position 2D屏幕坐标
-     * @param \FFI\CData $camera 2D相机配置
-     * @return \FFI\CData 2D世界坐标
+     * @param Vector2 $position 2D屏幕坐标
+     * @param Camera2D $camera 2D相机配置
+     * @return Vector2 2D世界坐标   
      */
-    public static function getScreenToWorld2D(\FFI\CData $position, \FFI\CData $camera): \FFI\CData
+    public static function getScreenToWorld2D(Vector2 $position, Camera2D $camera): Vector2
     {
-        return self::ffi()->GetScreenToWorld2D($position, $camera);
+        $c_vec2 = self::ffi()->GetScreenToWorld2D($position->struct(), $camera->struct());
+        return new Vector2($c_vec2->x, $c_vec2->y);
     }
 
     /**
      * 获取相机变换矩阵（视图矩阵）
      *
-     * @param \FFI\CData $camera 相机配置
-     * @return \FFI\CData 矩阵对象
+     * @param Camera3D $camera 相机配置
+     * @return Matrix 矩阵对象
      */
-    public static function getCameraMatrix(\FFI\CData $camera): \FFI\CData
+    public static function getCameraMatrix(Camera3D $camera): Matrix
     {
-        return self::ffi()->GetCameraMatrix($camera);
+        $c_matrix = self::ffi()->GetCameraMatrix($camera->struct());
+        return new Matrix(
+            $c_matrix->m0,
+            $c_matrix->m1,
+            $c_matrix->m2,
+            $c_matrix->m3,
+            $c_matrix->m4,
+            $c_matrix->m5,
+            $c_matrix->m6,
+            $c_matrix->m7,
+            $c_matrix->m8,
+            $c_matrix->m9,
+            $c_matrix->m10,
+            $c_matrix->m11,
+            $c_matrix->m12,
+            $c_matrix->m13,
+            $c_matrix->m14,
+            $c_matrix->m15
+        );
     }
 
     /**
      * 获取2D相机变换矩阵
      *
-     * @param \FFI\CData $camera 2D相机配置
-     * @return \FFI\CData 矩阵对象
+     * @param Camera2D $camera 2D相机配置
+     * @return Matrix 矩阵对象
      */
-    public static function getCameraMatrix2D(\FFI\CData $camera): \FFI\CData
+    public static function getCameraMatrix2D(Camera2D $camera): Matrix
     {
-        return self::ffi()->GetCameraMatrix2D($camera);
+        $c_matrix = self::ffi()->GetCameraMatrix2D($camera->struct());
+        return new Matrix(
+            $c_matrix->m0,
+            $c_matrix->m1,
+            $c_matrix->m2,
+            $c_matrix->m3,
+            $c_matrix->m4,
+            $c_matrix->m5,
+            $c_matrix->m6,
+            $c_matrix->m7,
+            $c_matrix->m8,
+            $c_matrix->m9,
+            $c_matrix->m10,
+            $c_matrix->m11,
+            $c_matrix->m12,
+            $c_matrix->m13,
+            $c_matrix->m14,
+            $c_matrix->m15
+        );
     }
 
     //### 时间相关函数
@@ -1596,11 +1691,11 @@ class Core extends Base
      * 加载目录文件路径列表
      *
      * @param string $dirPath 目录路径
-     * @return \FFI\CData 文件路径列表结构
+     * @return FilePathList 文件路径列表结构
      */
-    public static function loadDirectoryFiles(string $dirPath): \FFI\CData
+    public static function loadDirectoryFiles(string $dirPath): FilePathList
     {
-        return self::ffi()->LoadDirectoryFiles($dirPath);
+        return new FilePathList(self::ffi()->LoadDirectoryFiles($dirPath));
     }
 
     /**
@@ -1609,22 +1704,22 @@ class Core extends Base
      * @param string $basePath 基础路径
      * @param string $filter 过滤器
      * @param bool $scanSubdirs 是否递归子目录
-     * @return \FFI\CData 文件路径列表结构
+     * @return FilePathList 文件路径列表结构
      */
-    public static function loadDirectoryFilesEx(string $basePath, string $filter, bool $scanSubdirs): \FFI\CData
+    public static function loadDirectoryFilesEx(string $basePath, string $filter, bool $scanSubdirs): FilePathList
     {
-        return self::ffi()->LoadDirectoryFilesEx($basePath, $filter, $scanSubdirs);
+        return new FilePathList(self::ffi()->LoadDirectoryFilesEx($basePath, $filter, $scanSubdirs));
     }
 
     /**
      * 卸载文件路径列表
      *
-     * @param \FFI\CData $files 文件路径列表结构
+     * @param FilePathList $files 文件路径列表结构
      * @return void
      */
-    public static function unloadDirectoryFiles(\FFI\CData $files): void
+    public static function unloadDirectoryFiles(FilePathList $files): void
     {
-        self::ffi()->UnloadDirectoryFiles($files);
+        self::ffi()->UnloadDirectoryFiles($files->struct());
     }
 
     /**
@@ -1640,22 +1735,22 @@ class Core extends Base
     /**
      * 加载被拖放的文件路径
      *
-     * @return \FFI\CData 文件路径列表结构
+     * @return FilePathList 文件路径列表结构
      */
-    public static function loadDroppedFiles(): \FFI\CData
+    public static function loadDroppedFiles(): FilePathList
     {
-        return self::ffi()->LoadDroppedFiles();
+        return new FilePathList(self::ffi()->LoadDroppedFiles());
     }
 
     /**
      * 卸载被拖放的文件路径
      *
-     * @param \FFI\CData $files 文件路径列表结构
+     * @param FilePathList $files 文件路径列表结构
      * @return void
      */
-    public static function unloadDroppedFiles(\FFI\CData $files): void
+    public static function unloadDroppedFiles(FilePathList $files): void
     {
-        self::ffi()->UnloadDroppedFiles($files);
+        self::ffi()->UnloadDroppedFiles($files->struct());
     }
 
     /**
@@ -1783,45 +1878,54 @@ class Core extends Base
      * 从文件加载自动化事件列表，NULL表示空列表，容量=MAX_AUTOMATION_EVENTS
      *
      * @param string $fileName 文件路径
-     * @return \FFI\CData 自动化事件列表结构
+     * @return AutomationEventList 自动化事件列表结构
      */
-    public static function loadAutomationEventList(string $fileName): \FFI\CData
+    public static function loadAutomationEventList(string $fileName): AutomationEventList
     {
-        return self::ffi()->LoadAutomationEventList($fileName);
+        $list = self::ffi()->LoadAutomationEventList($fileName);
+        $arr = [];
+        for ($i = 0; $i < $list->count; $i++) {
+            $params = [];
+            for ($j = 0; $j < count($list->events[$i]->params); $j++) {
+                $params[] = $list->events[$i]->params[$j];
+            }
+            $arr[] = new AutomationEvent($list->events[$i]->type, $list->events[$i]->frame, $list->events[$i]->value, $params);
+        }
+        return new AutomationEventList($list->capacity, $list->count, $arr);
     }
 
     /**
      * 卸载自动化事件列表
      *
-     * @param \FFI\CData $list 自动化事件列表结构
+     * @param AutomationEventList $list 自动化事件列表结构
      * @return void
      */
-    public static function unloadAutomationEventList(\FFI\CData $list): void
+    public static function unloadAutomationEventList(AutomationEventList $list): void
     {
-        self::ffi()->UnloadAutomationEventList($list);
+        self::ffi()->UnloadAutomationEventList($list->struct());
     }
 
     /**
      * 将自动化事件列表导出为文本文件
      *
-     * @param \FFI\CData $list 自动化事件列表结构
+     * @param AutomationEventList $list 自动化事件列表结构
      * @param string $fileName 导出文件路径
      * @return bool 操作是否成功
      */
-    public static function exportAutomationEventList(\FFI\CData $list, string $fileName): bool
+    public static function exportAutomationEventList(AutomationEventList $list, string $fileName): bool
     {
-        return self::ffi()->ExportAutomationEventList($list, $fileName);
+        return self::ffi()->ExportAutomationEventList($list->struct(), $fileName);
     }
 
     /**
      * 设置要记录的自动化事件列表
      *
-     * @param \FFI\CData $list 自动化事件列表结构指针
+     * @param AutomationEventList $list 自动化事件列表结构
      * @return void
      */
-    public static function setAutomationEventList(\FFI\CData $list): void
+    public static function setAutomationEventList(AutomationEventList $list): void
     {
-        self::ffi()->SetAutomationEventList($list);
+        self::ffi()->SetAutomationEventList($list->struct());
     }
 
     /**
@@ -1858,12 +1962,12 @@ class Core extends Base
     /**
      * 执行记录的自动化事件
      *
-     * @param \FFI\CData $event 自动化事件结构
+     * @param AutomationEvent $event 自动化事件结构
      * @return void
      */
-    public static function playAutomationEvent(\FFI\CData $event): void
+    public static function playAutomationEvent(AutomationEvent $event): void
     {
-        self::ffi()->PlayAutomationEvent($event);
+        self::ffi()->PlayAutomationEvent($event->struct());
     }
 
     //### 键盘输入相关函数
@@ -2153,21 +2257,23 @@ class Core extends Base
     /**
      * 获取鼠标XY坐标（Vector2类型）
      *
-     * @return \FFI\CData Vector2类型的坐标结构
+     * @return Vector2 Vector2类型的坐标结构
      */
-    public static function getMousePosition(): \FFI\CData
+    public static function getMousePosition(): Vector2
     {
-        return self::ffi()->GetMousePosition();
+        $v2 = self::ffi()->GetMousePosition();
+        return new Vector2($v2->x, $v2->y);
     }
 
     /**
      * 获取帧间鼠标移动增量
      *
-     * @return \FFI\CData Vector2类型的增量结构
+     * @return Vector2 Vector2类型的增量结构
      */
-    public static function getMouseDelta(): \FFI\CData
+    public static function getMouseDelta(): Vector2
     {
-        return self::ffi()->GetMouseDelta();
+        $v2 = self::ffi()->GetMouseDelta();
+        return new Vector2($v2->x, $v2->y);
     }
 
     /**
@@ -2219,11 +2325,12 @@ class Core extends Base
     /**
      * 获取鼠标滚轮XY双向滚动量（Vector2类型）
      *
-     * @return \FFI\CData Vector2类型的滚动量结构
+     * @return Vector2 Vector2类型的滚动量结构
      */
-    public static function getMouseWheelMoveV(): \FFI\CData
+    public static function getMouseWheelMoveV(): Vector2
     {
-        return self::ffi()->GetMouseWheelMoveV();
+        $v2 = self::ffi()->GetMouseWheelMoveV();
+        return new Vector2($v2->x, $v2->y);
     }
 
     /**
@@ -2263,11 +2370,12 @@ class Core extends Base
      * 获取指定索引触摸点的坐标
      *
      * @param int $index 触摸点索引
-     * @return \FFI\CData Vector2类型的坐标结构
+     * @return Vector2 Vector2类型的坐标结构
      */
-    public static function getTouchPosition(int $index): \FFI\CData
+    public static function getTouchPosition(int $index): Vector2
     {
-        return self::ffi()->GetTouchPosition($index);
+        $v2 = self::ffi()->GetTouchPosition($index);
+        return new Vector2($v2->x, $v2->y);
     }
 
     /**
@@ -2380,27 +2488,28 @@ class Core extends Base
     /**
      * 根据选定模式更新相机位置（第一人称/第三人称等）
      *
-     * @param \FFI\CData $camera 相机对象指针
+     * @param Camera3D $camera 相机对象指针
      * @param int $mode 更新模式
      * @return void
      */
-    public static function updateCamera(\FFI\CData $camera, int $mode): void
+    public static function updateCamera(Camera3D $camera, int $mode): void
     {
-        $c_camera = self::ffi()::addr($camera);
+        $c_camera = self::ffi()::addr($camera->struct());
         self::ffi()->UpdateCamera($c_camera, $mode);
     }
 
     /**
      * 高级相机控制（自定义移动/旋转/缩放）
      *
-     * @param \FFI\CData $camera 相机对象指针
-     * @param \FFI\CData $movement 移动向量（Vector3类型）
-     * @param \FFI\CData $rotation 旋转向量（Vector3类型）
+     * @param Camera3D $camera 相机对象指针
+     * @param Vector3 $movement 移动向量（Vector3类型）
+     * @param Vector3 $rotation 旋转向量（Vector3类型）
      * @param float $zoom 缩放值
      * @return void
      */
-    public static function updateCameraPro(\FFI\CData $camera, \FFI\CData $movement, \FFI\CData $rotation, float $zoom): void
+    public static function updateCameraPro(Camera3D $camera, Vector3 $movement, Vector3 $rotation, float $zoom): void
     {
-        self::ffi()->UpdateCameraPro($camera, $movement, $rotation, $zoom);
+        $c_camera = self::ffi()::addr($camera->struct());
+        self::ffi()->UpdateCameraPro($c_camera, $movement->struct(), $rotation->struct(), $zoom);
     }
 }
