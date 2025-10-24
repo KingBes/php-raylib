@@ -33,7 +33,7 @@ class NPatchInfo extends Base
         $this->right = $cdata->right;
         $this->bottom = $cdata->bottom;
         $this->layout = $cdata->layout;
-        $this->data = $cdata->data;
+        $this->data = $cdata;
     }
 
     /**

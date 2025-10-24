@@ -5,6 +5,8 @@ use Kingbes\Raylib\Core;
 use Kingbes\Raylib\Shapes;
 use Kingbes\Raylib\Text;
 use Kingbes\Raylib\Utils;
+use Kingbes\Raylib\MouseKey;
+use Kingbes\Raylib\KeyBoard;
 
 // 优化后的尺寸设置，解决网格遮挡文字问题
 const SCREEN_WIDTH = 450;
@@ -244,29 +246,29 @@ while (!Core::windowShouldClose()) {
         $moved = false;
         
         // 左箭头
-        if (Core::isKeyPressed(263) && $lastKeyPressed != 263) {
+        if (Core::isKeyPressed(KeyBoard::Left->value) && $lastKeyPressed != KeyBoard::Left->value) {
             $moved = moveLeft($grid, $score);
-            $lastKeyPressed = 263;
+            $lastKeyPressed =  KeyBoard::Left->value;
         }
         // 右箭头
-        elseif (Core::isKeyPressed(262) && $lastKeyPressed != 262) {
+        elseif (Core::isKeyPressed(KeyBoard::Right->value) && $lastKeyPressed != KeyBoard::Right->value) {
             $moved = moveRight($grid, $score);
-            $lastKeyPressed = 262;
+            $lastKeyPressed =  KeyBoard::Right->value;
         }
         // 上箭头
-        elseif (Core::isKeyPressed(265) && $lastKeyPressed != 265) {
+        elseif (Core::isKeyPressed(KeyBoard::Up->value) && $lastKeyPressed != KeyBoard::Up->value) {
             $moved = moveUp($grid, $score);
-            $lastKeyPressed = 265;
+            $lastKeyPressed =  KeyBoard::Up->value;
         }
         // 下箭头
-        elseif (Core::isKeyPressed(264) && $lastKeyPressed != 264) {
+        elseif (Core::isKeyPressed(KeyBoard::Down->value) && $lastKeyPressed != KeyBoard::Down->value) {
             $moved = moveDown($grid, $score);
-            $lastKeyPressed = 264;
+            $lastKeyPressed =  KeyBoard::Down->value;
         }
         // 没有按键时重置最后按键记录
-        elseif (!Core::isKeyDown(263) && !Core::isKeyDown(262) && 
-                !Core::isKeyDown(265) && !Core::isKeyDown(264)) {
-            $lastKeyPressed = 0;
+        elseif (!Core::isKeyDown(KeyBoard::Left->value) && !Core::isKeyDown(KeyBoard::Right->value) && 
+                !Core::isKeyDown(KeyBoard::Up->value) && !Core::isKeyDown(KeyBoard::Down->value)) {
+            $lastKeyPressed = KeyBoard::None->value;
         }
         
         // 如果有移动，生成新方块并检查游戏状态

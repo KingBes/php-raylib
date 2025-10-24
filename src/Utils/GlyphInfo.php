@@ -30,7 +30,7 @@ class GlyphInfo extends Base
         $this->offsetX = $cdata->offsetX;
         $this->offsetY = $cdata->offsetY;
         $this->advanceX = $cdata->advanceX;
-        $this->data = $cdata->data;
+        $this->data = $cdata;
     }
 
     /**

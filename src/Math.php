@@ -98,365 +98,387 @@ class Math extends Base
     /**
      * 返回一个零向量2
      *
-     * @return CData Vector2 零向量2
+     * @return Vector2 Vector2 零向量2
      */
-    public static function vector2Zero(): CData
+    public static function vector2Zero(): Vector2
     {
-        return self::ffi()->Vector2Zero();
+        $res = self::ffi()->Vector2Zero();
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 返回一个单位向量2
      *
-     * @return CData Vector2 单位向量2
+     * @return Vector2 单位向量2
      */
-    public static function vector2One(): CData
+    public static function vector2One(): Vector2
     {
-        return self::ffi()->Vector2One();
+        $res = self::ffi()->Vector2One();
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2加法
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
-     * @return CData Vector2 向量2加法结果
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
+     * @return Vector2 向量2加法结果
      */
-    public static function vector2Add(CData $Vector2_1, CData $Vector2_2): CData
+    public static function vector2Add(Vector2 $Vector2_1, Vector2 $Vector2_2): Vector2
     {
-        return self::ffi()->Vector2Add($Vector2_1, $Vector2_2);
+        $res = self::ffi()->Vector2Add($Vector2_1->struct(), $Vector2_2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2加法（值）
      *
-     * @param CData Vector2 $Vector2 向量2
+     * @param Vector2 Vector2 $Vector2 向量2
      * @param float $add 要添加的值
-     * @return CData Vector2 向量2加法结果
+     * @return Vector2 向量2加法结果
      */
-    public static function vector2AddValue(CData $Vector2, float $add): CData
+    public static function vector2AddValue(Vector2 $Vector2, float $add): Vector2
     {
-        return self::ffi()->Vector2AddValue($Vector2, $add);
+        $res = self::ffi()->Vector2AddValue($Vector2->struct(), $add);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2减法
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
-     * @return CData Vector2 向量2减法结果
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
+     * @return Vector2 向量2减法结果
      */
-    public static function vector2Subtract(CData $Vector2_1, CData $Vector2_2): CData
+    public static function vector2Subtract(Vector2 $Vector2_1, Vector2 $Vector2_2): Vector2
     {
-        return self::ffi()->Vector2Subtract($Vector2_1, $Vector2_2);
+        $res = self::ffi()->Vector2Subtract($Vector2_1->struct(), $Vector2_2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2减法（值）
      *
-     * @param CData Vector2 $Vector2 向量2
+     * @param Vector2 $Vector2 向量2
      * @param float $subtract 要减去的值
-     * @return CData Vector2 向量2减法结果
+     * @return Vector2 向量2减法结果
      */
-    public static function vector2SubtractValue(CData $Vector2, float $subtract): CData
+    public static function vector2SubtractValue(Vector2 $Vector2, float $subtract): Vector2
     {
-        return self::ffi()->Vector2SubtractValue($Vector2, $subtract);
+        $res = self::ffi()->Vector2SubtractValue($Vector2->struct(), $subtract);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2长度
      *
-     * @param CData Vector2 $Vector2 向量2
+     * @param Vector2 $Vector2 向量2    
      * @return float 向量2长度
      */
-    public static function vector2Length(CData $Vector2): float
+    public static function vector2Length(Vector2 $Vector2): float
     {
-        return self::ffi()->Vector2Length($Vector2);
+        return self::ffi()->Vector2Length($Vector2->struct());
     }
 
     /**
      * 向量2长度平方
      *
-     * @param CData Vector2 $Vector2 向量2
+     * @param Vector2 $Vector2 向量2
      * @return float 向量2长度平方
      */
-    public static function vector2LengthSqr(CData $Vector2): float
+    public static function vector2LengthSqr(Vector2 $Vector2): float
     {
-        return self::ffi()->Vector2LengthSqr($Vector2);
+        return self::ffi()->Vector2LengthSqr($Vector2->struct());
     }
 
     /**
      * 向量2点积
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
      * @return float 向量2点积
      */
-    public static function vector2DotProduct(CData $Vector2_1, CData $Vector2_2): float
+    public static function vector2DotProduct(Vector2 $Vector2_1, Vector2 $Vector2_2): float
     {
-        return self::ffi()->Vector2DotProduct($Vector2_1, $Vector2_2);
+        return self::ffi()->Vector2DotProduct($Vector2_1->struct(), $Vector2_2->struct());
     }
 
     /**
      * 向量2距离
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
      * @return float 向量2距离
      */
-    public static function vector2Distance(CData $Vector2_1, CData $Vector2_2): float
+    public static function vector2Distance(Vector2 $Vector2_1, Vector2 $Vector2_2): float
     {
-        return self::ffi()->Vector2Distance($Vector2_1, $Vector2_2);
+        return self::ffi()->Vector2Distance($Vector2_1->struct(), $Vector2_2->struct());
     }
 
     /**
      * 向量2距离平方
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
      * @return float 向量2距离平方
      */
-    public static function vector2DistanceSqr(CData $Vector2_1, CData $Vector2_2): float
+    public static function vector2DistanceSqr(Vector2 $Vector2_1, Vector2 $Vector2_2): float
     {
-        return self::ffi()->Vector2DistanceSqr($Vector2_1, $Vector2_2);
+        return self::ffi()->Vector2DistanceSqr($Vector2_1->struct(), $Vector2_2->struct());
     }
 
     /**
      * 向量2角度
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
      * @return float 向量2角度
      */
-    public static function vector2Angle(CData $Vector2_1, CData $Vector2_2): float
+    public static function vector2Angle(Vector2 $Vector2_1, Vector2 $Vector2_2): float
     {
-        return self::ffi()->Vector2Angle($Vector2_1, $Vector2_2);
+        return self::ffi()->Vector2Angle($Vector2_1->struct(), $Vector2_2->struct());
     }
 
     /**
      * 向量2线角度
      *
-     * @param CData Vector2 $Vector2_start 向量2
-     * @param CData Vector2 $Vector2_end 向量2
+     * @param Vector2 $Vector2_start 向量2
+     * @param Vector2 $Vector2_end 向量2    
      * @return float 向量2线角度
      */
-    public static function vector2LineAngle(CData $Vector2_start, CData $Vector2_end): float
+    public static function vector2LineAngle(Vector2 $Vector2_start, Vector2 $Vector2_end): float
     {
-        return self::ffi()->Vector2LineAngle($Vector2_start, $Vector2_end);
+        return self::ffi()->Vector2LineAngle($Vector2_start->struct(), $Vector2_end->struct());
     }
 
     /**
      * 向量2缩放
      *
-     * @param CData Vector2 $Vector2 向量2
+     * @param Vector2 $Vector2 向量2
      * @param float $scale 缩放值
-     * @return CData Vector2 向量2缩放结果
+     * @return Vector2 向量2缩放结果
      */
-    public static function vector2Scale(CData $Vector2, float $scale): CData
+    public static function vector2Scale(Vector2 $Vector2, float $scale): Vector2
     {
-        return self::ffi()->Vector2Scale($Vector2, $scale);
+        $res = self::ffi()->Vector2Scale($Vector2->struct(), $scale);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2乘法
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
-     * @return CData Vector2 向量2乘法结果
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
+     * @return Vector2 向量2乘法结果
      */
-    public static function vector2Multiply(CData $Vector2_1, CData $Vector2_2): CData
+    public static function vector2Multiply(Vector2 $Vector2_1, Vector2 $Vector2_2): Vector2
     {
-        return self::ffi()->Vector2Multiply($Vector2_1, $Vector2_2);
+        $res = self::ffi()->Vector2Multiply($Vector2_1->struct(), $Vector2_2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2取反
      *
-     * @param CData Vector2 $Vector2 向量2
-     * @return CData Vector2 向量2取反结果
+     * @param Vector2 $Vector2 向量2
+     * @return Vector2 向量2取反结果
      */
-    public static function vector2Negate(CData $Vector2): CData
+    public static function vector2Negate(Vector2 $Vector2): Vector2
     {
-        return self::ffi()->Vector2Negate($Vector2);
+        $res = self::ffi()->Vector2Negate($Vector2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2除法
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
-     * @return CData Vector2 向量2除法结果
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
+     * @return Vector2 向量2除法结果
      */
-    public static function vector2Divide(CData $Vector2_1, CData $Vector2_2): CData
+    public static function vector2Divide(Vector2 $Vector2_1, Vector2 $Vector2_2): Vector2
     {
-        return self::ffi()->Vector2Divide($Vector2_1, $Vector2_2);
+        $res = self::ffi()->Vector2Divide($Vector2_1->struct(), $Vector2_2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2归一化
      *
-     * @param CData Vector2 $Vector2 向量2
-     * @return CData Vector2 向量2归一化结果
+     * @param Vector2 $Vector2 向量2
+     * @return Vector2 向量2归一化结果
      */
-    public static function vector2Normalize(CData $Vector2): CData
+    public static function vector2Normalize(Vector2 $Vector2): Vector2
     {
-        return self::ffi()->Vector2Normalize($Vector2);
+        $res = self::ffi()->Vector2Normalize($Vector2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2变换
      *
-     * @param CData Vector2 $Vector2 向量2
-     * @param CData Matrix $Matrix 矩阵
-     * @return CData Vector2 向量2变换结果
+     * @param Vector2 $Vector2 向量2
+     * @param Matrix $Matrix 矩阵
+     * @return Vector2 向量2变换结果
      */
-    public static function vector2Transform(CData $Vector2, CData $Matrix): CData
+    public static function vector2Transform(Vector2 $Vector2, Matrix $Matrix): Vector2
     {
-        return self::ffi()->Vector2Transform($Vector2, $Matrix);
+        $res = self::ffi()->Vector2Transform($Vector2->struct(), $Matrix->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2插值
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
      * @param float $t 插值参数
-     * @return CData Vector2 向量2插值结果
+     * @return Vector2 向量2插值结果
      */
-    public static function vector2Lerp(CData $Vector2_1, CData $Vector2_2, float $t): CData
+    public static function vector2Lerp(Vector2 $Vector2_1, Vector2 $Vector2_2, float $t): Vector2
     {
-        return self::ffi()->Vector2Lerp($Vector2_1, $Vector2_2, $t);
+        $res = self::ffi()->Vector2Lerp($Vector2_1->struct(), $Vector2_2->struct(), $t);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2反射
      *
-     * @param CData Vector2 $Vector2 向量2
-     * @param CData Vector2 $Normal 向量2
-     * @return CData Vector2 向量2反射结果
+     * @param Vector2 $Vector2 向量2
+     * @param Vector2 $Normal 向量2
+     * @return Vector2 向量2反射结果
      */
-    public static function vector2Reflect(CData $Vector2, CData $Normal): CData
+    public static function vector2Reflect(Vector2 $Vector2, Vector2 $Normal): Vector2
     {
-        return self::ffi()->Vector2Reflect($Vector2, $Normal);
+        $res = self::ffi()->Vector2Reflect($Vector2->struct(), $Normal->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2最小
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
-     * @return CData Vector2 向量2最小结果
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
+     * @return Vector2 向量2最小结果
      */
-    public static function vector2Min(CData $Vector2_1, CData $Vector2_2): CData
+    public static function vector2Min(Vector2 $Vector2_1, Vector2 $Vector2_2): Vector2
     {
-        return self::ffi()->Vector2Min($Vector2_1, $Vector2_2);
+        $res = self::ffi()->Vector2Min($Vector2_1->struct(), $Vector2_2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2最大
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
-     * @return CData Vector2 向量2最大结果
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
+     * @return Vector2 向量2最大结果
      */
-    public static function vector2Max(CData $Vector2_1, CData $Vector2_2): CData
+    public static function vector2Max(Vector2 $Vector2_1, Vector2 $Vector2_2): Vector2
     {
-        return self::ffi()->Vector2Max($Vector2_1, $Vector2_2);
+        $res = self::ffi()->Vector2Max($Vector2_1->struct(), $Vector2_2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2旋转
      *
-     * @param CData Vector2 $Vector2 向量2
+     * @param Vector2 $Vector2 向量2
      * @param float $angle 角度
-     * @return CData Vector2 向量2旋转结果
+     * @return Vector2 向量2旋转结果
      */
-    public static function vector2Rotate(CData $Vector2, float $angle): CData
+    public static function vector2Rotate(Vector2 $Vector2, float $angle): Vector2
     {
-        return self::ffi()->Vector2Rotate($Vector2, $angle);
+        $res = self::ffi()->Vector2Rotate($Vector2->struct(), $angle);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2移动 towards
      *
-     * @param CData Vector2 $Vector2 向量2
-     * @param CData Vector2 $Target 向量2
+     * @param Vector2 $Vector2 向量2
+     * @param Vector2 $Target 向量2
      * @param float $maxDistanceDelta 最大距离
-     * @return CData Vector2 向量2移动 towards 结果
+     * @return Vector2 向量2移动 towards 结果
      */
-    public static function vector2MoveTowards(CData $Vector2, CData $Target, float $maxDistanceDelta): CData
+    public static function vector2MoveTowards(Vector2 $Vector2, Vector2 $Target, float $maxDistanceDelta): Vector2
     {
-        return self::ffi()->Vector2MoveTowards($Vector2, $Target, $maxDistanceDelta);
+        $res = self::ffi()->Vector2MoveTowards($Vector2->struct(), $Target->struct(), $maxDistanceDelta);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2取反
      *
-     * @param CData Vector2 $Vector2 向量2
-     * @return CData Vector2 向量2取反结果
+     * @param Vector2 $Vector2 向量2
+     * @return Vector2 向量2取反结果
      */
-    public static function vector2Invert(CData $Vector2): CData
+    public static function vector2Invert(Vector2 $Vector2): Vector2
     {
-        return self::ffi()->Vector2Invert($Vector2);
+        $res = self::ffi()->Vector2Invert($Vector2->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2 限制在范围内
      *
-     * @param CData Vector2 $Vector2 向量2
-     * @param CData Vector2 $Min 向量2
-     * @param CData Vector2 $Max 向量2
-     * @return CData Vector2 向量2 限制在范围内 结果
+     * @param Vector2 $Vector2 向量2
+     * @param Vector2 $Min 向量2
+     * @param Vector2 $Max 向量2
+     * @return Vector2 向量2 限制在范围内 结果
      */
-    public static function vector2Clamp(CData $Vector2, CData $Min, CData $Max): CData
+    public static function vector2Clamp(Vector2 $Vector2, Vector2 $Min, Vector2 $Max): Vector2
     {
-        return self::ffi()->Vector2Clamp($Vector2, $Min, $Max);
+        $res = self::ffi()->Vector2Clamp($Vector2->struct(), $Min->struct(), $Max->struct());
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2 限制在范围内
      *
-     * @param CData Vector2 $Vector2 向量2
+     * @param Vector2 $Vector2 向量2
      * @param float $Min 最小值
      * @param float $Max 最大值
-     * @return CData Vector2 向量2 限制在范围内 结果
+     * @return Vector2 向量2 限制在范围内 结果
      */
-    public static function vector2ClampValue(CData $Vector2, float $Min, float $Max): CData
+    public static function vector2ClampValue(Vector2 $Vector2, float $Min, float $Max): Vector2
     {
-        return self::ffi()->Vector2ClampValue($Vector2, $Min, $Max);
+        $res = self::ffi()->Vector2ClampValue($Vector2->struct(), $Min, $Max);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量2 是否相等
      *
-     * @param CData Vector2 $Vector2_1 向量2
-     * @param CData Vector2 $Vector2_2 向量2
+     * @param Vector2 $Vector2_1 向量2
+     * @param Vector2 $Vector2_2 向量2
      * @return bool 向量2 是否相等 结果
      */
-    public static function vector2Equals(CData $Vector2_1, CData $Vector2_2): bool
+    public static function vector2Equals(Vector2 $Vector2_1, Vector2 $Vector2_2): bool
     {
-        return self::ffi()->Vector2Equals($Vector2_1, $Vector2_2) == 1;
+        return self::ffi()->Vector2Equals($Vector2_1->struct(), $Vector2_2->struct()) == 1;
     }
 
     /**
      * 向量2 折射
      *
-     * @param CData Vector2 $Vector2 向量2
-     * @param CData Vector2 $Normal 向量2
+     * @param Vector2 $Vector2 向量2
+     * @param Vector2 $Normal 向量2
      * @param float $indexRatio 折射率_ratio
-     * @return CData Vector2 向量2 折射 结果
+     * @return Vector2 向量2 折射 结果
      */
-    public static function vector2Refract(CData $Vector2, CData $Normal, float $indexRatio): CData
+    public static function vector2Refract(Vector2 $Vector2, Vector2 $Normal, float $indexRatio): Vector2
     {
-        return self::ffi()->Vector2Refract($Vector2, $Normal, $indexRatio);
+        $res = self::ffi()->Vector2Refract($Vector2->struct(), $Normal->struct(), $indexRatio);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 向量3 零向量
      *
-     * @return CData Vector3 向量3 零向量 结果
+     * @return Vector3 向量3 零向量 结果
      */
-    public static function vector3Zero(): CData
+    public static function vector3Zero(): Vector3
     {
         return self::ffi()->Vector3Zero();
     }
@@ -464,9 +486,9 @@ class Math extends Base
     /**
      * 向量3 单位向量
      *
-     * @return CData Vector3 向量3 单位向量 结果
+     * @return Vector3 向量3 单位向量 结果
      */
-    public static function vector3One(): CData
+    public static function vector3One(): Vector3
     {
         return self::ffi()->Vector3One();
     }
@@ -474,905 +496,969 @@ class Math extends Base
     /**
      * 向量3 加法
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
-     * @return CData Vector3 向量3 加法 结果
+     * @param Vector3 $Vector3_1 向量3  
+     * @param Vector3 $Vector3_2 向量3
+     * @return Vector3 向量3 加法 结果
      */
-    public static function vector3Add(CData $Vector3_1, CData $Vector3_2): CData
+    public static function vector3Add(Vector3 $Vector3_1, Vector3 $Vector3_2): Vector3
     {
-        return self::ffi()->Vector3Add($Vector3_1, $Vector3_2);
+        $res = self::ffi()->Vector3Add($Vector3_1->struct(), $Vector3_2->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 加法
      *
-     * @param CData Vector3 $Vector3 向量3
+     * @param Vector3 $Vector3 向量3
      * @param float $Value 值
-     * @return CData Vector3 向量3 加法 结果
+     * @return Vector3 向量3 加法 结果
      */
-    public static function vector3AddValue(CData $Vector3, float $Value): CData
+    public static function vector3AddValue(Vector3 $Vector3, float $Value): Vector3
     {
-        return self::ffi()->Vector3AddValue($Vector3, $Value);
+        $res = self::ffi()->Vector3AddValue($Vector3->struct(), $Value);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 减法
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
-     * @return CData Vector3 向量3 减法 结果
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3  
+     * @return Vector3 向量3 减法 结果
      */
-    public static function vector3Subtract(CData $Vector3_1, CData $Vector3_2): CData
+    public static function vector3Subtract(Vector3 $Vector3_1, Vector3 $Vector3_2): Vector3
     {
-        return self::ffi()->Vector3Subtract($Vector3_1, $Vector3_2);
+        $res = self::ffi()->Vector3Subtract($Vector3_1->struct(), $Vector3_2->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 减法
      *
-     * @param CData Vector3 $Vector3 向量3
+     * @param Vector3 $Vector3 向量3
      * @param float $sub 值
-     * @return CData Vector3 向量3 减法 结果
+     * @return Vector3 向量3 减法 结果
      */
-    public static function vector3SubtractValue(CData $Vector3, float $sub): CData
+    public static function vector3SubtractValue(Vector3 $Vector3, float $sub): Vector3
     {
-        return self::ffi()->Vector3SubtractValue($Vector3, $sub);
+        $res = self::ffi()->Vector3SubtractValue($Vector3->struct(), $sub);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 乘法
      *
-     * @param CData Vector3 $Vector3 向量3
+     * @param Vector3 $Vector3 向量3
      * @param float $scalar 值
-     * @return CData Vector3 向量3 乘法 结果
+     * @return Vector3 向量3 乘法 结果
      */
-    public static function vector3Scale(CData $Vector3, float $scalar): CData
+    public static function vector3Scale(Vector3 $Vector3, float $scalar): Vector3
     {
-        return self::ffi()->Vector3Scale($Vector3, $scalar);
+        $res = self::ffi()->Vector3Scale($Vector3->struct(), $scalar);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 乘法
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
-     * @return CData Vector3 向量3 乘法 结果
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
+     * @return Vector3 向量3 乘法 结果
      */
-    public static function vector3Multiply(CData $Vector3_1, CData $Vector3_2): CData
+    public static function vector3Multiply(Vector3 $Vector3_1, Vector3 $Vector3_2): Vector3
     {
-        return self::ffi()->Vector3Multiply($Vector3_1, $Vector3_2);
+        $res = self::ffi()->Vector3Multiply($Vector3_1->struct(), $Vector3_2->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 叉乘
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
-     * @return CData Vector3 向量3 叉乘 结果
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
+     * @return Vector3 向量3 叉乘 结果
      */
-    public static function vector3CrossProduct(CData $Vector3_1, CData $Vector3_2): CData
+    public static function vector3CrossProduct(Vector3 $Vector3_1, Vector3 $Vector3_2): Vector3
     {
-        return self::ffi()->Vector3CrossProduct($Vector3_1, $Vector3_2);
+        $res = self::ffi()->Vector3CrossProduct($Vector3_1->struct(), $Vector3_2->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 垂直向量
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @return CData Vector3 向量3 垂直向量 结果
+     * @param Vector3 $Vector3 向量3
+     * @return Vector3 向量3 垂直向量 结果
      */
-    public static function vector3Perpendicular(CData $Vector3): CData
+    public static function vector3Perpendicular(Vector3 $Vector3): Vector3
     {
-        return self::ffi()->Vector3Perpendicular($Vector3);
+        $res = self::ffi()->Vector3Perpendicular($Vector3->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 长度
      *
-     * @param CData Vector3 $Vector3 向量3
+     * @param Vector3 $Vector3 向量3
      * @return float 向量3 长度 结果
      */
-    public static function vector3Length(CData $Vector3): float
+    public static function vector3Length(Vector3 $Vector3): float
     {
-        return self::ffi()->Vector3Length($Vector3);
+        return self::ffi()->Vector3Length($Vector3->struct());
     }
 
     /**
      * 向量3 长度平方
      *
-     * @param CData Vector3 $Vector3 向量3
+     * @param Vector3 $Vector3 向量3
      * @return float 向量3 长度平方 结果
      */
-    public static function vector3LengthSqr(CData $Vector3): float
+    public static function vector3LengthSqr(Vector3 $Vector3): float
     {
-        return self::ffi()->Vector3LengthSqr($Vector3);
+        return self::ffi()->Vector3LengthSqr($Vector3->struct());
     }
 
     /**
      * 向量3 点乘
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
      * @return float 向量3 点乘 结果
      */
-    public static function vector3DotProduct(CData $Vector3_1, CData $Vector3_2): float
+    public static function vector3DotProduct(Vector3 $Vector3_1, Vector3 $Vector3_2): float
     {
-        return self::ffi()->Vector3DotProduct($Vector3_1, $Vector3_2);
+        return self::ffi()->Vector3DotProduct($Vector3_1->struct(), $Vector3_2->struct());
     }
 
     /**
      * 向量3 距离
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
      * @return float 向量3 距离 结果
      */
-    public static function vector3Distance(CData $Vector3_1, CData $Vector3_2): float
+    public static function vector3Distance(Vector3 $Vector3_1, Vector3 $Vector3_2): float
     {
-        return self::ffi()->Vector3Distance($Vector3_1, $Vector3_2);
+        return self::ffi()->Vector3Distance($Vector3_1->struct(), $Vector3_2->struct());
     }
 
     /**
      * 向量3 距离平方
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
      * @return float 向量3 距离平方 结果
      */
-    public static function vector3DistanceSqr(CData $Vector3_1, CData $Vector3_2): float
+    public static function vector3DistanceSqr(Vector3 $Vector3_1, Vector3 $Vector3_2): float
     {
-        return self::ffi()->Vector3DistanceSqr($Vector3_1, $Vector3_2);
+        return self::ffi()->Vector3DistanceSqr($Vector3_1->struct(), $Vector3_2->struct());
     }
 
     /**
      * 向量3 角度
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
      * @return float 向量3 角度 结果
      */
-    public static function vector3Angle(CData $Vector3_1, CData $Vector3_2): float
+    public static function vector3Angle(Vector3 $Vector3_1, Vector3 $Vector3_2): float
     {
-        return self::ffi()->Vector3Angle($Vector3_1, $Vector3_2);
+        return self::ffi()->Vector3Angle($Vector3_1->struct(), $Vector3_2->struct());
     }
 
     /**
      * 向量3 取反
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @return CData Vector3 向量3 取反 结果
+     * @param Vector3 $Vector3 向量3
+     * @return Vector3 向量3 取反 结果
      */
-    public static function vector3Negate(CData $Vector3): CData
+    public static function vector3Negate(Vector3 $Vector3): Vector3
     {
-        return self::ffi()->Vector3Negate($Vector3);
+        $res = self::ffi()->Vector3Negate($Vector3->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 除法
      *
-     * @param CData Vector3 $Vector3 向量3
+     * @param Vector3 $Vector3 向量3
      * @param float $div 值
-     * @return CData Vector3 向量3 除法 结果
+     * @return Vector3 向量3 除法 结果
      */
-    public static function vector3Divide(CData $Vector3, float $div): CData
+    public static function vector3Divide(Vector3 $Vector3, float $div): Vector3
     {
-        return self::ffi()->Vector3Divide($Vector3, $div);
+        $res = self::ffi()->Vector3Divide($Vector3->struct(), $div);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 归一化
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @return CData Vector3 向量3 归一化 结果
+     * @param Vector3 $Vector3 向量3
+     * @return Vector3 向量3 归一化 结果
      */
-    public static function vector3Normalize(CData $Vector3): CData
+    public static function vector3Normalize(Vector3 $Vector3): Vector3
     {
-        return self::ffi()->Vector3Normalize($Vector3);
+        $res = self::ffi()->Vector3Normalize($Vector3->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 投影
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $onNormal 向量3
-     * @return CData Vector3 向量3 投影 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $onNormal 向量3
+     * @return Vector3 向量3 投影 结果
      */
-    public static function vector3Project(CData $Vector3, CData $onNormal): CData
+    public static function vector3Project(Vector3 $Vector3, Vector3 $onNormal): Vector3
     {
-        return self::ffi()->Vector3Project($Vector3, $onNormal);
+        $res = self::ffi()->Vector3Project($Vector3->struct(), $onNormal->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 拒绝
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $onNormal 向量3
-     * @return CData Vector3 向量3 拒绝 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $onNormal 向量3
+     * @return Vector3 向量3 拒绝 结果
      */
-    public static function vector3Reject(CData $Vector3, CData $onNormal): CData
+    public static function vector3Reject(Vector3 $Vector3, Vector3 $onNormal): Vector3
     {
-        return self::ffi()->Vector3Reject($Vector3, $onNormal);
+        $res = self::ffi()->Vector3Reject($Vector3->struct(), $onNormal->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 正交归一化
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @return CData Vector3 向量3 正交归一化 结果
+     * @param Vector3 $Vector3 向量3
+     * @return Vector3 向量3 正交归一化 结果
      */
-    public static function vector3OrthoNormalize(CData $Vector3): CData
+    public static function vector3OrthoNormalize(Vector3 $Vector3): Vector3
     {
-        return self::ffi()->Vector3OrthoNormalize($Vector3);
+        $res = self::ffi()->Vector3OrthoNormalize($Vector3->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 变换
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Matrix $matrix 矩阵
-     * @return CData Vector3 向量3 变换 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Matrix $matrix 矩阵
+     * @return Vector3 向量3 变换 结果
      */
-    public static function vector3Transform(CData $Vector3, CData $matrix): CData
+    public static function vector3Transform(Vector3 $Vector3, Matrix $matrix): Vector3
     {
-        return self::ffi()->Vector3Transform($Vector3, $matrix);
+        $res = self::ffi()->Vector3Transform($Vector3->struct(), $matrix->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 四元数旋转
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Quaternion $quaternion 四元数
-     * @return CData Vector3 向量3 四元数旋转 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector4 $quaternion 四元数
+     * @return Vector3 向量3 四元数旋转 结果
      */
-    public static function vector3RotateByQuaternion(CData $Vector3, CData $quaternion): CData
+    public static function vector3RotateByQuaternion(Vector3 $Vector3, Vector4 $quaternion): Vector3
     {
-        return self::ffi()->Vector3RotateByQuaternion($Vector3, $quaternion);
+        $res = self::ffi()->Vector3RotateByQuaternion($Vector3->struct(), $quaternion->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 轴角旋转
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $axis 向量3
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $axis 向量3
      * @param float $angle 角度
-     * @return CData Vector3 向量3 轴角旋转 结果
+     * @return Vector3 向量3 轴角旋转 结果
      */
-    public static function vector3RotateByAxisAngle(CData $Vector3, CData $axis, float $angle): CData
+    public static function vector3RotateByAxisAngle(Vector3 $Vector3, Vector3 $axis, float $angle): Vector3
     {
-        return self::ffi()->Vector3RotateByAxisAngle($Vector3, $axis, $angle);
+        $res = self::ffi()->Vector3RotateByAxisAngle($Vector3->struct(), $axis->struct(), $angle);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 移动方向
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $target 向量3
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $target 向量3
      * @param float $maxDistanceDelta 最大距离增量
-     * @return CData Vector3 向量3 移动方向 结果
+     * @return Vector3 向量3 移动方向 结果
      */
-    public static function vector3MoveTowards(CData $Vector3, CData $target, float $maxDistanceDelta): CData
+    public static function vector3MoveTowards(Vector3 $Vector3, Vector3 $target, float $maxDistanceDelta): Vector3
     {
-        return self::ffi()->Vector3MoveTowards($Vector3, $target, $maxDistanceDelta);
+        $res = self::ffi()->Vector3MoveTowards($Vector3->struct(), $target->struct(), $maxDistanceDelta);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 线性插值
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $target 向量3
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $target 向量3
      * @param float $t 插值参数
-     * @return CData Vector3 向量3 线性插值 结果
+     * @return Vector3 向量3 线性插值 结果
      */
-    public static function vector3Lerp(CData $Vector3, CData $target, float $t): CData
+    public static function vector3Lerp(Vector3 $Vector3, Vector3 $target, float $t): Vector3
     {
-        return self::ffi()->Vector3Lerp($Vector3, $target, $t);
+        $res = self::ffi()->Vector3Lerp($Vector3->struct(), $target->struct(), $t);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 三次 Hermite 插值
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $target 向量3
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $target 向量3
      * @param float $t 插值参数
-     * @return CData Vector3 向量3 三次 Hermite 插值 结果
+     * @return Vector3 向量3 三次 Hermite 插值 结果 
      */
-    public static function vector3CubicHermite(CData $Vector3, CData $target, float $t): CData
+    public static function vector3CubicHermite(Vector3 $Vector3, Vector3 $target, float $t): Vector3
     {
-        return self::ffi()->Vector3CubicHermite($Vector3, $target, $t);
+        $res = self::ffi()->Vector3CubicHermite($Vector3->struct(), $target->struct(), $t);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 反射
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $onNormal 向量3
-     * @return CData Vector3 向量3 反射 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $onNormal 向量3
+     * @return Vector3 向量3 反射 结果
      */
-    public static function vector3Reflect(CData $Vector3, CData $onNormal): CData
+    public static function vector3Reflect(Vector3 $Vector3, Vector3 $onNormal): Vector3
     {
-        return self::ffi()->Vector3Reflect($Vector3, $onNormal);
+        $res = self::ffi()->Vector3Reflect($Vector3->struct(), $onNormal->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 最小
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $target 向量3
-     * @return CData Vector3 向量3 最小 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $target 向量3
+     * @return Vector3 向量3 最小 结果
      */
-    public static function vector3Min(CData $Vector3, CData $target): CData
+    public static function vector3Min(Vector3 $Vector3, Vector3 $target): Vector3
     {
-        return self::ffi()->Vector3Min($Vector3, $target);
+        $res = self::ffi()->Vector3Min($Vector3->struct(), $target->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 最大
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $target 向量3
-     * @return CData Vector3 向量3 最大 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $target 向量3
+     * @return Vector3 向量3 最大 结果
      */
-    public static function vector3Max(CData $Vector3, CData $target): CData
+    public static function vector3Max(Vector3 $Vector3, Vector3 $target): Vector3
     {
-        return self::ffi()->Vector3Max($Vector3, $target);
+        $res = self::ffi()->Vector3Max($Vector3->struct(), $target->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 重心坐标
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $v1 向量3
-     * @param CData Vector3 $v2 向量3
-     * @param CData Vector3 $v3 向量3
-     * @return CData Vector3 向量3 重心坐标 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $v1 向量3
+     * @param Vector3 $v2 向量3
+     * @param Vector3 $v3 向量3
+     * @return Vector3 向量3 重心坐标 结果
      */
-    public static function vector3Barycenter(CData $Vector3, CData $v1, CData $v2, CData $v3): CData
+    public static function vector3Barycenter(Vector3 $Vector3, Vector3 $v1, Vector3 $v2, Vector3 $v3): Vector3
     {
-        return self::ffi()->Vector3Barycenter($Vector3, $v1, $v2, $v3);
+        $res = self::ffi()->Vector3Barycenter($Vector3->struct(), $v1->struct(), $v2->struct(), $v3->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 投影
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $source 向量3
-     * @param CData Vector3 $target 向量3
-     * @return CData Vector3 向量3 投影 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $source 向量3
+     * @param Vector3 $target 向量3
+     * @return Vector3 向量3 投影 结果
      */
-    public static function vector3Project(CData $Vector3, CData $source, CData $target): CData
+    public static function vector3Project(Vector3 $Vector3, Vector3 $source, Vector3 $target): Vector3
     {
-        return self::ffi()->Vector3Project($Vector3, $source, $target);
+        $res = self::ffi()->Vector3Project($Vector3->struct(), $source->struct(), $target->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 拒绝
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $onNormal 向量3
-     * @return CData Vector3 向量3 拒绝 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $onNormal 向量3
+     * @return Vector3 向量3 拒绝 结果
      */
-    public static function vector3Reject(CData $Vector3, CData $onNormal): CData
+    public static function vector3Reject(Vector3 $Vector3, Vector3 $onNormal): Vector3
     {
-        return self::ffi()->Vector3Reject($Vector3, $onNormal);
+        $res = self::ffi()->Vector3Reject($Vector3->struct(), $onNormal->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 正交化归一化
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $v1 向量3
-     * @param CData Vector3 $v2 向量3
-     * @param CData Vector3 $v3 向量3
-     * @return CData Vector3 向量3 正交化归一化 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $v1 向量3
+     * @param Vector3 $v2 向量3
+     * @param Vector3 $v3 向量3
+     * @return Vector3 向量3 正交化归一化 结果
      */
-    public static function vector3OrthoNormalize(CData $Vector3, CData $v1, CData $v2, CData $v3): CData
+    public static function vector3OrthoNormalize(Vector3 $Vector3, Vector3 $v1, Vector3 $v2, Vector3 $v3): Vector3
     {
-        return self::ffi()->Vector3OrthoNormalize($Vector3, $v1, $v2, $v3);
+        $res = self::ffi()->Vector3OrthoNormalize($Vector3->struct(), $v1->struct(), $v2->struct(), $v3->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 变换
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Matrix $matrix 矩阵
-     * @return CData Vector3 向量3 变换 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Matrix $matrix 矩阵
+     * @return Vector3 向量3 变换 结果
      */
-    public static function vector3Transform(CData $Vector3, CData $matrix): CData
+    public static function vector3Transform(Vector3 $Vector3, Matrix $matrix): Vector3
     {
-        return self::ffi()->Vector3Transform($Vector3, $matrix);
+        $res = self::ffi()->Vector3Transform($Vector3->struct(), $matrix->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 四元数旋转
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Quaternion $quaternion 四元数
-     * @return CData Vector3 向量3 四元数旋转 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector4 $quaternion 四元数
+     * @return Vector3 向量3 四元数旋转 结果
      */
-    public static function vector3RotateByQuaternion(CData $Vector3, CData $quaternion): CData
+    public static function vector3RotateByQuaternion(Vector3 $Vector3, Vector4 $quaternion): Vector3
     {
-        return self::ffi()->Vector3RotateByQuaternion($Vector3, $quaternion);
+        $res = self::ffi()->Vector3RotateByQuaternion($Vector3->struct(), $quaternion->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 轴角旋转
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $axis 向量3
+     * @param Vector3 $Vector3 向量3        
+     * @param Vector3 $axis 向量3
      * @param float $angle 角度
-     * @return CData Vector3 向量3 轴角旋转 结果
+     * @return Vector3 向量3 轴角旋转 结果
      */
-    public static function vector3RotateByAxisAngle(CData $Vector3, CData $axis, float $angle): CData
+    public static function vector3RotateByAxisAngle(Vector3 $Vector3, Vector3 $axis, float $angle): Vector3
     {
-        return self::ffi()->Vector3RotateByAxisAngle($Vector3, $axis, $angle);
+        $res = self::ffi()->Vector3RotateByAxisAngle($Vector3->struct(), $axis->struct(), $angle);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 移动 towards
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $target 向量3
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $target 向量3
      * @param float $maxDistanceDelta 最大距离增量
-     * @return CData Vector3 向量3 移动 towards 结果
+     * @return Vector3 向量3 移动 towards 结果
      */
-    public static function vector3MoveTowards(CData $Vector3, CData $target, float $maxDistanceDelta): CData
+    public static function vector3MoveTowards(Vector3 $Vector3, Vector3 $target, float $maxDistanceDelta): Vector3
     {
-        return self::ffi()->Vector3MoveTowards($Vector3, $target, $maxDistanceDelta);
+        $res = self::ffi()->Vector3MoveTowards($Vector3->struct(), $target->struct(), $maxDistanceDelta);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 线性插值
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $target 向量3
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $target 向量3
      * @param float $amount 插值比例
-     * @return CData Vector3 向量3 线性插值 结果
+     * @return Vector3 向量3 线性插值 结果
      */
-    public static function vector3Lerp(CData $Vector3, CData $target, float $amount): CData
+    public static function vector3Lerp(Vector3 $Vector3, Vector3 $target, float $amount): Vector3
     {
-        return self::ffi()->Vector3Lerp($Vector3, $target, $amount);
+        $res = self::ffi()->Vector3Lerp($Vector3->struct(), $target->struct(), $amount);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 三次 Hermite 插值
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $start 向量3
-     * @param CData Vector3 $end 向量3
-     * @param CData Vector3 $startTangent 向量3
-     * @param CData Vector3 $endTangent 向量3
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $start 向量3
+     * @param Vector3 $end 向量3
+     * @param Vector3 $startTangent 向量3
+     * @param Vector3 $endTangent 向量3
      * @param float $amount 插值比例
-     * @return CData Vector3 向量3 三次 Hermite 插值 结果
+     * @return Vector3 向量3 三次 Hermite 插值 结果
      */
-    public static function vector3CubicHermite(CData $Vector3, CData $start, CData $end, CData $startTangent, CData $endTangent, float $amount): CData
+    public static function vector3CubicHermite(Vector3 $Vector3, Vector3 $start, Vector3 $end, Vector3 $startTangent, Vector3 $endTangent, float $amount): Vector3
     {
-        return self::ffi()->Vector3CubicHermite($Vector3, $start, $end, $startTangent, $endTangent, $amount);
+        $res = self::ffi()->Vector3CubicHermite($Vector3->struct(), $start->struct(), $end->struct(), $startTangent->struct(), $endTangent->struct(), $amount);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 反射
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $onNormal 向量3
-     * @return CData Vector3 向量3 反射 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $onNormal 向量3
+     * @return Vector3 向量3 反射 结果
      */
-    public static function vector3Reflect(CData $Vector3, CData $onNormal): CData
+    public static function vector3Reflect(Vector3 $Vector3, Vector3 $onNormal): Vector3
     {
-        return self::ffi()->Vector3Reflect($Vector3, $onNormal);
+        $res = self::ffi()->Vector3Reflect($Vector3->struct(), $onNormal->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 最小
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
-     * @return CData Vector3 向量3 最小 结果
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
+     * @return Vector3 向量3 最小 结果
      */
-    public static function vector3Min(CData $Vector3_1, CData $Vector3_2): CData
+    public static function vector3Min(Vector3 $Vector3_1, Vector3 $Vector3_2): Vector3
     {
-        return self::ffi()->Vector3Min($Vector3_1, $Vector3_2);
+        $res = self::ffi()->Vector3Min($Vector3_1->struct(), $Vector3_2->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 最大
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
-     * @return CData Vector3 向量3 最大 结果
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
+     * @return Vector3 向量3 最大 结果
      */
-    public static function vector3Max(CData $Vector3_1, CData $Vector3_2): CData
+    public static function vector3Max(Vector3 $Vector3_1, Vector3 $Vector3_2): Vector3
     {
-        return self::ffi()->Vector3Max($Vector3_1, $Vector3_2);
+        $res = self::ffi()->Vector3Max($Vector3_1->struct(), $Vector3_2->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 重心坐标
      *
-     * @param CData Vector3 $Vector3_p 向量3
-     * @param CData Vector3 $Vector3_a 向量3
-     * @param CData Vector3 $Vector3_b 向量3
-     * @param CData Vector3 $Vector3_c 向量3
-     * @return CData Vector3 向量3 重心坐标 结果
+     * @param Vector3 $Vector3_p 向量3
+     * @param Vector3 $Vector3_a 向量3
+     * @param Vector3 $Vector3_b 向量3
+     * @param Vector3 $Vector3_c 向量3
+     * @return Vector3 向量3 重心坐标 结果
      */
-    public static function vector3Barycenter(CData $Vector3_p, CData $Vector3_a, CData $Vector3_b, CData $Vector3_c): CData
+    public static function vector3Barycenter(Vector3 $Vector3_p, Vector3 $Vector3_a, Vector3 $Vector3_b, Vector3 $Vector3_c): Vector3
     {
-        return self::ffi()->Vector3Barycenter($Vector3_p, $Vector3_a, $Vector3_b, $Vector3_c);
+        $res = self::ffi()->Vector3Barycenter($Vector3_p->struct(), $Vector3_a->struct(), $Vector3_b->struct(), $Vector3_c->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 反投影
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Matrix $matrix 矩阵
-     * @param CData Rectangle $viewport 矩形
-     * @return CData Vector3 向量3 反投影 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Matrix $matrix 矩阵
+     * @param Rectangle $viewport 矩形
+     * @return Vector3 向量3 反投影 结果
      */
-    public static function vector3Unproject(CData $Vector3, CData $matrix, CData $viewport): CData
+    public static function vector3Unproject(Vector3 $Vector3, Matrix $matrix, Rectangle $viewport): Vector3
     {
-        return self::ffi()->Vector3Unproject($Vector3, $matrix, $viewport);
+        $res = self::ffi()->Vector3Unproject($Vector3->struct(), $matrix->struct(), $viewport->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 转换为 float 对象
      *
-     * @param CData Vector3 $Vector3 向量3
+     * @param Vector3 $Vector3 向量3
      * @return CData float3 浮点数对象
      */
-    public static function vector3ToFloatV(CData $Vector3): CData
+    public static function vector3ToFloatV(Vector3 $Vector3): CData
     {
-        return self::ffi()->Vector3ToFloatV($Vector3);
+        return self::ffi()->Vector3ToFloatV($Vector3->struct());
     }
 
     /**
      * 向量3 反方向
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @return CData Vector3 向量3 反方向 结果
+     * @param Vector3 $Vector3 向量3
+     * @return Vector3 向量3 反方向 结果
      */
-    public static function vector3Invert(CData $Vector3): CData
+    public static function vector3Invert(Vector3 $Vector3): Vector3
     {
-        return self::ffi()->Vector3Invert($Vector3);
+        $res = self::ffi()->Vector3Invert($Vector3->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 范围
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $min 向量3
-     * @param CData Vector3 $max 向量3
-     * @return CData Vector3 向量3 范围 结果
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $min 向量3
+     * @param Vector3 $max 向量3
+     * @return Vector3 向量3 范围 结果
      */
-    public static function vector3Clamp(CData $Vector3, CData $min, CData $max): CData
+    public static function vector3Clamp(Vector3 $Vector3, Vector3 $min, Vector3 $max): Vector3
     {
-        return self::ffi()->Vector3Clamp($Vector3, $min, $max);
+        $res = self::ffi()->Vector3Clamp($Vector3->struct(), $min->struct(), $max->struct());
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 范围值
      *
-     * @param CData Vector3 $Vector3 向量3
+     * @param Vector3 $Vector3 向量3
      * @param float $min 最小值
      * @param float $max 最大值
-     * @return CData Vector3 向量3 范围值 结果
+     * @return Vector3 向量3 范围值 结果
      */
-    public static function vector3ClampValue(CData $Vector3, float $min, float $max): CData
+    public static function vector3ClampValue(Vector3 $Vector3, float $min, float $max): Vector3
     {
-        return self::ffi()->Vector3ClampValue($Vector3, $min, $max);
+        $res = self::ffi()->Vector3ClampValue($Vector3->struct(), $min, $max);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量3 是否相等
      *
-     * @param CData Vector3 $Vector3_1 向量3
-     * @param CData Vector3 $Vector3_2 向量3
+     * @param Vector3 $Vector3_1 向量3
+     * @param Vector3 $Vector3_2 向量3
      * @return bool 向量3 是否相等 结果
      */
-    public static function vector3Equals(CData $Vector3_1, CData $Vector3_2): bool
+    public static function vector3Equals(Vector3 $Vector3_1, Vector3 $Vector3_2): bool
     {
-        return self::ffi()->Vector3Equals($Vector3_1, $Vector3_2) == 1;
+        return self::ffi()->Vector3Equals($Vector3_1->struct(), $Vector3_2->struct()) == 1;
     }
 
     /**
      * 向量3 折射
      *
-     * @param CData Vector3 $Vector3 向量3
-     * @param CData Vector3 $onNormal 向量3
+     * @param Vector3 $Vector3 向量3
+     * @param Vector3 $onNormal 向量3
      * @param float $refractionIndex 折射索引
-     * @return CData Vector3 向量3 折射 结果
+     * @return Vector3 向量3 折射 结果
      */
-    public static function vector3Refract(CData $Vector3, CData $onNormal, float $refractionIndex): CData
+    public static function vector3Refract(Vector3 $Vector3, Vector3 $onNormal, float $refractionIndex): Vector3
     {
-        return self::ffi()->Vector3Refract($Vector3, $onNormal, $refractionIndex);
+        $res = self::ffi()->Vector3Refract($Vector3->struct(), $onNormal->struct(), $refractionIndex);
+        return new Vector3($res->x, $res->y, $res->z);
     }
 
     /**
      * 向量4 零
      *
-     * @return CData Vector4 向量4 零 结果
+     * @return Vector4 向量4 零 结果
      */
-    public static function vector4Zero(): CData
+    public static function vector4Zero(): Vector4
     {
-        return self::ffi()->Vector4Zero();
+        $res = self::ffi()->Vector4Zero();
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 一
      *
-     * @return CData Vector4 向量4 一 结果
+     * @return Vector4 向量4 一 结果
      */
-    public static function vector4One(): CData
+    public static function vector4One(): Vector4
     {
-        return self::ffi()->Vector4One();
+        $res = self::ffi()->Vector4One();
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 加法
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
-     * @return CData Vector4 向量4 加法 结果
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
+     * @return Vector4 向量4 加法 结果
      */
-    public static function vector4Add(CData $Vector4_1, CData $Vector4_2): CData
+    public static function vector4Add(Vector4 $Vector4_1, Vector4 $Vector4_2): Vector4
     {
-        return self::ffi()->Vector4Add($Vector4_1, $Vector4_2);
+        $res = self::ffi()->Vector4Add($Vector4_1->struct(), $Vector4_2->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 加法值
      *
-     * @param CData Vector4 $Vector4 向量4
+     * @param Vector4 $Vector4 向量4
      * @param float $value 值
-     * @return CData Vector4 向量4 加法值 结果
+     * @return Vector4 向量4 加法值 结果
      */
-    public static function vector4AddValue(CData $Vector4, float $value): CData
+    public static function vector4AddValue(Vector4 $Vector4, float $value): Vector4
     {
-        return self::ffi()->Vector4AddValue($Vector4, $value);
+        $res = self::ffi()->Vector4AddValue($Vector4->struct(), $value);
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 减法
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
-     * @return CData Vector4 向量4 减法 结果
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
+     * @return Vector4 向量4 减法 结果
      */
-    public static function vector4Subtract(CData $Vector4_1, CData $Vector4_2): CData
+    public static function vector4Subtract(Vector4 $Vector4_1, Vector4 $Vector4_2): Vector4
     {
-        return self::ffi()->Vector4Subtract($Vector4_1, $Vector4_2);
+        $res = self::ffi()->Vector4Subtract($Vector4_1->struct(), $Vector4_2->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 减法值
      *
-     * @param CData Vector4 $Vector4 向量4
+     * @param Vector4 $Vector4 向量4
      * @param float $value 值
-     * @return CData Vector4 向量4 减法值 结果
+     * @return Vector4 向量4 减法值 结果
      */
-    public static function vector4SubtractValue(CData $Vector4, float $value): CData
+    public static function vector4SubtractValue(Vector4 $Vector4, float $value): Vector4
     {
-        return self::ffi()->Vector4SubtractValue($Vector4, $value);
+        $res = self::ffi()->Vector4SubtractValue($Vector4->struct(), $value);
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 长度
      *
-     * @param CData Vector4 $Vector4 向量4
+     * @param Vector4 $Vector4 向量4
      * @return float 向量4 长度 结果
      */
-    public static function vector4Length(CData $Vector4): float
+    public static function vector4Length(Vector4 $Vector4): float
     {
-        return self::ffi()->Vector4Length($Vector4);
+        return self::ffi()->Vector4Length($Vector4->struct());
     }
 
     /**
      * 向量4 长度平方
      *
-     * @param CData Vector4 $Vector4 向量4
+     * @param Vector4 $Vector4 向量4
      * @return float 向量4 长度平方 结果
      */
-    public static function vector4LengthSqr(CData $Vector4): float
+    public static function vector4LengthSqr(Vector4 $Vector4): float
     {
-        return self::ffi()->Vector4LengthSqr($Vector4);
+        return self::ffi()->Vector4LengthSqr($Vector4->struct());
     }
 
     /**
      * 向量4 点积
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
      * @return float 向量4 点积 结果
      */
-    public static function vector4DotProduct(CData $Vector4_1, CData $Vector4_2): float
+    public static function vector4DotProduct(Vector4 $Vector4_1, Vector4 $Vector4_2): float
     {
-        return self::ffi()->Vector4DotProduct($Vector4_1, $Vector4_2);
+        return self::ffi()->Vector4DotProduct($Vector4_1->struct(), $Vector4_2->struct());
     }
 
     /**
      * 向量4 距离
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
      * @return float 向量4 距离 结果
      */
-    public static function vector4Distance(CData $Vector4_1, CData $Vector4_2): float
+    public static function vector4Distance(Vector4 $Vector4_1, Vector4 $Vector4_2): float
     {
-        return self::ffi()->Vector4Distance($Vector4_1, $Vector4_2);
+        return self::ffi()->Vector4Distance($Vector4_1->struct(), $Vector4_2->struct());
     }
 
     /**
      * 向量4 距离平方
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
      * @return float 向量4 距离平方 结果
      */
-    public static function vector4DistanceSqr(CData $Vector4_1, CData $Vector4_2): float
+    public static function vector4DistanceSqr(Vector4 $Vector4_1, Vector4 $Vector4_2): float
     {
-        return self::ffi()->Vector4DistanceSqr($Vector4_1, $Vector4_2);
+        return self::ffi()->Vector4DistanceSqr($Vector4_1->struct(), $Vector4_2->struct());
     }
 
     /**
      * 向量4 缩放
      *
-     * @param CData Vector4 $Vector4 向量4
+     * @param Vector4 $Vector4 向量4
      * @param float $scalar 标量
-     * @return CData Vector4 向量4 缩放 结果
+     * @return Vector4 向量4 缩放 结果
      */
-    public static function vector4Scale(CData $Vector4, float $scalar): CData
+    public static function vector4Scale(Vector4 $Vector4, float $scalar): Vector4
     {
-        return self::ffi()->Vector4Scale($Vector4, $scalar);
+        $res = self::ffi()->Vector4Scale($Vector4->struct(), $scalar);
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 乘法
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
-     * @return CData Vector4 向量4 乘法 结果
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
+     * @return Vector4 向量4 乘法 结果
      */
-    public static function vector4Multiply(CData $Vector4_1, CData $Vector4_2): CData
+    public static function vector4Multiply(Vector4 $Vector4_1, Vector4 $Vector4_2): Vector4
     {
-        return self::ffi()->Vector4Multiply($Vector4_1, $Vector4_2);
+        $res = self::ffi()->Vector4Multiply($Vector4_1->struct(), $Vector4_2->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 取反
      *
-     * @param CData Vector4 $Vector4 向量4
-     * @return CData Vector4 向量4 取反 结果
+     * @param Vector4 $Vector4 向量4
+     * @return Vector4 向量4 取反 结果
      */
-    public static function vector4Negate(CData $Vector4): CData
+    public static function vector4Negate(Vector4 $Vector4): Vector4
     {
-        return self::ffi()->Vector4Negate($Vector4);
+        $res = self::ffi()->Vector4Negate($Vector4->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 除法
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
-     * @return CData Vector4 向量4 除法 结果
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
+     * @return Vector4 向量4 除法 结果
      */
-    public static function vector4Divide(CData $Vector4_1, CData $Vector4_2): CData
+    public static function vector4Divide(Vector4 $Vector4_1, Vector4 $Vector4_2): Vector4
     {
-        return self::ffi()->Vector4Divide($Vector4_1, $Vector4_2);
+        $res = self::ffi()->Vector4Divide($Vector4_1->struct(), $Vector4_2->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 归一化
      *
-     * @param CData Vector4 $Vector4 向量4
-     * @return CData Vector4 向量4 归一化 结果
+     * @param Vector4 $Vector4 向量4
+     * @return Vector4 向量4 归一化 结果
      */
-    public static function vector4Normalize(CData $Vector4): CData
+    public static function vector4Normalize(Vector4 $Vector4): Vector4
     {
-        return self::ffi()->Vector4Normalize($Vector4);
+        $res = self::ffi()->Vector4Normalize($Vector4->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 最小值
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
-     * @return CData Vector4 向量4 最小值 结果
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
+     * @return Vector4 向量4 最小值 结果
      */
-    public static function vector4Min(CData $Vector4_1, CData $Vector4_2): CData
+    public static function vector4Min(Vector4 $Vector4_1, Vector4 $Vector4_2): Vector4
     {
-        return self::ffi()->Vector4Min($Vector4_1, $Vector4_2);
+        $res = self::ffi()->Vector4Min($Vector4_1->struct(), $Vector4_2->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 最大值
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
-     * @return CData Vector4 向量4 最大值 结果
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
+     * @return Vector4 向量4 最大值 结果
      */
-    public static function vector4Max(CData $Vector4_1, CData $Vector4_2): CData
+    public static function vector4Max(Vector4 $Vector4_1, Vector4 $Vector4_2): Vector4
     {
-        return self::ffi()->Vector4Max($Vector4_1, $Vector4_2);
+        $res = self::ffi()->Vector4Max($Vector4_1->struct(), $Vector4_2->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 插值
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
      * @param float $amount 插值参数
-     * @return CData Vector4 向量4 插值 结果
+     * @return Vector4 向量4 插值 结果
      */
-    public static function vector4Lerp(CData $Vector4_1, CData $Vector4_2, float $amount): CData
+    public static function vector4Lerp(Vector4 $Vector4_1, Vector4 $Vector4_2, float $amount): Vector4
     {
-        return self::ffi()->Vector4Lerp($Vector4_1, $Vector4_2, $amount);
+        $res = self::ffi()->Vector4Lerp($Vector4_1->struct(), $Vector4_2->struct(), $amount);
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 移动方向
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
      * @param float $maxDistanceDelta 最大移动距离
-     * @return CData Vector4 向量4 移动方向 结果
+     * @return Vector4 向量4 移动方向 结果
      */
-    public static function vector4MoveTowards(CData $Vector4_1, CData $Vector4_2, float $maxDistanceDelta): CData
+    public static function vector4MoveTowards(Vector4 $Vector4_1, Vector4 $Vector4_2, float $maxDistanceDelta): Vector4
     {
-        return self::ffi()->Vector4MoveTowards($Vector4_1, $Vector4_2, $maxDistanceDelta);
+        $res = self::ffi()->Vector4MoveTowards($Vector4_1->struct(), $Vector4_2->struct(), $maxDistanceDelta);
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 取反
      *
-     * @param CData Vector4 $Vector4 向量4
-     * @return CData Vector4 向量4 取反 结果
+     * @param Vector4 $Vector4 向量4        
+     * @return Vector4 向量4 取反 结果
      */
-    public static function vector4Invert(CData $Vector4): CData
+    public static function vector4Invert(Vector4 $Vector4): Vector4
     {
-        return self::ffi()->Vector4Invert($Vector4);
+        $res = self::ffi()->Vector4Invert($Vector4->struct());
+        return new Vector4($res->x, $res->y, $res->z, $res->w);
     }
 
     /**
      * 向量4 是否相等
      *
-     * @param CData Vector4 $Vector4_1 向量4
-     * @param CData Vector4 $Vector4_2 向量4
+     * @param Vector4 $Vector4_1 向量4
+     * @param Vector4 $Vector4_2 向量4
      * @return bool 向量4 是否相等 结果
      */
-    public static function vector4Equals(CData $Vector4_1, CData $Vector4_2): bool
+    public static function vector4Equals(Vector4 $Vector4_1, Vector4 $Vector4_2): bool
     {
-        return self::ffi()->Vector4Equals($Vector4_1, $Vector4_2) == 1;
+        return self::ffi()->Vector4Equals($Vector4_1->struct(), $Vector4_2->struct()) == 1;
     }
 
     /**
      * 矩阵4 行列式
      *
-     * @param CData Matrix $Matrix 矩阵4
+     * @param Matrix $Matrix 矩阵4
      * @return float 矩阵4 行列式 结果
      */
-    public static function matrixDeterminant(CData $Matrix): float
+    public static function matrixDeterminant(Matrix $Matrix): float
     {
-        return self::ffi()->MatrixDeterminant($Matrix);
+        return self::ffi()->MatrixDeterminant($Matrix->struct());
     }
 
     /**
      * 矩阵4 迹
      *
-     * @param CData Matrix $Matrix 矩阵4
+     * @param Matrix $Matrix 矩阵4
      * @return float 矩阵4 迹 结果
      */
-    public static function matrixTrace(CData $Matrix): float
+    public static function matrixTrace(Matrix $Matrix): float
     {
-        return self::ffi()->MatrixTrace($Matrix);
+        return self::ffi()->MatrixTrace($Matrix->struct());
     }
 
     /**
      * 矩阵4 转置
      *
-     * @param CData Matrix $Matrix 矩阵4
-     * @return CData Matrix 矩阵4 转置 结果
+     * @param Matrix $Matrix 矩阵4
+     * @return Matrix 矩阵4 转置 结果
      */
-    public static function matrixTranspose(CData $Matrix): CData
+    public static function matrixTranspose(Matrix $Matrix): Matrix
     {
-        return self::ffi()->MatrixTranspose($Matrix);
+        $res = self::ffi()->MatrixTranspose($Matrix->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
@@ -1381,55 +1467,85 @@ class Math extends Base
      * @param CData Matrix $Matrix 矩阵4
      * @return CData Matrix 矩阵4 取反 结果
      */
-    public static function matrixInvert(CData $Matrix): CData
+    public static function matrixInvert(Matrix $Matrix): Matrix
     {
-        return self::ffi()->MatrixInvert($Matrix);
+        $res = self::ffi()->MatrixInvert($Matrix->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 单位矩阵
      *
-     * @return CData Matrix 矩阵4 单位矩阵 结果
+     * @return Matrix 矩阵4 单位矩阵 结果
      */
-    public static function matrixIdentity(): CData
+    public static function matrixIdentity(): Matrix
     {
-        return self::ffi()->MatrixIdentity();
+        $res = self::ffi()->MatrixIdentity();
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 加法
      *
-     * @param CData Matrix $Matrix_left 矩阵4
-     * @param CData Matrix $Matrix_right 矩阵4
-     * @return CData Matrix 矩阵4 加法 结果
+     * @param Matrix $Matrix_left 矩阵4
+     * @param Matrix $Matrix_right 矩阵4
+     * @return Matrix 矩阵4 加法 结果 
      */
-    public static function matrixAdd(CData $Matrix_left, CData $Matrix_right): CData
+    public static function matrixAdd(Matrix $Matrix_left, Matrix $Matrix_right): Matrix
     {
-        return self::ffi()->MatrixAdd($Matrix_left, $Matrix_right);
+        $res = self::ffi()->MatrixAdd($Matrix_left->struct(), $Matrix_right->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 减法
      *
-     * @param CData Matrix $Matrix_left 矩阵4
-     * @param CData Matrix $Matrix_right 矩阵4
-     * @return CData Matrix 矩阵4 减法 结果
+     * @param Matrix $Matrix_left 矩阵4
+     * @param Matrix $Matrix_right 矩阵4
+     * @return Matrix 矩阵4 减法 结果
      */
-    public static function matrixSubtract(CData $Matrix_left, CData $Matrix_right): CData
+    public static function matrixSubtract(Matrix $Matrix_left, Matrix $Matrix_right): Matrix
     {
-        return self::ffi()->MatrixSubtract($Matrix_left, $Matrix_right);
+        $res = self::ffi()->MatrixSubtract($Matrix_left->struct(), $Matrix_right->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 乘法
      *
-     * @param CData Matrix $Matrix_left 矩阵4
-     * @param CData Matrix $Matrix_right 矩阵4
-     * @return CData Matrix 矩阵4 乘法 结果
+     * @param Matrix $Matrix_left 矩阵4
+     * @param Matrix $Matrix_right 矩阵4
+     * @return Matrix 矩阵4 乘法 结果
      */
-    public static function matrixMultiply(CData $Matrix_left, CData $Matrix_right): CData
+    public static function matrixMultiply(Matrix $Matrix_left, Matrix $Matrix_right): Matrix
     {
-        return self::ffi()->MatrixMultiply($Matrix_left, $Matrix_right);
+        $res = self::ffi()->MatrixMultiply($Matrix_left->struct(), $Matrix_right->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
@@ -1438,78 +1554,120 @@ class Math extends Base
      * @param float $x 平移X轴
      * @param float $y 平移Y轴
      * @param float $z 平移Z轴
-     * @return CData Matrix 矩阵4 平移 结果
+     * @return Matrix 矩阵4 平移 结果
      */
-    public static function matrixTranslate(float $x, float $y, float $z): CData
+    public static function matrixTranslate(float $x, float $y, float $z): Matrix
     {
-        return self::ffi()->MatrixTranslate($x, $y, $z);
+        $res = self::ffi()->MatrixTranslate($x, $y, $z);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 旋转
      *
-     * @param CData Vector3 $axis 旋转轴
+     * @param Vector3 $axis 旋转轴
      * @param float $angle 旋转角度
-     * @return CData Matrix 矩阵4 旋转 结果
+     * @return Matrix 矩阵4 旋转 结果
      */
-    public static function matrixRotate(CData $axis, float $angle): CData
+    public static function matrixRotate(Vector3 $axis, float $angle): Matrix
     {
-        return self::ffi()->MatrixRotate($axis, $angle);
+        $res = self::ffi()->MatrixRotate($axis->struct(), $angle);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 旋转X轴
      *
      * @param float $angle 旋转角度
-     * @return CData Matrix 矩阵4 旋转X轴 结果
+     * @return Matrix 矩阵4 旋转X轴 结果
      */
-    public static function matrixRotateX(float $angle): CData
+    public static function matrixRotateX(float $angle): Matrix
     {
-        return self::ffi()->MatrixRotateX($angle);
+        $res = self::ffi()->MatrixRotateX($angle);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 旋转Y轴
      *
      * @param float $angle 旋转角度
-     * @return CData Matrix 矩阵4 旋转Y轴 结果
+     * @return Matrix 矩阵4 旋转Y轴 结果
      */
-    public static function matrixRotateY(float $angle): CData
+    public static function matrixRotateY(float $angle): Matrix
     {
-        return self::ffi()->MatrixRotateY($angle);
+        $res = self::ffi()->MatrixRotateY($angle);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 旋转Z轴
      *
      * @param float $angle 旋转角度
-     * @return CData Matrix 矩阵4 旋转Z轴 结果
+     * @return Matrix 矩阵4 旋转Z轴 结果
      */
-    public static function matrixRotateZ(float $angle): CData
+    public static function matrixRotateZ(float $angle): Matrix
     {
-        return self::ffi()->MatrixRotateZ($angle);
+        $res = self::ffi()->MatrixRotateZ($angle);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 旋转XYZ轴
      *
-     * @param CData Vector3 $Vector3_angle 旋转XYZ轴角度
-     * @return CData Matrix 矩阵4 旋转XYZ轴 结果
+     * @param Vector3 $Vector3_angle 旋转XYZ轴角度
+     * @return Matrix 矩阵4 旋转XYZ轴 结果
      */
-    public static function matrixRotateXYZ(CData $Vector3_angle): CData
+    public static function matrixRotateXYZ(Vector3 $Vector3_angle): Matrix
     {
-        return self::ffi()->MatrixRotateXYZ($Vector3_angle);
+        $res = self::ffi()->MatrixRotateXYZ($Vector3_angle->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 旋转ZYX轴
      *
-     * @param CData Vector3 $Vector3_angle 旋转ZYX轴角度
-     * @return CData Matrix 矩阵4 旋转ZYX轴 结果
+     * @param Vector3 $Vector3_angle 旋转ZYX轴角度
+     * @return Matrix 矩阵4 旋转ZYX轴 结果
      */
-    public static function matrixRotateZYX(CData $Vector3_angle): CData
+    public static function matrixRotateZYX(Vector3 $Vector3_angle): Matrix
     {
-        return self::ffi()->MatrixRotateZYX($Vector3_angle);
+        $res = self::ffi()->MatrixRotateZYX($Vector3_angle->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
@@ -1518,11 +1676,17 @@ class Math extends Base
      * @param float $x 缩放X轴
      * @param float $y 缩放Y轴
      * @param float $z 缩放Z轴
-     * @return CData Matrix 矩阵4 缩放 结果
+     * @return Matrix 矩阵4 缩放 结果
      */
-    public static function matrixScale(float $x, float $y, float $z): CData
+    public static function matrixScale(float $x, float $y, float $z): Matrix
     {
-        return self::ffi()->MatrixScale($x, $y, $z);
+        $res = self::ffi()->MatrixScale($x, $y, $z);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
@@ -1534,11 +1698,17 @@ class Math extends Base
      * @param float $top 上裁剪平面
      * @param float $nearPlane 近裁剪平面
      * @param float $farPlane 远裁剪平面
-     * @return CData Matrix 矩阵4 透视投影 结果
+     * @return Matrix 矩阵4 透视投影 结果
      */
-    public static function matrixFrustum(float $left, float $right, float $bottom, float $top, float $nearPlane, float $farPlane): CData
+    public static function matrixFrustum(float $left, float $right, float $bottom, float $top, float $nearPlane, float $farPlane): Matrix
     {
-        return self::ffi()->MatrixFrustum($left, $right, $bottom, $top, $nearPlane, $farPlane);
+        $res = self::ffi()->MatrixFrustum($left, $right, $bottom, $top, $nearPlane, $farPlane);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
@@ -1548,11 +1718,17 @@ class Math extends Base
      * @param float $aspect 宽高比
      * @param float $nearPlane 近裁剪平面
      * @param float $farPlane 远裁剪平面
-     * @return CData Matrix 矩阵4 透视投影 结果
+     * @return Matrix 矩阵4 透视投影 结果
      */
-    public static function matrixPerspective(float $fovY, float $aspect, float $nearPlane, float $farPlane): CData
+    public static function matrixPerspective(float $fovY, float $aspect, float $nearPlane, float $farPlane): Matrix
     {
-        return self::ffi()->MatrixPerspective($fovY, $aspect, $nearPlane, $farPlane);
+        $res = self::ffi()->MatrixPerspective($fovY, $aspect, $nearPlane, $farPlane);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
@@ -1564,278 +1740,406 @@ class Math extends Base
      * @param float $top 上裁剪平面
      * @param float $nearPlane 近裁剪平面
      * @param float $farPlane 远裁剪平面
-     * @return CData Matrix 矩阵4 正交投影 结果
+     * @return Matrix 矩阵4 正交投影 结果
      */
-    public static function matrixOrtho(float $left, float $right, float $bottom, float $top, float $nearPlane, float $farPlane): CData
+    public static function matrixOrtho(float $left, float $right, float $bottom, float $top, float $nearPlane, float $farPlane): Matrix
     {
-        return self::ffi()->MatrixOrtho($left, $right, $bottom, $top, $nearPlane, $farPlane);
+        $res = self::ffi()->MatrixOrtho($left, $right, $bottom, $top, $nearPlane, $farPlane);
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 观察矩阵
      *
-     * @param CData Vector3 $Vector3_eye 相机位置
-     * @param CData Vector3 $Vector3_target 相机目标
-     * @param CData Vector3 $Vector3_up 相机上方向
-     * @return CData Matrix 矩阵4 观察矩阵 结果
+     * @param Vector3 $Vector3_eye 相机位置
+     * @param Vector3 $Vector3_target 相机目标
+     * @param Vector3 $Vector3_up 相机上方向
+     * @return Matrix 矩阵4 观察矩阵 结果
      */
-    public static function matrixLookAt(CData $Vector3_eye, CData $Vector3_target, CData $Vector3_up): CData
+    public static function matrixLookAt(Vector3 $Vector3_eye, Vector3 $Vector3_target, Vector3 $Vector3_up): Matrix
     {
-        return self::ffi()->MatrixLookAt($Vector3_eye, $Vector3_target, $Vector3_up);
+        $res = self::ffi()->MatrixLookAt($Vector3_eye->struct(), $Vector3_target->struct(), $Vector3_up->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15]
+        );
     }
 
     /**
      * 矩阵4 转换为浮点数对象
      *
-     * @param CData Matrix $Matrix 矩阵4
+     * @param Matrix $Matrix 矩阵4
      * @return CData 浮点数对象
      */
-    public static function matrixToFloatV(CData $Matrix): CData
+    public static function matrixToFloatV(Matrix $Matrix): CData
     {
-        return self::ffi()->MatrixToFloatV($Matrix);
+        return self::ffi()->MatrixToFloatV($Matrix->struct());
     }
 
     /**
      * 四元数 加法
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
-     * @param CData Quaternion $Quaternion_b 四元数b
-     * @return CData Quaternion 四元数 加法 结果
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_b 四元数b
+     * @return Vector4 Quaternion 四元数 加法 结果
      */
-    public static function quaternionAdd(CData $Quaternion_a, CData $Quaternion_b): CData
+    public static function quaternionAdd(Vector4 $Quaternion_a, Vector4 $Quaternion_b): Vector4
     {
-        return self::ffi()->QuaternionAdd($Quaternion_a, $Quaternion_b);
+        $res = self::ffi()->QuaternionAdd($Quaternion_a->struct(), $Quaternion_b->struct());
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 加法
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
      * @param float $add 四元数b值
-     * @return CData Quaternion 四元数 加法 结果
+     * @return Vector4 Quaternion 四元数 加法 结果
      */
-    public static function quaternionAddValue(CData $Quaternion_a, float $add): CData
+    public static function quaternionAddValue(Vector4 $Quaternion_a, float $add): Vector4
     {
-        return self::ffi()->QuaternionAddValue($Quaternion_a, $add);
+        $res = self::ffi()->QuaternionAddValue($Quaternion_a->struct(), $add);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 减法
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
-     * @param CData Quaternion $Quaternion_b 四元数b
-     * @return CData Quaternion 四元数 减法 结果
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_b 四元数b
+     * @return Vector4 Quaternion 四元数 减法 结果
      */
-    public static function quaternionSubtract(CData $Quaternion_a, CData $Quaternion_b): CData
+    public static function quaternionSubtract(Vector4 $Quaternion_a, Vector4 $Quaternion_b): Vector4
     {
-        return self::ffi()->QuaternionSubtract($Quaternion_a, $Quaternion_b);
+        $res = self::ffi()->QuaternionSubtract($Quaternion_a->struct(), $Quaternion_b->struct());
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 减法
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
      * @param float $subtract 四元数b值
-     * @return CData Quaternion 四元数 减法 结果
+     * @return Vector4 Quaternion 四元数 减法 结果
      */
-    public static function quaternionSubtractValue(CData $Quaternion_a, float $subtract): CData
+    public static function quaternionSubtractValue(Vector4 $Quaternion_a, float $subtract): Vector4
     {
-        return self::ffi()->QuaternionSubtractValue($Quaternion_a, $subtract);
+        $res = self::ffi()->QuaternionSubtractValue($Quaternion_a->struct(), $subtract);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 身份
      *
-     * @return CData Quaternion 四元数 身份 结果
+     * @return Vector4 Quaternion 四元数 身份 结果
      */
-    public static function quaternionIdentity(): CData
+    public static function quaternionIdentity(): Vector4
     {
-        return self::ffi()->QuaternionIdentity();
+        $res = self::ffi()->QuaternionIdentity();
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 长度
      *
-     * @param CData Quaternion $Quaternion 四元数
+     * @param Vector4 Quaternion $Quaternion 四元数
      * @return float 四元数 长度 结果
      */
-    public static function quaternionLength(CData $Quaternion): float
+    public static function quaternionLength(Vector4 $Quaternion): float
     {
-        return self::ffi()->QuaternionLength($Quaternion);
+        return self::ffi()->QuaternionLength($Quaternion->struct());
     }
 
     /**
      * 四元数 归一化
      *
-     * @param CData Quaternion $Quaternion 四元数
-     * @return CData Quaternion 四元数 归一化 结果
+     * @param Vector4 Quaternion $Quaternion 四元数
+     * @return Vector4 Quaternion 四元数 归一化 结果
      */
-    public static function quaternionNormalize(CData $Quaternion): CData
+    public static function quaternionNormalize(Vector4 $Quaternion): Vector4
     {
-        return self::ffi()->QuaternionNormalize($Quaternion);
+        $res = self::ffi()->QuaternionNormalize($Quaternion->struct());
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 反相
      *
-     * @param CData Quaternion $Quaternion 四元数
-     * @return CData Quaternion 四元数 反相 结果
+     * @param Vector4 Quaternion $Quaternion 四元数
+     * @return Vector4 Quaternion 四元数 反相 结果
      */
-    public static function quaternionInvert(CData $Quaternion): CData
+    public static function quaternionInvert(Vector4 $Quaternion): Vector4
     {
-        return self::ffi()->QuaternionInvert($Quaternion);
+        $res = self::ffi()->QuaternionInvert($Quaternion->struct());
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 乘法
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
-     * @param CData Quaternion $Quaternion_b 四元数b
-     * @return CData Quaternion 四元数 乘法 结果
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_b 四元数b
+     * @return Vector4 Quaternion 四元数 乘法 结果
      */
-    public static function quaternionMultiply(CData $Quaternion_a, CData $Quaternion_b): CData
+    public static function quaternionMultiply(Vector4 $Quaternion_a, Vector4 $Quaternion_b): Vector4
     {
-        return self::ffi()->QuaternionMultiply($Quaternion_a, $Quaternion_b);
+        $res = self::ffi()->QuaternionMultiply($Quaternion_a->struct(), $Quaternion_b->struct());
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 乘法
      *
-     * @param CData Quaternion $Quaternion 四元数
+     * @param Vector4 Quaternion $Quaternion 四元数
      * @param float $scale 缩放值
-     * @return CData Quaternion 四元数 乘法 结果
+     * @return Vector4 Quaternion 四元数 乘法 结果
      */
-    public static function quaternionScale(CData $Quaternion, float $scale): CData
+    public static function quaternionScale(Vector4 $Quaternion, float $scale): Vector4
     {
-        return self::ffi()->QuaternionScale($Quaternion, $scale);
+        $res = self::ffi()->QuaternionScale($Quaternion->struct(), $scale);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 除法
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
-     * @param CData Quaternion $Quaternion_b 四元数b
-     * @return CData Quaternion 四元数 除法 结果
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_b 四元数b
+     * @return Vector4 Quaternion 四元数 除法 结果
      */
-    public static function quaternionDivide(CData $Quaternion_a, CData $Quaternion_b): CData
+    public static function quaternionDivide(Vector4 $Quaternion_a, Vector4 $Quaternion_b): Vector4
     {
-        return self::ffi()->QuaternionDivide($Quaternion_a, $Quaternion_b);
+        $res = self::ffi()->QuaternionDivide($Quaternion_a->struct(), $Quaternion_b->struct());
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 插值
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
-     * @param CData Quaternion $Quaternion_b 四元数b
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_b 四元数b
      * @param float $amount 插值比例
-     * @return CData Quaternion 四元数 插值 结果
+     * @return Vector4 Quaternion 四元数 插值 结果
      */
-    public static function quaternionLerp(CData $Quaternion_a, CData $Quaternion_b, float $amount): CData
+    public static function quaternionLerp(Vector4 $Quaternion_a, Vector4 $Quaternion_b, float $amount): Vector4
     {
-        return self::ffi()->QuaternionLerp($Quaternion_a, $Quaternion_b, $amount);
+        $res = self::ffi()->QuaternionLerp($Quaternion_a->struct(), $Quaternion_b->struct(), $amount);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 归一化插值
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
-     * @param CData Quaternion $Quaternion_b 四元数b
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_b 四元数b
      * @param float $amount 插值比例
-     * @return CData Quaternion 四元数 归一化插值 结果
+     * @return Vector4 Quaternion 四元数 归一化插值 结果
      */
-    public static function quaternionNlerp(CData $Quaternion_a, CData $Quaternion_b, float $amount): CData
+    public static function quaternionNlerp(Vector4 $Quaternion_a, Vector4 $Quaternion_b, float $amount): Vector4
     {
-        return self::ffi()->QuaternionNlerp($Quaternion_a, $Quaternion_b, $amount);
+        $res = self::ffi()->QuaternionNlerp($Quaternion_a->struct(), $Quaternion_b->struct(), $amount);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 球面线性插值
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
-     * @param CData Quaternion $Quaternion_b 四元数b
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_b 四元数b
      * @param float $amount 插值比例
-     * @return CData Quaternion 四元数 球面线性插值 结果
+     * @return Vector4 Quaternion 四元数 球面线性插值 结果
      */
-    public static function quaternionSlerp(CData $Quaternion_a, CData $Quaternion_b, float $amount): CData
+    public static function quaternionSlerp(Vector4 $Quaternion_a, Vector4 $Quaternion_b, float $amount): Vector4
     {
-        return self::ffi()->QuaternionSlerp($Quaternion_a, $Quaternion_b, $amount);
+        $res = self::ffi()->QuaternionSlerp($Quaternion_a->struct(), $Quaternion_b->struct(), $amount);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 三次Hermite插值
      * 
-     * @param CData Quaternion $Quaternion_q1 四元数a
-     * @param CData Quaternion $Quaternion_outTangent1 四元数a的外切线
-     * @param CData Quaternion $Quaternion_q2 四元数b
-     * @param CData Quaternion $Quaternion_inTangent2 四元数b的内切线
+     * @param Vector4 Quaternion $Quaternion_q1 四元数a
+     * @param Vector4 Quaternion $Quaternion_outTangent1 四元数a的外切线
+     * @param Vector4 Quaternion $Quaternion_q2 四元数b
+     * @param Vector4 Quaternion $Quaternion_inTangent2 四元数b的内切线
      * @param float $t 插值比例
-     * @return CData Quaternion 四元数 三次Hermite插值 结果
+     * @return Vector4 Quaternion 四元数 三次Hermite插值 结果
      */
-    public static function quaternionCubicHermiteSpline(CData $Quaternion_q1, CData $Quaternion_outTangent1, CData $Quaternion_q2, CData $Quaternion_inTangent2, float $t): CData
+    public static function quaternionCubicHermiteSpline(Vector4 $Quaternion_q1, Vector4 $Quaternion_outTangent1, Vector4 $Quaternion_q2, Vector4 $Quaternion_inTangent2, float $t): Vector4
     {
-        return self::ffi()->QuaternionCubicHermiteSpline($Quaternion_q1, $Quaternion_outTangent1, $Quaternion_q2, $Quaternion_inTangent2, $t);
+        $res = self::ffi()->QuaternionCubicHermiteSpline($Quaternion_q1->struct(), $Quaternion_outTangent1->struct(), $Quaternion_q2->struct(), $Quaternion_inTangent2->struct(), $t);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 从向量3到向量3
      *
-     * @param CData Vector3 $Vector3_from 向量3a
-     * @param CData Vector3 $Vector3_to 向量3b
-     * @return CData Quaternion 四元数 从向量3到向量3 结果
+     * @param Vector3 $Vector3_from 向量3a
+     * @param Vector3 $Vector3_to 向量3b
+     * @return Vector4 Quaternion 四元数 从向量3到向量3 结果
      */
-    public static function quaternionFromVector3ToVector3(CData $Vector3_from, CData $Vector3_to): CData
+    public static function quaternionFromVector3ToVector3(Vector3 $Vector3_from, Vector3 $Vector3_to): Vector4
     {
-        return self::ffi()->QuaternionFromVector3ToVector3($Vector3_from, $Vector3_to);
+        $res = self::ffi()->QuaternionFromVector3ToVector3($Vector3_from->struct(), $Vector3_to->struct());
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 从矩阵
      *
-     * @param CData Matrix $Matrix 矩阵
-     * @return CData Quaternion 四元数 从矩阵 结果
+     * @param Matrix $Matrix 矩阵
+     * @return Vector4 Quaternion 四元数 从矩阵 结果
      */
-    public static function quaternionFromMatrix(CData $Matrix): CData
+    public static function quaternionFromMatrix(Matrix $Matrix): Vector4
     {
-        return self::ffi()->QuaternionFromMatrix($Matrix);
+        $res = self::ffi()->QuaternionFromMatrix($Matrix->struct());
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 转换为矩阵
      *
-     * @param CData Quaternion $Quaternion 四元数
-     * @return CData Matrix 矩阵 结果
+     * @param Vector4 Quaternion $Quaternion 四元数
+     * @return Matrix 矩阵 结果
      */
-    public static function quaternionToMatrix(CData $Quaternion): CData
+    public static function quaternionToMatrix(Vector4 $Quaternion): Matrix
     {
-        return self::ffi()->QuaternionToMatrix($Quaternion);
+        $res = self::ffi()->QuaternionToMatrix($Quaternion->struct());
+        return new Matrix(
+            [$res->m0, $res->m4, $res->m8, $res->m12],
+            [$res->m1, $res->m5, $res->m9, $res->m13],
+            [$res->m2, $res->m6, $res->m10, $res->m14],
+            [$res->m3, $res->m7, $res->m11, $res->m15],
+        );
     }
 
     /**
      * 四元数 从轴角
      *
-     * @param CData Vector3 $Vector3_axis 轴向量
+     * @param Vector3 $Vector3_axis 轴向量
      * @param float $angle 旋转角度（弧度）
-     * @return CData Quaternion 四元数 从轴角 结果
+     * @return Vector4 Quaternion 四元数 从轴角 结果
      */
-    public static function quaternionFromAxisAngle(CData $Vector3_axis, float $angle): CData
+    public static function quaternionFromAxisAngle(Vector3 $Vector3_axis, float $angle): Vector4
     {
-        return self::ffi()->QuaternionFromAxisAngle($Vector3_axis, $angle);
+        $res = self::ffi()->QuaternionFromAxisAngle($Vector3_axis->struct(), $angle);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 转换为轴角
      *
-     * @param CData Quaternion $Quaternion 四元数
-     * @param CData Vector3 $Vector3_axis 轴向量 结果
-     * @param void 
+     * @param Vector4 Quaternion $Quaternion 四元数
+     * @param Vector3 $Vector3_outAxis 轴向量 结果
+     * @param float $outAngle 旋转角度（弧度） 结果
      */
-    public static function quaternionToAxisAngle(CData $Quaternion, CData &$Vector3_outAxis, float &$outAngle): void
+    public static function quaternionToAxisAngle(Vector4 $Quaternion, Vector3 &$Vector3_outAxis, float &$outAngle): void
     {
-        $Vector3_outAxis = self::ffi()::addr($Vector3_outAxis);
+        $Vector3_outAxis = self::ffi()->cast('Vector3 *', $Vector3_outAxis);
         $c_outAngle = self::ffi()->new('float[1]');
         $c_outAngle[0] = $outAngle;
-        $outAngle = self::ffi()::addr($c_outAngle);
-        self::ffi()->QuaternionToAxisAngle($Quaternion, $Vector3_outAxis, $outAngle);
+        $outAngle = self::ffi()->cast('float', $c_outAngle);
+        self::ffi()->QuaternionToAxisAngle($Quaternion->struct(), $Vector3_outAxis, $outAngle);
+        $Vector3_outAxis = new Vector3(
+            $Vector3_outAxis[0]->x,
+            $Vector3_outAxis[0]->y,
+            $Vector3_outAxis[0]->z,
+        );
+        $outAngle = $c_outAngle[0];
+        unset($c_outAngle);
+        unset($Vector3_outAxis);
     }
 
     /**
@@ -1844,62 +2148,97 @@ class Math extends Base
      * @param float $pitch 俯仰角（弧度）
      * @param float $yaw 偏航角（弧度）
      * @param float $roll 滚转角（弧度）
-     * @return CData Quaternion 四元数 从欧拉角 结果
+     * @return Vector4 Quaternion 四元数 从欧拉角 结果
      */
-    public static function quaternionFromEuler(float $pitch, float $yaw, float $roll): CData
+    public static function quaternionFromEuler(float $pitch, float $yaw, float $roll): Vector4
     {
-        return self::ffi()->QuaternionFromEuler($pitch, $yaw, $roll);
+        $res = self::ffi()->QuaternionFromEuler($pitch, $yaw, $roll);
+        return new Vector4(
+            $res->x,
+            $res->y,
+            $res->z,
+            $res->w,
+        );
     }
 
     /**
      * 四元数 转换为欧拉角
      *
-     * @param CData Quaternion $Quaternion 四元数
-     * @return CData Vector3 欧拉角 结果
+     * @param Vector4 Quaternion $Quaternion 四元数
+     * @return Vector3 欧拉角 结果
      */
-    public static function quaternionToEuler(CData $Quaternion): CData
+    public static function quaternionToEuler(Vector4 $Quaternion): Vector3
     {
-        return self::ffi()->QuaternionToEuler($Quaternion);
+        $res = self::ffi()->QuaternionToEuler($Quaternion->struct());
+        return new Vector3(
+            $res->x,
+            $res->y,
+            $res->z,
+        );
     }
 
     /**
      * 四元数 变换向量3
      *
-     * @param CData Quaternion $Quaternion 四元数
-     * @param CData Matrix $mat 变换矩阵
-     * @return CData Vector3 变换后的向量3 结果
+     * @param Vector4 Quaternion $Quaternion 四元数
+     * @param Matrix $mat 变换矩阵
+     * @return Vector3 变换后的向量3 结果
      */
-    public static function quaternionTransform(CData $Quaternion, CData $mat): CData
+    public static function quaternionTransform(Vector4 $Quaternion, Matrix $mat): Vector3
     {
-        return self::ffi()->QuaternionTransform($Quaternion, $mat);
+        $res = self::ffi()->QuaternionTransform($Quaternion->struct(), $mat->struct());
+        return new Vector3(
+            $res->x,
+            $res->y,
+            $res->z,
+        );
     }
 
     /**
      * 四元数 相等判断
      *
-     * @param CData Quaternion $Quaternion_a 四元数a
-     * @param CData Quaternion $Quaternion_b 四元数b
+     * @param Vector4 Quaternion $Quaternion_a 四元数a
+     * @param Vector4 Quaternion $Quaternion_b 四元数b
      * @return bool 是否相等 结果
      */
-    public static function quaternionEquals(CData $Quaternion_a, CData $Quaternion_b): bool
+    public static function quaternionEquals(Vector4 $Quaternion_a, Vector4 $Quaternion_b): bool
     {
-        return self::ffi()->QuaternionEquals($Quaternion_a, $Quaternion_b) == 1;
+        return self::ffi()->QuaternionEquals($Quaternion_a->struct(), $Quaternion_b->struct()) == 1;
     }
 
     /**
      * 四元数 分解矩阵
      *
-     * @param CData Matrix $mat 矩阵
-     * @param CData Vector3 $translation 平移向量 结果
-     * @param CData Quaternion $rotation 旋转四元数 结果
-     * @param CData Vector3 $scale 缩放向量 结果
+     * @param Matrix $mat 矩阵
+     * @param Vector3 $translation 平移向量 结果
+     * @param Vector4 $rotation 旋转四元数 结果
+     * @param Vector3 $scale 缩放向量 结果
      * @return void
      */
-    public static function matrixDecompose(CData $mat, CData &$translation, CData &$rotation, CData &$scale): void
+    public static function matrixDecompose(Matrix $mat, Vector3 &$translation, Vector4 &$rotation, Vector3 &$scale): void
     {
-        $translation = self::ffi()::addr($translation);
-        $rotation = self::ffi()::addr($rotation);
-        $scale = self::ffi()::addr($scale);
+        $translation = self::ffi()->cast('Vector3 *', $translation->struct());
+        $rotation = self::ffi()->cast('Vector4 *', $rotation->struct());
+        $scale = self::ffi()->cast('Vector3 *', $scale->struct());
         self::ffi()->MatrixDecompose($mat, $translation, $rotation, $scale);
+        $translation = new Vector3(
+            $translation[0]->x,
+            $translation[0]->y,
+            $translation[0]->z,
+        );
+        $rotation = new Vector4(
+            $rotation[0]->x,
+            $rotation[0]->y,
+            $rotation[0]->z,
+            $rotation[0]->w,
+        );
+        $scale = new Vector3(
+            $scale[0]->x,
+            $scale[0]->y,
+            $scale[0]->z,
+        );
+        unset($translation);
+        unset($rotation);
+        unset($scale);
     }
 }

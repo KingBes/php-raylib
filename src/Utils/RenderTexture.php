@@ -27,7 +27,7 @@ class RenderTexture extends Base
         $this->id = $cdata->id;
         $this->texture = new Texture($cdata->texture);
         $this->depth = new Texture($cdata->depth);
-        $this->data = $cdata->data;
+        $this->data = $cdata;
     }
 
     /**

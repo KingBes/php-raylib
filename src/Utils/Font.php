@@ -27,7 +27,7 @@ class Font extends Base
         $this->baseSize = $cdata->baseSize;
         $this->glyphCount = $cdata->glyphCount;
         $this->glyphPadding = $cdata->glyphPadding;
-        $this->data = $cdata->data;
+        $this->data = $cdata;
     }
 
     /**

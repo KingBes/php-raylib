@@ -5,6 +5,7 @@ require dirname(__DIR__) . "/vendor/autoload.php";
 use Kingbes\Raylib\Core; //核心
 use Kingbes\Raylib\Utils; // 工具类
 use Kingbes\Raylib\Gui;
+use Kingbes\Raylib\Text;
 
 Core::initWindow(800, 450, "Hello World"); //初始化窗口
 
@@ -51,6 +52,37 @@ $listViewText = [
 
 $secretViewActive = false;
 
+// 读取字体文件
+$fileData = Core::loadFileData(
+    // 字体文件路径
+    __DIR__ . DIRECTORY_SEPARATOR . "seguiemj.ttf"
+);
+
+$text = "asd🤣"; // 中文文本
+
+// 加载字体码位
+$codepoints = Text::loadCodepoints($text);
+
+// 从内存加载字体
+$font = Text::loadFontFromMemory(
+    ".ttf",
+    $fileData["data"],
+    $fileData["size"],
+    72,
+    $codepoints["data"],
+    $codepoints["count"]
+);
+
+// 释放码点表
+Text::unloadCodepoints($codepoints["data"]);
+
+if (Text::isFontValid($font) == false) {
+    // 如果字体加载失败，抛出异常
+    throw new \Exception("无法加载系统字体，请检查路径是否正确！");
+}
+
+Gui::setFont($font);
+
 // 主循环
 while (!Core::windowShouldClose()) {
     Core::beginDrawing(); //开始绘制
@@ -95,7 +127,7 @@ while (!Core::windowShouldClose()) {
     } */
 
     // 文本框控件
-    /* $res = Gui::textBox(
+    $res = Gui::textBox(
         Utils::rectangle(24, 120, 250, 30),
         $text,
         20,
@@ -104,7 +136,7 @@ while (!Core::windowShouldClose()) {
     if ($res) {
         $textBoxEditMode = !$textBoxEditMode;
         echo "文本框内容: $text\n";
-    } */
+    }
 
     // 网格控件
     /* Gui::grid(
@@ -119,7 +151,7 @@ while (!Core::windowShouldClose()) {
     // 列表视图控件
     /* Gui::listView(
         Utils::rectangle(24, 120, 250, 250),
-        "Charmander;Bulbasaur;#18#Squirtel;Pikachu;Eevee;Pidgey",
+        "$text;Bulbasaur;#18#Squirtel;Pikachu;Eevee;Pidgey",
         $listViewScrollIndex,
         $listViewActive
     ); */
@@ -132,7 +164,7 @@ while (!Core::windowShouldClose()) {
     ); */
 
     // 文本输入框控件
-    $res = Gui::textInputBox(
+    /* $res = Gui::textInputBox(
         Utils::rectangle(24, 120, 250, 30),
         "Text Input Box",
         "Enter your password:",
@@ -143,7 +175,7 @@ while (!Core::windowShouldClose()) {
     );
     if ($res) {
         echo "文本输入框内容: $text\n";
-    }
+    } */
 
     Core::endDrawing(); // 结束绘制
 }

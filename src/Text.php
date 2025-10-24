@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Kingbes\Raylib;
 
+use Kingbes\Raylib\Utils\Font;
+use Kingbes\Raylib\Utils\Image;
+use Kingbes\Raylib\Utils\Color;
+use Kingbes\Raylib\Utils\GlyphInfo;
+use Kingbes\Raylib\Utils\Rectangle;
+use Kingbes\Raylib\Utils\Vector2;
+
 /**
  * Text类
  */
@@ -14,22 +21,22 @@ class Text extends Base
     /**
      * 获取默认字体
      *
-     * @return \FFI\CData 返回Font对象
+     * @return Font 返回Font对象
      */
-    public static function getFontDefault(): \FFI\CData
+    public static function getFontDefault(): Font
     {
-        return self::ffi()->GetFontDefault();
+        return new Font(self::ffi()->GetFontDefault());
     }
 
     /**
      * 从文件加载字体到GPU显存(VRAM)
      *
      * @param string $fileName 文件名
-     * @return \FFI\CData 返回Font对象
+     * @return Font 返回Font对象
      */
-    public static function loadFont(string $fileName): \FFI\CData
+    public static function loadFont(string $fileName): Font
     {
-        return self::ffi()->LoadFont($fileName);
+        return new Font(self::ffi()->LoadFont($fileName));
     }
 
     /**
@@ -37,35 +44,43 @@ class Text extends Base
      *
      * @param string $fileName 文件名
      * @param int $fontSize 字体大小
-     * @param array|null &$codepoints 字符点数组引用
-     * @param int $codepointCount 字符点数量
-     * @return \FFI\CData 返回Font对象
+     * @return Font 返回Font对象
      */
-    public static function loadFontEx(string $fileName, int $fontSize, ?array $codepoints = null, int $codepointCount = 0): \FFI\CData
-    {
-        if ($codepoints !== null) {
-            $codepointCount = count($codepoints); // 获取数组长度
-            $cCodepoints = self::ffi()->new("int[$codepointCount]"); // 创建C指针数组
-            foreach ($codepoints as $i => $cp) {
-                $cCodepoints[$i] = $cp; // 将PHP数组元素赋值给C指针数组
-            }
-        } else {
-            $cCodepoints = null; // 如果没有传入字符点，则设置为null
+    public static function loadFontEx(
+        string $fileName,
+        int $fontSize
+    ): Font {
+        $c_codepoints = self::ffi()->new("int[" . filesize($fileName) . "]");
+        foreach ($c_codepoints as $key => $value) {
+            $c_codepoints[$key] = $key;
         }
-        return self::ffi()->LoadFontEx($fileName, $fontSize, $cCodepoints, $codepointCount);
+        $cc_codepoints = self::ffi()->cast("int*", $c_codepoints);
+        $res = new Font(self::ffi()->LoadFontEx(
+            $fileName,
+            $fontSize,
+            $cc_codepoints,
+            filesize($fileName)
+        ));
+        if (self::isFontValid($res) == false) {
+            // 如果字体加载失败，抛出异常
+            throw new \Exception("无法加载字体，请检查路径是否正确！");
+        }
+        unset($c_codepoints);
+        unset($cc_codepoints);
+        return $res;
     }
 
     /**
      * 从图像加载字体(XNA风格)
      *
-     * @param \FFI\CData $image Image对象
-     * @param \FFI\CData $key 颜色键
+     * @param Image $image Image对象
+     * @param Color $key 颜色键
      * @param int $firstChar 第一个字符
-     * @return \FFI\CData 返回Font对象
+     * @return Font 返回Font对象
      */
-    public static function loadFontFromImage(\FFI\CData $image, \FFI\CData $key, int $firstChar): \FFI\CData
+    public static function loadFontFromImage(Image $image, Color $key, int $firstChar): Font
     {
-        return self::ffi()->LoadFontFromImage($image, $key, $firstChar);
+        return new Font(self::ffi()->LoadFontFromImage($image->struct(), $key->struct(), $firstChar));
     }
 
     /**
@@ -77,22 +92,35 @@ class Text extends Base
      * @param int $fontSize 字体大小
      * @param array|null &$codepoints 字符点数组引用
      * @param int $codepointCount 字符点数量
-     * @return \FFI\CData 返回Font对象
+     * @return Font 返回Font对象
      */
-    public static function loadFontFromMemory(string $fileType, \FFI\CData $fileData, int $dataSize, int $fontSize, \FFI\CData $codepoints, int $codepointCount = 0): \FFI\CData
-    {
-        return self::ffi()->LoadFontFromMemory($fileType, $fileData, $dataSize, $fontSize, $codepoints, $codepointCount);
+    public static function loadFontFromMemory(
+        string $fileType,
+        \FFI\CData $fileData,
+        int $dataSize,
+        int $fontSize,
+        \FFI\CData $codepoints,
+        int $codepointCount = 0
+    ): Font {
+        return new Font(self::ffi()->LoadFontFromMemory(
+            $fileType,
+            $fileData,
+            $dataSize,
+            $fontSize,
+            $codepoints,
+            $codepointCount
+        ));
     }
 
     /**
      * 检查字体是否有效（仅检查字体数据，不检查GPU纹理）
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @return bool 是否有效
      */
-    public static function isFontValid(\FFI\CData $font): bool
+    public static function isFontValid(Font $font): bool
     {
-        return self::ffi()->IsFontValid($font);
+        return self::ffi()->IsFontValid($font->struct());
     }
 
     /**
@@ -111,6 +139,8 @@ class Text extends Base
         if ($codepoints === null) {
             $codepoints = [];
             $codepointCount = 0;
+        } else {
+            $codepointCount = count($codepoints); // 获取数组长度   
         }
         return self::ffi()->LoadFontData($fileData, $dataSize, $fontSize, $codepoints, $codepointCount, $type);
     }
@@ -118,52 +148,64 @@ class Text extends Base
     /**
      * 根据字形信息生成字体图集
      *
-     * @param \FFI\CData $glyphs GlyphInfo对象数组
-     * @param \FFI\CData $glyphRecs Rectangle对象数组引用
+     * @param GlyphInfo[] $glyphs GlyphInfo对象数组
+     * @param Rectangle[] &$glyphRecs Rectangle对象数组引用
      * @param int $glyphCount 字形数量
      * @param int $fontSize 字体大小
      * @param int $padding 填充
      * @param int $packMethod 打包方法
-     * @return \FFI\CData 返回Image对象
+     * @return Image 返回Image对象
      */
-    public static function genImageFontAtlas(\FFI\CData $glyphs, \FFI\CData &$glyphRecs, int $glyphCount, int $fontSize, int $padding, int $packMethod): \FFI\CData
+    public static function genImageFontAtlas(array $glyphs, array &$glyphRecs, int $glyphCount, int $fontSize, int $padding, int $packMethod): Image
     {
-        return self::ffi()->GenImageFontAtlas($glyphs, $glyphRecs, $glyphCount, $fontSize, $padding, $packMethod);
+        $cGlyphs = self::ffi()->new("GlyphInfo[$glyphCount]"); // 创建C指针数组
+        foreach ($glyphs as $i => $glyph) {
+            $cGlyphs[$i] = $glyph->struct(); // 将PHP数组元素赋值给C指针数组
+        }
+        $cGlyphRecs = self::ffi()->new("Rectangle[$glyphCount]"); // 创建C指针数组
+        foreach ($glyphRecs as $i => $rect) {
+            $cGlyphRecs[$i] = $rect->struct(); // 将PHP数组元素赋值给C指针数组
+        }
+        return new Image(self::ffi()->GenImageFontAtlas($cGlyphs, $cGlyphRecs, $glyphCount, $fontSize, $padding, $packMethod));
     }
 
     /**
      * 卸载字体字形数据(RAM)
      *
-     * @param \FFI\CData $glyphs GlyphInfo对象数组
+     * @param GlyphInfo[] $glyphs GlyphInfo对象数组
      * @param int $glyphCount 字形数量
      * @return void
      */
-    public static function unloadFontData(\FFI\CData $glyphs, int $glyphCount): void
+    public static function unloadFontData(array $glyphs, int $glyphCount): void
     {
-        self::ffi()->UnloadFontData($glyphs, $glyphCount);
+        $cGlyphs = self::ffi()->new("GlyphInfo[$glyphCount]"); // 创建C指针数组
+        foreach ($glyphs as $i => $glyph) {
+            $cGlyphs[$i] = $glyph->struct(); // 将PHP数组元素赋值给C指针数组
+        }
+        self::ffi()->UnloadFontData($cGlyphs, $glyphCount);
     }
 
     /**
      * 从GPU显存卸载字体
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @return void
      */
-    public static function unloadFont(\FFI\CData $font): void
+    public static function unloadFont(Font $font): void
     {
-        self::ffi()->UnloadFont($font);
+        self::ffi()->UnloadFont($font->struct());
     }
 
     /**
      * 将字体导出为代码文件，成功返回true
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @param string $fileName 文件名
      * @return bool 成功与否
      */
-    public static function exportFontAsCode(\FFI\CData $font, string $fileName): bool
+    public static function exportFontAsCode(Font $font, string $fileName): bool
     {
-        return self::ffi()->ExportFontAsCode($font, $fileName);
+        return self::ffi()->ExportFontAsCode($font->struct(), $fileName);
     }
 
     //### 文本绘制函数
@@ -187,83 +229,83 @@ class Text extends Base
      * @param int $posX X坐标
      * @param int $posY Y坐标
      * @param int $fontSize 字体大小
-     * @param \FFI\CData $color 颜色
+     * @param Color $color 颜色
      * @return void
      */
-    public static function drawText(string $text, int $posX, int $posY, int $fontSize, \FFI\CData $color): void
+    public static function drawText(string $text, int $posX, int $posY, int $fontSize, Color $color): void
     {
-        self::ffi()->DrawText($text, $posX, $posY, $fontSize, $color);
+        self::ffi()->DrawText($text, $posX, $posY, $fontSize, $color->struct());
     }
 
     /**
      * 使用字体和额外参数绘制文本
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @param string $text 文本内容
-     * @param \FFI\CData $position Vector2对象
+     * @param Vector2 $position Vector2对象
      * @param float $fontSize 字体大小
      * @param float $spacing 字间距
-     * @param \FFI\CData $tint 颜色
+     * @param Color $tint 颜色
      * @return void
      */
-    public static function drawTextEx(\FFI\CData $font, string $text, \FFI\CData $position, float $fontSize, float $spacing, \FFI\CData $tint): void
+    public static function drawTextEx(Font $font, string $text, Vector2 $position, float $fontSize, float $spacing, Color $tint): void
     {
-        self::ffi()->DrawTextEx($font, $text, $position, $fontSize, $spacing, $tint);
+        self::ffi()->DrawTextEx($font->struct(), $text, $position->struct(), $fontSize, $spacing, $tint->struct());
     }
 
     /**
      * 使用字体和高级参数绘制文本（支持旋转）
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @param string $text 文本内容
-     * @param \FFI\CData $position Vector2对象
-     * @param \FFI\CData $origin Vector2对象
+     * @param Vector2 $position Vector2对象
+     * @param Vector2 $origin Vector2对象
      * @param float $rotation 旋转角度
      * @param float $fontSize 字体大小
      * @param float $spacing 字间距
-     * @param \FFI\CData $tint 颜色
+     * @param Color $tint 颜色
      * @return void
      */
-    public static function drawTextPro(\FFI\CData $font, string $text, \FFI\CData $position, \FFI\CData $origin, float $rotation, float $fontSize, float $spacing, \FFI\CData $tint): void
+    public static function drawTextPro(Font $font, string $text, Vector2 $position, Vector2 $origin, float $rotation, float $fontSize, float $spacing, Color $tint): void
     {
-        self::ffi()->DrawTextPro($font, $text, $position, $origin, $rotation, $fontSize, $spacing, $tint);
+        self::ffi()->DrawTextPro($font->struct(), $text, $position->struct(), $origin->struct(), $rotation, $fontSize, $spacing, $tint->struct());
     }
 
     /**
      * 绘制单个字符（码位）
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @param int $codepoint 码位
-     * @param \FFI\CData $position Vector2对象
+     * @param Vector2 $position Vector2对象
      * @param float $fontSize 字体大小
-     * @param \FFI\CData $tint 颜色
+     * @param Color $tint 颜色
      * @return void
      */
-    public static function drawTextCodepoint(\FFI\CData $font, int $codepoint, \FFI\CData $position, float $fontSize, \FFI\CData $tint): void
+    public static function drawTextCodepoint(Font $font, int $codepoint, Vector2 $position, float $fontSize, Color $tint): void
     {
-        self::ffi()->DrawTextCodepoint($font, $codepoint, $position, $fontSize, $tint);
+        self::ffi()->DrawTextCodepoint($font->struct(), $codepoint, $position->struct(), $fontSize, $tint->struct());
     }
 
     /**
      * 绘制多个字符（码位）
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @param array $codepoints 码位数组
      * @param int $codepointCount 码位数量
-     * @param \FFI\CData $position Vector2对象
+     * @param Vector2 $position Vector2对象
      * @param float $fontSize 字体大小
      * @param float $spacing 字间距
-     * @param \FFI\CData $tint 颜色
+     * @param Color $tint 颜色
      * @return void
      */
-    public static function drawTextCodepoints(\FFI\CData $font, array $codepoints, int $codepointCount, \FFI\CData $position, float $fontSize, float $spacing, \FFI\CData $tint): void
+    public static function drawTextCodepoints(Font $font, array $codepoints, int $codepointCount, Vector2 $position, float $fontSize, float $spacing, Color $tint): void
     {
         // 将PHP数组转换为C指针
         $cCodepoints = self::ffi()->new("int[$codepointCount]");
         foreach ($codepoints as $i => $cp) {
             $cCodepoints[$i] = $cp;
         }
-        self::ffi()->DrawTextCodepoints($font, $cCodepoints, $codepointCount, $position, $fontSize, $spacing, $tint);
+        self::ffi()->DrawTextCodepoints($font->struct(), $cCodepoints, $codepointCount, $position->struct(), $fontSize, $spacing, $tint->struct());
     }
 
     //### 字体信息函数
@@ -300,45 +342,47 @@ class Text extends Base
      * @param float $spacing 字间距
      * @return \FFI\CData 返回Vector2对象
      */
-    public static function measureTextEx(\FFI\CData $font, string $text, float $fontSize, float $spacing): \FFI\CData
+    public static function measureTextEx(Font $font, string $text, float $fontSize, float $spacing): Vector2
     {
-        return self::ffi()->MeasureTextEx($font, $text, $fontSize, $spacing);
+        $res = self::ffi()->MeasureTextEx($font->struct(), $text, $fontSize, $spacing);
+        return new Vector2($res->x, $res->y);
     }
 
     /**
      * 获取字符码位对应的字形索引（未找到返回'?'索引）
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @param int $codepoint 码位
      * @return int 字形索引
      */
-    public static function getGlyphIndex(\FFI\CData $font, int $codepoint): int
+    public static function getGlyphIndex(Font $font, int $codepoint): int
     {
-        return self::ffi()->GetGlyphIndex($font, $codepoint);
+        return self::ffi()->GetGlyphIndex($font->struct(), $codepoint);
     }
 
     /**
      * 获取字符码位的字形信息（未找到返回'?'信息）
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @param int $codepoint 码位
-     * @return \FFI\CData 返回GlyphInfo对象
+     * @return GlyphInfo 返回GlyphInfo对象
      */
-    public static function getGlyphInfo(\FFI\CData $font, int $codepoint): \FFI\CData
+    public static function getGlyphInfo(Font $font, int $codepoint): GlyphInfo
     {
-        return self::ffi()->GetGlyphInfo($font, $codepoint);
+        return new GlyphInfo(self::ffi()->GetGlyphInfo($font->struct(), $codepoint));
     }
 
     /**
      * 获取字符码位在图集中的矩形区域（未找到返回'?'区域）
      *
-     * @param \FFI\CData $font Font对象
+     * @param Font $font Font对象
      * @param int $codepoint 码位
-     * @return \FFI\CData 返回Rectangle对象
+     * @return Rectangle 返回Rectangle对象
      */
-    public static function getGlyphAtlasRec(\FFI\CData $font, int $codepoint): \FFI\CData
+    public static function getGlyphAtlasRec(Font $font, int $codepoint): Rectangle
     {
-        return self::ffi()->GetGlyphAtlasRec($font, $codepoint);
+        $res = self::ffi()->GetGlyphAtlasRec($font->struct(), $codepoint);
+        return new Rectangle($res->x, $res->y, $res->width, $res->height);
     }
 
     //### 码位管理函数（Unicode字符）

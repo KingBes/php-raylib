@@ -39,7 +39,7 @@ class Texture extends Base
         $this->height = $cdata->height;
         $this->mipmaps = $cdata->mipmaps;
         $this->format = $cdata->format;
-        $this->data = $cdata->data;
+        $this->data = $cdata;
     }
     
     /**

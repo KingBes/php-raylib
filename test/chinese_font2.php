@@ -19,17 +19,17 @@ Core::setTargetFPS(60); //设置目标帧率
 // 读取字体文件
 $fileData = Core::loadFileData(
     // 字体文件路径
-    __DIR__ . DIRECTORY_SEPARATOR ."alimama". DIRECTORY_SEPARATOR . "AlimamaShuHeiTi-Bold.otf"
+    __DIR__ . DIRECTORY_SEPARATOR .  "AlimamaShuHeiTi-Bold.ttf"
 );
 
 $text = "这个是中文文本"; // 中文文本
 
 // 加载字体码位
 $codepoints = Text::loadCodepoints($text);
-
+var_dump(Text::ffi()->cast("int[7]", $codepoints["data"]));
 // 从内存加载字体
 $font = Text::loadFontFromMemory(
-    ".otf",
+    ".ttf",
     $fileData["data"],
     $fileData["size"],
     72,

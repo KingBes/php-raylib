@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace Kingbes\Raylib;
 
+use \FFI\CData;
 use Kingbes\Raylib\Utils\Image;
 use Kingbes\Raylib\Utils\Vector2;
 use Kingbes\Raylib\Utils\Color;
@@ -14,7 +15,7 @@ use Kingbes\Raylib\Utils\Texture;
 use Kingbes\Raylib\Utils\RenderTexture;
 use Kingbes\Raylib\Utils\Shader;
 use Kingbes\Raylib\Utils\VrStereoConfig;
-use Kingbes\Raylib\Utils\VrDeviceInfo;
+// use Kingbes\Raylib\Utils\VrDeviceInfo;
 use Kingbes\Raylib\Utils\Ray;
 use Kingbes\Raylib\Utils\Matrix;
 use Kingbes\Raylib\Utils\Vector3;
@@ -230,17 +231,18 @@ class Core extends Base
      * 设置窗口图标（多张RGBA 32位图像）
      *
      * @param Image[] $images 图像数组
-     * @param integer $count 数组中的图像数量
      * @return void
      */
-    public static function setWindowIcons(array $images, int $count): void
+    public static function setWindowIcons(array $images): void
     {
-        $c_images = self::ffi()->new('struct Image[' . $count . ']');
-        for ($i = 0; $i < $count; $i++) {
+        $c_images = self::ffi()->new('struct Image[' . count($images) . ']');
+        for ($i = 0; $i < count($images); $i++) {
             $c_images[$i] = $images[$i]->struct();
         }
-
-        self::ffi()->SetWindowIcons(self::ffi()::addr($c_images), $count);
+        self::ffi()->SetWindowIcons(
+            self::ffi()->cast('struct Image *', $c_images),
+            count($images)
+        );
     }
 
     /**
@@ -337,9 +339,9 @@ class Core extends Base
     /**
      * 获取原生窗口句柄
      *
-     * @return \FFI\CData 原生窗口句柄
+     * @return CData 原生窗口句柄
      */
-    public static function getWindowHandle(): \FFI\CData
+    public static function getWindowHandle(): CData
     {
         return self::ffi()->GetWindowHandle();
     }
@@ -802,27 +804,30 @@ class Core extends Base
 
     //### VR立体配置函数（用于VR模拟器）
 
-    /**
-     * 加载VR模拟器设备的立体配置
-     *
-     * @param VrDeviceInfo $device VR设备信息
-     * @return VrStereoConfig VR立体配置
-     */
-    /* public static function loadVrStereoConfig(VrDeviceInfo $device): VrStereoConfig
-    {
-        return new VrStereoConfig(self::ffi()->LoadVrStereoConfig($device->struct()));
-    } */
+    // /**
+    //  * 加载VR模拟器设备的立体配置
+    //  *
+    //  * @param VrDeviceInfo $device VR设备信息
+    //  * @return VrStereoConfig VR立体配置
+    //  */
+    // public static function loadVrStereoConfig(VrDeviceInfo $device): VrStereoConfig
+    // {
+    //     $res = self::ffi()->LoadVrStereoConfig($device->struct());
+    //     return new VrStereoConfig(
+    //         [new Matrix($res->projection[0]->)]
+    //     );
+    // }
 
-    /**
-     * 卸载VR立体配置
-     *
-     * @param VrStereoConfig $config VR立体配置
-     * @return void
-     */
-    public static function unloadVrStereoConfig(VrStereoConfig $config): void
-    {
-        self::ffi()->UnloadVrStereoConfig($config->struct());
-    }
+    // /**
+    //  * 卸载VR立体配置
+    //  *
+    //  * @param VrStereoConfig $config VR立体配置
+    //  * @return void
+    //  */
+    // public static function unloadVrStereoConfig(VrStereoConfig $config): void
+    // {
+    //     self::ffi()->UnloadVrStereoConfig($config->struct());
+    // }
 
     //### 着色器管理函数
     //> 注意：OpenGL 1.1不支持着色器功能
@@ -1075,22 +1080,10 @@ class Core extends Base
     {
         $c_matrix = self::ffi()->GetCameraMatrix($camera->struct());
         return new Matrix(
-            $c_matrix->m0,
-            $c_matrix->m1,
-            $c_matrix->m2,
-            $c_matrix->m3,
-            $c_matrix->m4,
-            $c_matrix->m5,
-            $c_matrix->m6,
-            $c_matrix->m7,
-            $c_matrix->m8,
-            $c_matrix->m9,
-            $c_matrix->m10,
-            $c_matrix->m11,
-            $c_matrix->m12,
-            $c_matrix->m13,
-            $c_matrix->m14,
-            $c_matrix->m15
+            [$c_matrix->m0, $c_matrix->m1, $c_matrix->m2, $c_matrix->m3],
+            [$c_matrix->m4, $c_matrix->m5, $c_matrix->m6, $c_matrix->m7],
+            [$c_matrix->m8, $c_matrix->m9, $c_matrix->m10, $c_matrix->m11],
+            [$c_matrix->m12, $c_matrix->m13, $c_matrix->m14, $c_matrix->m15]
         );
     }
 
@@ -1104,22 +1097,10 @@ class Core extends Base
     {
         $c_matrix = self::ffi()->GetCameraMatrix2D($camera->struct());
         return new Matrix(
-            $c_matrix->m0,
-            $c_matrix->m1,
-            $c_matrix->m2,
-            $c_matrix->m3,
-            $c_matrix->m4,
-            $c_matrix->m5,
-            $c_matrix->m6,
-            $c_matrix->m7,
-            $c_matrix->m8,
-            $c_matrix->m9,
-            $c_matrix->m10,
-            $c_matrix->m11,
-            $c_matrix->m12,
-            $c_matrix->m13,
-            $c_matrix->m14,
-            $c_matrix->m15
+            [$c_matrix->m0, $c_matrix->m1, $c_matrix->m2, $c_matrix->m3],
+            [$c_matrix->m4, $c_matrix->m5, $c_matrix->m6, $c_matrix->m7],
+            [$c_matrix->m8, $c_matrix->m9, $c_matrix->m10, $c_matrix->m11],
+            [$c_matrix->m12, $c_matrix->m13, $c_matrix->m14, $c_matrix->m15]
         );
     }
 
@@ -1232,23 +1213,31 @@ class Core extends Base
      * @param int $count 序列中的数字数量
      * @param int $min 序列中最小值
      * @param int $max 序列中最大值
-     * @return \FFI\CData|int[] 随机数序列
+     * @return array<int,int> 随机数序列
      */
     public static function loadRandomSequence(int $count, int $min, int $max): array
     {
-        // 注意：返回类型使用\FFI\CData来表示C指针，但在PHP中处理时需要将其转换为适当的PHP数组或其他数据结构。
-        return self::ffi()->LoadRandomSequence($count, $min, $max);
+        $res = self::ffi()->LoadRandomSequence($count, $min, $max);
+        $arr = [];
+        foreach ($res as $i => $val) {
+            $arr[$i] = (int)$val;
+        }
+        return $arr;
     }
 
     /**
      * 卸载随机数序列
      *
-     * @param \FFI\CData|int[] $sequence 随机数序列
+     * @param array<int,int> $sequence 随机数序列
      * @return void
      */
-    public static function unloadRandomSequence($sequence): void
+    public static function unloadRandomSequence(array $sequence): void
     {
-        self::ffi()->UnloadRandomSequence($sequence);
+        $c_ints = self::ffi()->new("int [" . count($sequence) . "]");
+        foreach ($sequence as $i => $val) {
+            $c_ints[$i] = $val;
+        }
+        self::ffi()->UnloadRandomSequence(self::ffi()->cast("int *", $c_ints));
     }
 
     //### 杂项函数
@@ -1316,9 +1305,9 @@ class Core extends Base
      * 内部内存分配器
      *
      * @param int $size 要分配的内存大小
-     * @return \FFI\CData 分配的内存块
+     * @return CData 分配的内存块
      */
-    public static function memAlloc(int $size): \FFI\CData
+    public static function memAlloc(int $size): CData
     {
         return self::ffi()->MemAlloc($size);
     }
@@ -1326,11 +1315,11 @@ class Core extends Base
     /**
      * 内部内存重新分配器
      *
-     * @param \FFI\CData $ptr 已分配的内存指针
+     * @param CData $ptr 已分配的内存指针
      * @param int $size 新的内存大小
-     * @return \FFI\CData 重新分配的内存块
+     * @return CData 重新分配的内存块
      */
-    public static function memRealloc(\FFI\CData $ptr, int $size): \FFI\CData
+    public static function memRealloc(CData $ptr, int $size): CData
     {
         return self::ffi()->MemRealloc($ptr, $size);
     }
@@ -1338,10 +1327,10 @@ class Core extends Base
     /**
      * 内部内存释放器
      *
-     * @param \FFI\CData $ptr 要释放的内存指针
+     * @param CData $ptr 要释放的内存指针
      * @return void
      */
-    public static function memFree(\FFI\CData $ptr): void
+    public static function memFree(CData $ptr): void
     {
         self::ffi()->MemFree($ptr);
     }
@@ -1357,14 +1346,10 @@ class Core extends Base
      */
     public static function setTraceLogCallback(callable $callback): void
     {
-        // 创建一个符合C回调签名的包装器
-        $callbackWrapper = \FFI::closure(function (int $logLevel, string $text, \FFI\CData $args) use ($callback) {
-            // 使用vsprintf处理可变参数列表
-            $formattedText = vsprintf($text, \FFI::array_to_va_list($args));
-            call_user_func($callback, $logLevel, $formattedText);
-        });
-
-        self::ffi()->SetTraceLogCallback(\FFI::cast("TraceLogCallback", $callbackWrapper));
+        $callbackWrapper = function ($logLevel, $text, $args) use ($callback) {
+            $callback($logLevel, $text, $args);
+        };
+        self::ffi()->SetTraceLogCallback($callbackWrapper);
     }
 
     /**
@@ -1375,13 +1360,10 @@ class Core extends Base
      */
     public static function setLoadFileDataCallback(callable $callback): void
     {
-        $callbackWrapper = \FFI::closure(function (string $fileName, \FFI\CData &$dataSize) use ($callback) {
-            list($data, $size) = call_user_func($callback, $fileName);
-            $dataSize[0] = $size;
-            return $data;
-        });
-
-        self::ffi()->SetLoadFileDataCallback(\FFI::cast("LoadFileDataCallback", $callbackWrapper));
+        $callbackWrapper = function ($fileName, $dataSize) use ($callback) {
+            return $callback($fileName, $dataSize);
+        };
+        self::ffi()->SetLoadFileDataCallback($callbackWrapper);
     }
 
     /**
@@ -1392,11 +1374,10 @@ class Core extends Base
      */
     public static function setSaveFileDataCallback(callable $callback): void
     {
-        $callbackWrapper = \FFI::closure(function (string $fileName, \FFI\CData $data, int $dataSize) use ($callback) {
-            return call_user_func($callback, $fileName, $data, $dataSize);
-        });
-
-        self::ffi()->SetSaveFileDataCallback(\FFI::cast("SaveFileDataCallback", $callbackWrapper));
+        $callbackWrapper = function ($fileName, $data, $dataSize) use ($callback) {
+            return $callback($fileName, $data, $dataSize);
+        };
+        self::ffi()->SetSaveFileDataCallback($callbackWrapper);
     }
 
     /**
@@ -1407,11 +1388,10 @@ class Core extends Base
      */
     public static function setLoadFileTextCallback(callable $callback): void
     {
-        $callbackWrapper = \FFI::closure(function (string $fileName) use ($callback) {
-            return call_user_func($callback, $fileName);
-        });
-
-        self::ffi()->SetLoadFileTextCallback(\FFI::cast("LoadFileTextCallback", $callbackWrapper));
+        $callbackWrapper = function ($fileName) use ($callback) {
+            return $callback($fileName);
+        };
+        self::ffi()->SetLoadFileTextCallback($callbackWrapper);
     }
 
     /**
@@ -1422,11 +1402,11 @@ class Core extends Base
      */
     public static function setSaveFileTextCallback(callable $callback): void
     {
-        $callbackWrapper = \FFI::closure(function (string $fileName, string $text) use ($callback) {
-            return call_user_func($callback, $fileName, $text);
-        });
+        $callbackWrapper = function ($fileName, $text) use ($callback) {
+            return $callback($fileName, $text);
+        };
 
-        self::ffi()->SetSaveFileTextCallback(\FFI::cast("SaveFileTextCallback", $callbackWrapper));
+        self::ffi()->SetSaveFileTextCallback($callbackWrapper);
     }
 
     //### 文件管理函数
@@ -1439,7 +1419,6 @@ class Core extends Base
      */
     public static function loadFileData(string $fileName): array
     {
-        // $fileSize = filesize($fileName);
         $dataSize = self::ffi()->new("int[1]");
         $data = self::ffi()->LoadFileData($fileName, $dataSize);
         return [
@@ -1451,10 +1430,10 @@ class Core extends Base
     /**
      * 卸载由LoadFileData()分配的文件数据
      *
-     * @param \FFI\CData $data 要释放的数据指针
+     * @param CData $data 要释放的数据指针
      * @return void
      */
-    public static function unloadFileData(\FFI\CData $data): void
+    public static function unloadFileData(CData $data): void
     {
         self::ffi()->UnloadFileData($data);
     }
@@ -1463,26 +1442,30 @@ class Core extends Base
      * 将字节数组数据保存到文件（写入），成功返回true
      *
      * @param string $fileName 文件路径
-     * @param \FFI\CData $data 数据指针
+     * @param string $data 数据
      * @param int $dataSize 数据大小
      * @return bool 操作是否成功
      */
-    public static function saveFileData(string $fileName, \FFI\CData $data, int $dataSize): bool
+    public static function saveFileData(string $fileName, string $data): bool
     {
-        return self::ffi()->SaveFileData($fileName, $data, $dataSize);
+        $c_data = self::ffi()->new("char [" . strlen($data) + 1 . "]");
+        self::ffi()::memcpy($c_data, $data, strlen($data));
+        return self::ffi()->SaveFileData($fileName, $c_data, strlen($data));
     }
 
     /**
      * 将数据导出为代码文件(.h)，成功返回true
      *
-     * @param \FFI\CData $data 数据指针
+     * @param string $data 数据指针
      * @param int $dataSize 数据大小
      * @param string $fileName 文件路径
      * @return bool 操作是否成功
      */
-    public static function exportDataAsCode(\FFI\CData $data, int $dataSize, string $fileName): bool
+    public static function exportDataAsCode(string $data, int $dataSize, string $fileName): bool
     {
-        return self::ffi()->ExportDataAsCode($data, $dataSize, $fileName);
+        $c_data = self::ffi()->new("char [" . strlen($data) + 1 . "]");
+        self::ffi()::memcpy($c_data, $data, strlen($data));
+        return self::ffi()->ExportDataAsCode($c_data, $dataSize, $fileName);
     }
 
     /**
@@ -1499,12 +1482,14 @@ class Core extends Base
     /**
      * 卸载由LoadFileText()分配的文本数据
      *
-     * @param \FFI\CData $text 要释放的文本指针
+     * @param string $text 要释放的文本指针
      * @return void
      */
-    public static function unloadFileText(\FFI\CData $text): void
+    public static function unloadFileText(string $text): void
     {
-        self::ffi()->UnloadFileText($text);
+        $c_text = self::ffi()->new("char [" . strlen($text) + 1 . "]");
+        self::ffi()::memcpy($c_text, $text, strlen($text));
+        self::ffi()->UnloadFileText($c_text);
     }
 
     /**
@@ -1516,9 +1501,9 @@ class Core extends Base
      */
     public static function saveFileText(string $fileName, string $text): bool
     {
-        // 确保文本是以'\0'终止的
-        $textWithNull = $text . "\0";
-        return self::ffi()->SaveFileText($fileName, $textWithNull);
+        $c_text = self::ffi()->new("char [" . strlen($text) + 1 . "]");
+        self::ffi()::memcpy($c_text, $text, strlen($text));
+        return self::ffi()->SaveFileText($fileName, $c_text);
     }
 
     //### 文件系统函数
@@ -2446,11 +2431,12 @@ class Core extends Base
     /**
      * 获取拖拽手势的移动向量
      *
-     * @return \FFI\CData Vector2类型的移动向量结构
+     * @return Vector2 Vector2类型的移动向量结构
      */
-    public static function getGestureDragVector(): \FFI\CData
+    public static function getGestureDragVector(): Vector2
     {
-        return self::ffi()->GetGestureDragVector();
+        $v2 = self::ffi()->GetGestureDragVector();
+        return new Vector2($v2->x, $v2->y);
     }
 
     /**
@@ -2466,11 +2452,12 @@ class Core extends Base
     /**
      * 获取捏合手势的缩放向量（手指间距变化）
      *
-     * @return \FFI\CData Vector2类型的缩放向量结构
+     * @return Vector2 Vector2类型的缩放向量结构
      */
-    public static function getGesturePinchVector(): \FFI\CData
+    public static function getGesturePinchVector(): Vector2
     {
-        return self::ffi()->GetGesturePinchVector();
+        $v2 = self::ffi()->GetGesturePinchVector();
+        return new Vector2($v2->x, $v2->y);
     }
 
     /**
@@ -2507,9 +2494,31 @@ class Core extends Base
      * @param float $zoom 缩放值
      * @return void
      */
-    public static function updateCameraPro(Camera3D $camera, Vector3 $movement, Vector3 $rotation, float $zoom): void
+    public static function updateCameraPro(Camera3D &$camera, Vector3 $movement, Vector3 $rotation, float $zoom): void
     {
-        $c_camera = self::ffi()::addr($camera->struct());
-        self::ffi()->UpdateCameraPro($c_camera, $movement->struct(), $rotation->struct(), $zoom);
+        $c_camera = self::ffi()->cast("struct Camera3D *", $camera->struct());
+        self::ffi()->UpdateCameraPro(
+            $c_camera,
+            $movement->struct(),
+            $rotation->struct(),
+            $zoom
+        );
+        $camera->position = new Vector3(
+            $c_camera[0]->position->x,
+            $c_camera[0]->position->y,
+            $c_camera[0]->position->z
+        );
+        $camera->target = new Vector3(
+            $c_camera[0]->target->x,
+            $c_camera[0]->target->y,
+            $c_camera[0]->target->z
+        );
+        $camera->up = new Vector3(
+            $c_camera[0]->up->x,
+            $c_camera[0]->up->y,
+            $c_camera[0]->up->z
+        );
+        $camera->fovy = $c_camera[0]->fovy;
+        $camera->projection = $c_camera[0]->projection == 1;
     }
 }

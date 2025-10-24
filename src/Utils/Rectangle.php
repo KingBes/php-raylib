@@ -13,10 +13,10 @@ use \FFI\CData;
  */
 class Rectangle extends Base
 {
-    private float $x;
-    private float $y;
-    private float $width;
-    private float $height;
+    public float $x;
+    public float $y;
+    public float $width;
+    public float $height;
 
     /**
      * 矩形对象

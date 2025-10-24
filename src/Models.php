@@ -5,6 +5,21 @@ declare(strict_types=1);
 
 namespace Kingbes\Raylib;
 
+use Kingbes\Raylib\Utils\Vector2;
+use Kingbes\Raylib\Utils\Vector3;
+use Kingbes\Raylib\Utils\Color;
+use Kingbes\Raylib\Utils\Ray;
+use Kingbes\Raylib\Utils\Mesh;
+use Kingbes\Raylib\Utils\Model;
+use Kingbes\Raylib\Utils\BoundingBox;
+use Kingbes\Raylib\Utils\Camera3D;
+use Kingbes\Raylib\Utils\Texture;
+use Kingbes\Raylib\Utils\Matrix;
+use Kingbes\Raylib\Utils\Material;
+use Kingbes\Raylib\Utils\Image;
+use Kingbes\Raylib\Utils\ModelAnimation;
+use Kingbes\Raylib\Utils\RayCollision;
+
 /**
  * Models类
  */
@@ -16,293 +31,293 @@ class Models extends Base
     /**
      * 绘制3D空间直线
      *
-     * @param \FFI\CData $startPos Vector3对象
-     * @param \FFI\CData $endPos Vector3对象
-     * @param \FFI\CData $color Color对象
+     * @param Vector3 $startPos Vector3对象
+     * @param Vector3 $endPos Vector3对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawLine3D(\FFI\CData $startPos, \FFI\CData $endPos, \FFI\CData $color): void
+    public static function drawLine3D(Vector3 $startPos, Vector3 $endPos, Color $color): void
     {
-        self::ffi()->DrawLine3D($startPos, $endPos, $color);
+        self::ffi()->DrawLine3D($startPos->struct(), $endPos->struct(), $color->struct());
     }
 
     /**
      * 绘制3D空间点（实际显示为小线段）
      *
-     * @param \FFI\CData $position Vector3对象
-     * @param \FFI\CData $color Color对象
+     * @param Vector3 $position Vector3对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawPoint3D(\FFI\CData $position, \FFI\CData $color): void
+    public static function drawPoint3D(Vector3 $position, Color $color): void
     {
-        self::ffi()->DrawPoint3D($position, $color);
+        self::ffi()->DrawPoint3D($position->struct(), $color->struct());
     }
 
     /**
      * 绘制3D空间圆形（可旋转）
      *
-     * @param \FFI\CData $center Vector3对象
+     * @param Vector3 $center Vector3对象
      * @param float $radius 半径
-     * @param \FFI\CData $rotationAxis Vector3对象
+     * @param Vector3 $rotationAxis Vector3对象
      * @param float $rotationAngle 旋转角度
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCircle3D(\FFI\CData $center, float $radius, \FFI\CData $rotationAxis, float $rotationAngle, \FFI\CData $color): void
+    public static function drawCircle3D(Vector3 $center, float $radius, Vector3 $rotationAxis, float $rotationAngle, Color $color): void
     {
-        self::ffi()->DrawCircle3D($center, $radius, $rotationAxis, $rotationAngle, $color);
+        self::ffi()->DrawCircle3D($center->struct(), $radius, $rotationAxis->struct(), $rotationAngle, $color->struct());
     }
 
     /**
      * 绘制3D实心三角形（顶点逆时针顺序）
      *
-     * @param \FFI\CData $v1 Vector3对象
-     * @param \FFI\CData $v2 Vector3对象
-     * @param \FFI\CData $v3 Vector3对象
-     * @param \FFI\CData $color Color对象
+     * @param Vector3 $v1 Vector3对象
+     * @param Vector3 $v2 Vector3对象
+     * @param Vector3 $v3 Vector3对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawTriangle3D(\FFI\CData $v1, \FFI\CData $v2, \FFI\CData $v3, \FFI\CData $color): void
+    public static function drawTriangle3D(Vector3 $v1, Vector3 $v2, Vector3 $v3, Color $color): void
     {
-        self::ffi()->DrawTriangle3D($v1, $v2, $v3, $color);
+        self::ffi()->DrawTriangle3D($v1->struct(), $v2->struct(), $v3->struct(), $color->struct());
     }
 
     /**
      * 绘制3D三角形带
      *
-     * @param array $points Vector3对象数组
+     * @param array<int,Vector3> $points Vector3对象数组
      * @param int $pointCount 点的数量
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawTriangleStrip3D(array $points, int $pointCount, \FFI\CData $color): void
+    public static function drawTriangleStrip3D(array $points, int $pointCount, Color $color): void
     {
         // 将PHP数组转换为C指针
         $cPoints = self::ffi()->new("Vector3[$pointCount]");
         foreach ($points as $i => $p) {
-            $cPoints[$i] = $p;
+            $cPoints[$i] = $p->struct();
         }
-        self::ffi()->DrawTriangleStrip3D($cPoints, $pointCount, $color);
+        self::ffi()->DrawTriangleStrip3D(self::ffi()->cast("Vector3*", $cPoints), $pointCount, $color->struct());
     }
 
     /**
      * 绘制立方体
      *
-     * @param \FFI\CData $position Vector3对象
+     * @param Vector3 $position Vector3对象
      * @param float $width 宽度
      * @param float $height 高度
      * @param float $length 长度
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCube(\FFI\CData $position, float $width, float $height, float $length, \FFI\CData $color): void
+    public static function drawCube(Vector3 $position, float $width, float $height, float $length, Color $color): void
     {
-        self::ffi()->DrawCube($position, $width, $height, $length, $color);
+        self::ffi()->DrawCube($position->struct(), $width, $height, $length, $color->struct());
     }
 
     /**
      * 向量版立方体绘制
      *
-     * @param \FFI\CData $position Vector3对象
-     * @param \FFI\CData $size Vector3对象
-     * @param \FFI\CData $color Color对象
+     * @param Vector3 $position Vector3对象
+     * @param Vector3 $size Vector3对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCubeV(\FFI\CData $position, \FFI\CData $size, \FFI\CData $color): void
+    public static function drawCubeV(Vector3 $position, Vector3 $size, Color $color): void
     {
-        self::ffi()->DrawCubeV($position, $size, $color);
+        self::ffi()->DrawCubeV($position->struct(), $size->struct(), $color->struct());
     }
 
     /**
      * 绘制立方体线框
      *
-     * @param \FFI\CData $position Vector3对象
+     * @param Vector3 $position Vector3对象
      * @param float $width 宽度
      * @param float $height 高度
      * @param float $length 长度
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCubeWires(\FFI\CData $position, float $width, float $height, float $length, \FFI\CData $color): void
+    public static function drawCubeWires(Vector3 $position, float $width, float $height, float $length, Color $color): void
     {
-        self::ffi()->DrawCubeWires($position, $width, $height, $length, $color);
+        self::ffi()->DrawCubeWires($position->struct(), $width, $height, $length, $color->struct());
     }
 
     /**
      * 向量版立方体线框
      *
-     * @param \FFI\CData $position Vector3对象
-     * @param \FFI\CData $size Vector3对象
-     * @param \FFI\CData $color Color对象
+     * @param Vector3 $position Vector3对象
+     * @param Vector3 $size Vector3对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCubeWiresV(\FFI\CData $position, \FFI\CData $size, \FFI\CData $color): void
+    public static function drawCubeWiresV(Vector3 $position, Vector3 $size, Color $color): void
     {
-        self::ffi()->DrawCubeWiresV($position, $size, $color);
+        self::ffi()->DrawCubeWiresV($position->struct(), $size->struct(), $color->struct());
     }
 
     /**
      * 绘制球体
      *
-     * @param \FFI\CData $centerPos Vector3对象
+     * @param Vector3 $centerPos Vector3对象
      * @param float $radius 半径
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawSphere(\FFI\CData $centerPos, float $radius, \FFI\CData $color): void
+    public static function drawSphere(Vector3 $centerPos, float $radius, Color $color): void
     {
-        self::ffi()->DrawSphere($centerPos, $radius, $color);
+        self::ffi()->DrawSphere($centerPos->struct(), $radius, $color->struct());
     }
 
     /**
      * 扩展参数球体绘制（经线/纬线细分）
      *
-     * @param \FFI\CData $centerPos Vector3对象
+     * @param Vector3 $centerPos Vector3对象
      * @param float $radius 半径
      * @param int $rings 经线数
      * @param int $slices 纬线数
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawSphereEx(\FFI\CData $centerPos, float $radius, int $rings, int $slices, \FFI\CData $color): void
+    public static function drawSphereEx(Vector3 $centerPos, float $radius, int $rings, int $slices, Color $color): void
     {
-        self::ffi()->DrawSphereEx($centerPos, $radius, $rings, $slices, $color);
+        self::ffi()->DrawSphereEx($centerPos->struct(), $radius, $rings, $slices, $color->struct());
     }
 
     /**
      * 绘制球体线框
      *
-     * @param \FFI\CData $centerPos Vector3对象
+     * @param Vector3 $centerPos Vector3对象
      * @param float $radius 半径
      * @param int $rings 经线数
      * @param int $slices 纬线数
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawSphereWires(\FFI\CData $centerPos, float $radius, int $rings, int $slices, \FFI\CData $color): void
+    public static function drawSphereWires(Vector3 $centerPos, float $radius, int $rings, int $slices, Color $color): void
     {
-        self::ffi()->DrawSphereWires($centerPos, $radius, $rings, $slices, $color);
+        self::ffi()->DrawSphereWires($centerPos->struct(), $radius, $rings, $slices, $color->struct());
     }
 
     /**
      * 绘制圆柱/圆锥
      *
-     * @param \FFI\CData $position Vector3对象
+     * @param Vector3 $position Vector3对象
      * @param float $radiusTop 顶部半径
      * @param float $radiusBottom 底部半径
      * @param float $height 高度
      * @param int $slices 切片数
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCylinder(\FFI\CData $position, float $radiusTop, float $radiusBottom, float $height, int $slices, \FFI\CData $color): void
+    public static function drawCylinder(Vector3 $position, float $radiusTop, float $radiusBottom, float $height, int $slices, Color $color): void
     {
-        self::ffi()->DrawCylinder($position, $radiusTop, $radiusBottom, $height, $slices, $color);
+        self::ffi()->DrawCylinder($position->struct(), $radiusTop, $radiusBottom, $height, $slices, $color->struct());
     }
 
     /**
      * 绘制自定义端点圆柱
      *
-     * @param \FFI\CData $startPos 起始位置
-     * @param \FFI\CData $endPos 结束位置
+     * @param Vector3 $startPos 起始位置
+     * @param Vector3 $endPos 结束位置
      * @param float $startRadius 起始半径
      * @param float $endRadius 结束半径
      * @param int $sides 边数
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCylinderEx(\FFI\CData $startPos, \FFI\CData $endPos, float $startRadius, float $endRadius, int $sides, \FFI\CData $color): void
+    public static function drawCylinderEx(Vector3 $startPos, Vector3 $endPos, float $startRadius, float $endRadius, int $sides, Color $color): void
     {
-        self::ffi()->DrawCylinderEx($startPos, $endPos, $startRadius, $endRadius, $sides, $color);
+        self::ffi()->DrawCylinderEx($startPos->struct(), $endPos->struct(), $startRadius, $endRadius, $sides, $color->struct());
     }
 
     /**
      * 绘制圆柱线框
      *
-     * @param \FFI\CData $position Vector3对象
+     * @param Vector3 $position Vector3对象
      * @param float $radiusTop 顶部半径
      * @param float $radiusBottom 底部半径
      * @param float $height 高度
      * @param int $slices 切片数
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCylinderWires(\FFI\CData $position, float $radiusTop, float $radiusBottom, float $height, int $slices, \FFI\CData $color): void
+    public static function drawCylinderWires(Vector3 $position, float $radiusTop, float $radiusBottom, float $height, int $slices, Color $color): void
     {
-        self::ffi()->DrawCylinderWires($position, $radiusTop, $radiusBottom, $height, $slices, $color);
+        self::ffi()->DrawCylinderWires($position->struct(), $radiusTop, $radiusBottom, $height, $slices, $color->struct());
     }
 
     /**
      * 绘制自定义端点圆柱线框
      *
-     * @param \FFI\CData $startPos 起始位置
-     * @param \FFI\CData $endPos 结束位置
+     * @param Vector3 $startPos 起始位置
+     * @param Vector3 $endPos 结束位置
      * @param float $startRadius 起始半径
      * @param float $endRadius 结束半径
      * @param int $sides 边数
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCylinderWiresEx(\FFI\CData $startPos, \FFI\CData $endPos, float $startRadius, float $endRadius, int $sides, \FFI\CData $color): void
+    public static function drawCylinderWiresEx(Vector3 $startPos, Vector3 $endPos, float $startRadius, float $endRadius, int $sides, Color $color): void
     {
-        self::ffi()->DrawCylinderWiresEx($startPos, $endPos, $startRadius, $endRadius, $sides, $color);
+        self::ffi()->DrawCylinderWiresEx($startPos->struct(), $endPos->struct(), $startRadius, $endRadius, $sides, $color->struct());
     }
 
     /**
      * 绘制胶囊体（球帽中心位于起点和终点）
      *
-     * @param \FFI\CData $startPos Vector3对象，起始位置
-     * @param \FFI\CData $endPos Vector3对象，结束位置
+     * @param Vector3 $startPos Vector3对象，起始位置
+     * @param Vector3 $endPos Vector3对象，结束位置
      * @param float $radius 半径
      * @param int $slices 切片数
      * @param int $rings 环数
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCapsule(\FFI\CData $startPos, \FFI\CData $endPos, float $radius, int $slices, int $rings, \FFI\CData $color): void
+    public static function drawCapsule(Vector3 $startPos, Vector3 $endPos, float $radius, int $slices, int $rings, Color $color): void
     {
-        self::ffi()->DrawCapsule($startPos, $endPos, $radius, $slices, $rings, $color);
+        self::ffi()->DrawCapsule($startPos->struct(), $endPos->struct(), $radius, $slices, $rings, $color->struct());
     }
 
     /**
      * 绘制胶囊体线框
      *
-     * @param \FFI\CData $startPos Vector3对象，起始位置
-     * @param \FFI\CData $endPos Vector3对象，结束位置
+     * @param Vector3 $startPos Vector3对象，起始位置
+     * @param Vector3 $endPos Vector3对象，结束位置
      * @param float $radius 半径
      * @param int $slices 切片数
      * @param int $rings 环数
-     * @param \FFI\CData $color Color对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawCapsuleWires(\FFI\CData $startPos, \FFI\CData $endPos, float $radius, int $slices, int $rings, \FFI\CData $color): void
+    public static function drawCapsuleWires(Vector3 $startPos, Vector3 $endPos, float $radius, int $slices, int $rings, Color $color): void
     {
-        self::ffi()->DrawCapsuleWires($startPos, $endPos, $radius, $slices, $rings, $color);
+        self::ffi()->DrawCapsuleWires($startPos->struct(), $endPos->struct(), $radius, $slices, $rings, $color->struct());
     }
 
     /**
      * 绘制XZ平面
      *
-     * @param \FFI\CData $centerPos Vector3对象，中心位置
-     * @param \FFI\CData $size Vector2对象，尺寸
-     * @param \FFI\CData $color Color对象
+     * @param Vector3 $centerPos Vector3对象，中心位置
+     * @param Vector2 $size Vector2对象，尺寸
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawPlane(\FFI\CData $centerPos, \FFI\CData $size, \FFI\CData $color): void
+    public static function drawPlane(Vector3 $centerPos, Vector2 $size, Color $color): void
     {
-        self::ffi()->DrawPlane($centerPos, $size, $color);
+        self::ffi()->DrawPlane($centerPos->struct(), $size->struct(), $color->struct());
     }
 
     /**
      * 绘制射线
      *
-     * @param \FFI\CData $ray Ray对象
-     * @param \FFI\CData $color Color对象
+     * @param Ray $ray Ray对象
+     * @param Color $color Color对象
      * @return void
      */
-    public static function drawRay(\FFI\CData $ray, \FFI\CData $color): void
+    public static function drawRay(Ray $ray, Color $color): void
     {
-        self::ffi()->DrawRay($ray, $color);
+        self::ffi()->DrawRay($ray->struct(), $color->struct());
     }
 
     /**
@@ -323,207 +338,207 @@ class Models extends Base
      * 从文件加载模型（包含网格和材质）
      *
      * @param string $fileName 文件名
-     * @return \FFI\CData Model对象
+     * @return Model Model对象
      */
-    public static function loadModel(string $fileName): \FFI\CData
+    public static function loadModel(string $fileName): Model
     {
-        return self::ffi()->LoadModel($fileName);
+        return new Model(self::ffi()->LoadModel($fileName));
     }
 
     /**
      * 从生成的网格加载模型（使用默认材质）
      *
-     * @param \FFI\CData $mesh Mesh对象
-     * @return \FFI\CData Model对象
+     * @param Mesh $mesh Mesh对象
+     * @return Model Model对象
      */
-    public static function loadModelFromMesh(\FFI\CData $mesh): \FFI\CData
+    public static function loadModelFromMesh(Mesh $mesh): Model
     {
-        return self::ffi()->LoadModelFromMesh($mesh);
+        return new Model(self::ffi()->LoadModelFromMesh($mesh->struct()));
     }
 
     /**
      * 检查模型是否有效（已加载到GPU）
      *
-     * @param \FFI\CData $model Model对象
+     * @param Model $model Model对象
      * @return bool 是否有效
      */
-    public static function isModelValid(\FFI\CData $model): bool
+    public static function isModelValid(Model $model): bool
     {
-        return self::ffi()->IsModelValid($model);
+        return self::ffi()->IsModelValid($model->struct());
     }
 
     /**
      * 卸载模型（包含网格数据）
      *
-     * @param \FFI\CData $model Model对象
+     * @param Model $model Model对象
      * @return void
      */
-    public static function unloadModel(\FFI\CData $model): void
+    public static function unloadModel(Model $model): void
     {
-        self::ffi()->UnloadModel($model);
+        self::ffi()->UnloadModel($model->struct());
     }
 
     /**
      * 计算模型包围盒（包含所有网格）
      *
-     * @param \FFI\CData $model Model对象
-     * @return \FFI\CData BoundingBox对象
+     * @param Model $model Model对象
+     * @return BoundingBox BoundingBox对象
      */
-    public static function getModelBoundingBox(\FFI\CData $model): \FFI\CData
+    public static function getModelBoundingBox(Model $model): BoundingBox
     {
-        return self::ffi()->GetModelBoundingBox($model);
+        return new BoundingBox(self::ffi()->GetModelBoundingBox($model->struct()));
     }
 
     /**
      * 绘制模型（带纹理）
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $position Vector3对象，位置
+     * @param Model $model Model对象
+     * @param Vector3 $position Vector3对象，位置
      * @param float $scale 缩放比例
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawModel(\FFI\CData $model, \FFI\CData $position, float $scale, \FFI\CData $tint): void
+    public static function drawModel(Model $model, Vector3 $position, float $scale, Color $tint): void
     {
-        self::ffi()->DrawModel($model, $position, $scale, $tint);
+        self::ffi()->DrawModel($model->struct(), $position->struct(), $scale, $tint->struct());
     }
 
     /**
      * 扩展参数模型绘制
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $position Vector3对象，位置
-     * @param \FFI\CData $rotationAxis Vector3对象，旋转轴
+     * @param Model $model Model对象
+     * @param Vector3 $position Vector3对象，位置
+     * @param Vector3 $rotationAxis Vector3对象，旋转轴
      * @param float $rotationAngle 旋转角度
-     * @param \FFI\CData $scale Vector3对象，缩放比例
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Vector3 $scale Vector3对象，缩放比例
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawModelEx(\FFI\CData $model, \FFI\CData $position, \FFI\CData $rotationAxis, float $rotationAngle, \FFI\CData $scale, \FFI\CData $tint): void
+    public static function drawModelEx(Model $model, Vector3 $position, Vector3 $rotationAxis, float $rotationAngle, Vector3 $scale, Color $tint): void
     {
-        self::ffi()->DrawModelEx($model, $position, $rotationAxis, $rotationAngle, $scale, $tint);
+        self::ffi()->DrawModelEx($model->struct(), $position->struct(), $rotationAxis->struct(), $rotationAngle, $scale->struct(), $tint->struct());
     }
 
     /**
      * 绘制模型线框（带纹理）
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $position Vector3对象，位置
+     * @param Model $model Model对象
+     * @param Vector3 $position Vector3对象，位置
      * @param float $scale 缩放比例
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawModelWires(\FFI\CData $model, \FFI\CData $position, float $scale, \FFI\CData $tint): void
+    public static function drawModelWires(Model $model, Vector3 $position, float $scale, Color $tint): void
     {
-        self::ffi()->DrawModelWires($model, $position, $scale, $tint);
+        self::ffi()->DrawModelWires($model->struct(), $position->struct(), $scale, $tint->struct());
     }
 
     /**
      * 扩展参数线框绘制
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $position Vector3对象，位置
-     * @param \FFI\CData $rotationAxis Vector3对象，旋转轴
+     * @param Model $model Model对象
+     * @param Vector3 $position Vector3对象，位置
+     * @param Vector3 $rotationAxis Vector3对象，旋转轴
      * @param float $rotationAngle 旋转角度
-     * @param \FFI\CData $scale Vector3对象，缩放比例
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Vector3 $scale Vector3对象，缩放比例
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawModelWiresEx(\FFI\CData $model, \FFI\CData $position, \FFI\CData $rotationAxis, float $rotationAngle, \FFI\CData $scale, \FFI\CData $tint): void
+    public static function drawModelWiresEx(Model $model, Vector3 $position, Vector3 $rotationAxis, float $rotationAngle, Vector3 $scale, Color $tint): void
     {
-        self::ffi()->DrawModelWiresEx($model, $position, $rotationAxis, $rotationAngle, $scale, $tint);
+        self::ffi()->DrawModelWiresEx($model->struct(), $position->struct(), $rotationAxis->struct(), $rotationAngle, $scale->struct(), $tint->struct());
     }
 
     /**
      * 绘制模型点云
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $position Vector3对象，位置
+     * @param Model $model Model对象
+     * @param Vector3 $position Vector3对象，位置
      * @param float $scale 缩放比例
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawModelPoints(\FFI\CData $model, \FFI\CData $position, float $scale, \FFI\CData $tint): void
+    public static function drawModelPoints(Model $model, Vector3 $position, float $scale, Color $tint): void
     {
-        self::ffi()->DrawModelPoints($model, $position, $scale, $tint);
+        self::ffi()->DrawModelPoints($model->struct(), $position->struct(), $scale, $tint->struct());
     }
 
     /**
      * 扩展参数点云绘制
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $position Vector3对象，位置
-     * @param \FFI\CData $rotationAxis Vector3对象，旋转轴
+     * @param Model $model Model对象
+     * @param Vector3 $position Vector3对象，位置
+     * @param Vector3 $rotationAxis Vector3对象，旋转轴
      * @param float $rotationAngle 旋转角度
-     * @param \FFI\CData $scale Vector3对象，缩放比例
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Vector3 $scale Vector3对象，缩放比例
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawModelPointsEx(\FFI\CData $model, \FFI\CData $position, \FFI\CData $rotationAxis, float $rotationAngle, \FFI\CData $scale, \FFI\CData $tint): void
+    public static function drawModelPointsEx(Model $model, Vector3 $position, Vector3 $rotationAxis, float $rotationAngle, Vector3 $scale, Color $tint): void
     {
-        self::ffi()->DrawModelPointsEx($model, $position, $rotationAxis, $rotationAngle, $scale, $tint);
+        self::ffi()->DrawModelPointsEx($model->struct(), $position->struct(), $rotationAxis->struct(), $rotationAngle, $scale->struct(), $tint->struct());
     }
 
     /**
      * 绘制包围盒线框
      *
-     * @param \FFI\CData $box BoundingBox对象
-     * @param \FFI\CData $color Color对象，颜色
+     * @param BoundingBox $box BoundingBox对象
+     * @param Color $color Color对象，颜色
      * @return void
      */
-    public static function drawBoundingBox(\FFI\CData $box, \FFI\CData $color): void
+    public static function drawBoundingBox(BoundingBox $box, Color $color): void
     {
-        self::ffi()->DrawBoundingBox($box, $color);
+        self::ffi()->DrawBoundingBox($box->struct(), $color->struct());
     }
 
     /**
      * 绘制广告牌纹理
      *
-     * @param \FFI\CData $camera Camera对象
-     * @param \FFI\CData $texture Texture2D对象
-     * @param \FFI\CData $position Vector3对象，位置
+     * @param Camera3D $camera Camera3D对象
+     * @param Texture2D $texture Texture2D对象
+     * @param Vector3 $position Vector3对象，位置
      * @param float $scale 缩放比例
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawBillboard(\FFI\CData $camera, \FFI\CData $texture, \FFI\CData $position, float $scale, \FFI\CData $tint): void
+    public static function drawBillboard(Camera3D $camera, Texture2D $texture, Vector3 $position, float $scale, Color $tint): void
     {
-        self::ffi()->DrawBillboard($camera, $texture, $position, $scale, $tint);
+        self::ffi()->DrawBillboard($camera->struct(), $texture->struct(), $position->struct(), $scale, $tint->struct());
     }
 
     /**
      * 指定源矩形的广告牌绘制
      *
-     * @param \FFI\CData $camera Camera对象
-     * @param \FFI\CData $texture Texture2D对象
-     * @param \FFI\CData $source Rectangle对象，源矩形
-     * @param \FFI\CData $position Vector3对象，位置
-     * @param \FFI\CData $size Vector2对象，尺寸
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Camera3D $camera Camera3D对象
+     * @param Texture2D $texture Texture2D对象
+     * @param Rectangle $source Rectangle对象，源矩形
+     * @param Vector3 $position Vector3对象，位置
+     * @param Vector2 $size Vector2对象，尺寸
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawBillboardRec(\FFI\CData $camera, \FFI\CData $texture, \FFI\CData $source, \FFI\CData $position, \FFI\CData $size, \FFI\CData $tint): void
+    public static function drawBillboardRec(Camera3D $camera, Texture2D $texture, Rectangle $source, Vector3 $position, Vector2 $size, Color $tint): void
     {
-        self::ffi()->DrawBillboardRec($camera, $texture, $source, $position, $size, $tint);
+        self::ffi()->DrawBillboardRec($camera->struct(), $texture->struct(), $source->struct(), $position->struct(), $size->struct(), $tint->struct());
     }
 
     /**
      * 专业级广告牌绘制（支持旋转）
      *
-     * @param \FFI\CData $camera Camera对象
-     * @param \FFI\CData $texture Texture2D对象
-     * @param \FFI\CData $source Rectangle对象，源矩形
-     * @param \FFI\CData $position Vector3对象，位置
-     * @param \FFI\CData $up Vector3对象，向上向量
-     * @param \FFI\CData $size Vector2对象，尺寸
-     * @param \FFI\CData $origin Vector2对象，原点
+     * @param Camera3D $camera Camera3D对象
+     * @param Texture $texture Texture2D对象
+     * @param Rectangle $source Rectangle对象，源矩形
+     * @param Vector3 $position Vector3对象，位置
+     * @param Vector3 $up Vector3对象，向上向量
+     * @param Vector2 $size Vector2对象，尺寸
+     * @param Vector2 $origin Vector2对象，原点
      * @param float $rotation 旋转角度
-     * @param \FFI\CData $tint Color对象，颜色
+     * @param Color $tint Color对象，颜色
      * @return void
      */
-    public static function drawBillboardPro(\FFI\CData $camera, \FFI\CData $texture, \FFI\CData $source, \FFI\CData $position, \FFI\CData $up, \FFI\CData $size, \FFI\CData $origin, float $rotation, \FFI\CData $tint): void
+    public static function drawBillboardPro(Camera3D $camera, Texture $texture, Rectangle $source, Vector3 $position, Vector3 $up, Vector2 $size, Vector2 $origin, float $rotation, Color $tint): void
     {
-        self::ffi()->DrawBillboardPro($camera, $texture, $source, $position, $up, $size, $origin, $rotation, $tint);
+        self::ffi()->DrawBillboardPro($camera->struct(), $texture->struct(), $source->struct(), $position->struct(), $up->struct(), $size->struct(), $origin->struct(), $rotation, $tint->struct());
     }
 
     //### 网格管理函数
@@ -531,86 +546,86 @@ class Models extends Base
     /**
      * 上传网格数据到GPU（生成VAO/VBO）
      *
-     * @param \FFI\CData $mesh Mesh对象引用
+     * @param Mesh $mesh Mesh对象
      * @param bool $dynamic 是否动态
      * @return void
      */
-    public static function uploadMesh(\FFI\CData &$mesh, bool $dynamic): void
+    public static function uploadMesh(Mesh $mesh, bool $dynamic): void
     {
-        self::ffi()->UploadMesh($mesh, $dynamic);
+        self::ffi()->UploadMesh($mesh->struct(), $dynamic);
     }
 
     /**
      * 更新指定网格缓冲区数据
      *
-     * @param \FFI\CData $mesh Mesh对象
+     * @param Mesh $mesh Mesh对象
      * @param int $index 缓冲区索引
      * @param \FFI\CData $data 数据指针
      * @param int $dataSize 数据大小
      * @param int $offset 偏移量
      * @return void
      */
-    public static function updateMeshBuffer(\FFI\CData $mesh, int $index, \FFI\CData $data, int $dataSize, int $offset): void
+    public static function updateMeshBuffer(Mesh $mesh, int $index, \FFI\CData $data, int $dataSize, int $offset): void
     {
-        self::ffi()->UpdateMeshBuffer($mesh, $index, $data, $dataSize, $offset);
+        self::ffi()->UpdateMeshBuffer($mesh->struct(), $index, $data, $dataSize, $offset);
     }
 
     /**
      * 卸载网格数据（CPU/GPU）
      *
-     * @param \FFI\CData $mesh Mesh对象
+     * @param Mesh $mesh Mesh对象
      * @return void
      */
-    public static function unloadMesh(\FFI\CData $mesh): void
+    public static function unloadMesh(Mesh $mesh): void
     {
-        self::ffi()->UnloadMesh($mesh);
+        self::ffi()->UnloadMesh($mesh->struct());
     }
 
     /**
      * 绘制网格（带材质和变换矩阵）
      *
-     * @param \FFI\CData $mesh Mesh对象
-     * @param \FFI\CData $material Material对象
-     * @param \FFI\CData $transform Matrix对象，变换矩阵
+     * @param Mesh $mesh Mesh对象
+     * @param Material $material Material对象
+     * @param Matrix $transform Matrix对象，变换矩阵
      * @return void
      */
-    public static function drawMesh(\FFI\CData $mesh, \FFI\CData $material, \FFI\CData $transform): void
+    public static function drawMesh(Mesh $mesh, Material $material, Matrix $transform): void
     {
-        self::ffi()->DrawMesh($mesh, $material, $transform);
+        self::ffi()->DrawMesh($mesh->struct(), $material->struct(), $transform->struct());
     }
 
     /**
      * 批量绘制网格实例
      *
-     * @param \FFI\CData $mesh Mesh对象
-     * @param \FFI\CData $material Material对象
-     * @param \FFI\CData $transforms Matrix数组，变换矩阵列表
+     * @param Mesh $mesh Mesh对象
+     * @param Material $material Material对象
+     * @param Matrix[] $transforms Matrix数组，变换矩阵列表
      * @param int $instances 实例数量
      * @return void
      */
-    public static function drawMeshInstanced(\FFI\CData $mesh, \FFI\CData $material, \FFI\CData $transforms, int $instances): void
+    public static function drawMeshInstanced(Mesh $mesh, Material $material, array $transforms, int $instances): void
     {
-        self::ffi()->DrawMeshInstanced($mesh, $material, $transforms, $instances);
+        self::ffi()->DrawMeshInstanced($mesh->struct(), $material->struct(), $transforms, $instances);
     }
 
     /**
      * 计算网格包围盒
      *
-     * @param \FFI\CData $mesh Mesh对象
-     * @return \FFI\CData BoundingBox对象
+     * @param Mesh $mesh Mesh对象
+     * @return BoundingBox BoundingBox对象   
      */
-    public static function getMeshBoundingBox(\FFI\CData $mesh): \FFI\CData
+    public static function getMeshBoundingBox(Mesh $mesh): BoundingBox
     {
-        return self::ffi()->GetMeshBoundingBox($mesh);
+        return self::ffi()->GetMeshBoundingBox($mesh->struct());
     }
 
     /**
      * 生成网格切线数据
      *
-     * @param \FFI\CData $mesh Mesh对象引用
+     * @param Mesh $mesh Mesh对象引用
      * @return void
      */
-    public static function genMeshTangents(\FFI\CData &$mesh): void
+    public static function genMeshTangents(Mesh $mesh): void
     {
         self::ffi()->GenMeshTangents($mesh);
     }
@@ -618,25 +633,25 @@ class Models extends Base
     /**
      * 导出网格数据到文件
      *
-     * @param \FFI\CData $mesh Mesh对象
+     * @param Mesh $mesh Mesh对象
      * @param string $fileName 文件名
      * @return bool 是否成功
      */
-    public static function exportMesh(\FFI\CData $mesh, string $fileName): bool
+    public static function exportMesh(Mesh $mesh, string $fileName): bool
     {
-        return self::ffi()->ExportMesh($mesh, $fileName);
+        return self::ffi()->ExportMesh($mesh->struct(), $fileName);
     }
 
     /**
      * 将网格导出为C代码（顶点属性数组）
      *
-     * @param \FFI\CData $mesh Mesh对象
+     * @param Mesh $mesh Mesh对象
      * @param string $fileName 文件名
      * @return bool 是否成功
      */
-    public static function exportMeshAsCode(\FFI\CData $mesh, string $fileName): bool
+    public static function exportMeshAsCode(Mesh $mesh, string $fileName): bool
     {
-        return self::ffi()->ExportMeshAsCode($mesh, $fileName);
+        return self::ffi()->ExportMeshAsCode($mesh->struct(), $fileName);
     }
 
     //### 网格生成函数
@@ -646,11 +661,11 @@ class Models extends Base
      *
      * @param int $sides 边数
      * @param float $radius 半径
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshPoly(int $sides, float $radius): \FFI\CData
+    public static function genMeshPoly(int $sides, float $radius): Mesh
     {
-        return self::ffi()->GenMeshPoly($sides, $radius);
+        return new Mesh(self::ffi()->GenMeshPoly($sides, $radius));
     }
 
     /**
@@ -660,11 +675,11 @@ class Models extends Base
      * @param float $length 长度
      * @param int $resX X轴细分数量
      * @param int $resZ Z轴细分数量
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshPlane(float $width, float $length, int $resX, int $resZ): \FFI\CData
+    public static function genMeshPlane(float $width, float $length, int $resX, int $resZ): Mesh
     {
-        return self::ffi()->GenMeshPlane($width, $length, $resX, $resZ);
+        return new Mesh(self::ffi()->GenMeshPlane($width, $length, $resX, $resZ));
     }
 
     /**
@@ -673,11 +688,11 @@ class Models extends Base
      * @param float $width 宽度
      * @param float $height 高度
      * @param float $length 长度
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshCube(float $width, float $height, float $length): \FFI\CData
+    public static function genMeshCube(float $width, float $height, float $length): Mesh
     {
-        return self::ffi()->GenMeshCube($width, $height, $length);
+        return new Mesh(self::ffi()->GenMeshCube($width, $height, $length));
     }
 
     /**
@@ -686,11 +701,11 @@ class Models extends Base
      * @param float $radius 半径
      * @param int $rings 环数
      * @param int $slices 切片数
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshSphere(float $radius, int $rings, int $slices): \FFI\CData
+    public static function genMeshSphere(float $radius, int $rings, int $slices): Mesh
     {
-        return self::ffi()->GenMeshSphere($radius, $rings, $slices);
+        return new Mesh(self::ffi()->GenMeshSphere($radius, $rings, $slices));
     }
 
     /**
@@ -699,11 +714,11 @@ class Models extends Base
      * @param float $radius 半径
      * @param int $rings 环数
      * @param int $slices 切片数
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshHemiSphere(float $radius, int $rings, int $slices): \FFI\CData
+    public static function genMeshHemiSphere(float $radius, int $rings, int $slices): Mesh
     {
-        return self::ffi()->GenMeshHemiSphere($radius, $rings, $slices);
+        return new Mesh(self::ffi()->GenMeshHemiSphere($radius, $rings, $slices));
     }
 
     /**
@@ -712,11 +727,11 @@ class Models extends Base
      * @param float $radius 半径
      * @param float $height 高度
      * @param int $slices 切片数
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshCylinder(float $radius, float $height, int $slices): \FFI\CData
+    public static function genMeshCylinder(float $radius, float $height, int $slices): Mesh
     {
-        return self::ffi()->GenMeshCylinder($radius, $height, $slices);
+        return new Mesh(self::ffi()->GenMeshCylinder($radius, $height, $slices));
     }
 
     /**
@@ -725,11 +740,11 @@ class Models extends Base
      * @param float $radius 半径
      * @param float $height 高度
      * @param int $slices 切片数
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshCone(float $radius, float $height, int $slices): \FFI\CData
+    public static function genMeshCone(float $radius, float $height, int $slices): Mesh
     {
-        return self::ffi()->GenMeshCone($radius, $height, $slices);
+        return new Mesh(self::ffi()->GenMeshCone($radius, $height, $slices));
     }
 
     /**
@@ -739,11 +754,11 @@ class Models extends Base
      * @param float $size 尺寸
      * @param int $radSeg 径向分割数
      * @param int $sides 边数
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshTorus(float $radius, float $size, int $radSeg, int $sides): \FFI\CData
+    public static function genMeshTorus(float $radius, float $size, int $radSeg, int $sides): Mesh
     {
-        return self::ffi()->GenMeshTorus($radius, $size, $radSeg, $sides);
+        return new Mesh(self::ffi()->GenMeshTorus($radius, $size, $radSeg, $sides));
     }
 
     /**
@@ -753,35 +768,35 @@ class Models extends Base
      * @param float $size 尺寸
      * @param int $radSeg 径向分割数
      * @param int $sides 边数
-     * @return \FFI\CData Mesh对象
+     * @return Mesh Mesh对象
      */
-    public static function genMeshKnot(float $radius, float $size, int $radSeg, int $sides): \FFI\CData
+    public static function genMeshKnot(float $radius, float $size, int $radSeg, int $sides): Mesh
     {
-        return self::ffi()->GenMeshKnot($radius, $size, $radSeg, $sides);
+        return new Mesh(self::ffi()->GenMeshKnot($radius, $size, $radSeg, $sides));
     }
 
     /**
      * 从高度图生成地形网格
      *
-     * @param \FFI\CData $heightmap Image对象，高度图
-     * @param \FFI\CData $size Vector3对象，尺寸
-     * @return \FFI\CData Mesh对象
+     * @param Image $heightmap 高度图
+     * @param Vector3 $size 尺寸
+     * @return Mesh Mesh对象
      */
-    public static function genMeshHeightmap(\FFI\CData $heightmap, \FFI\CData $size): \FFI\CData
+    public static function genMeshHeightmap(Image $heightmap, Vector3 $size): Mesh
     {
-        return self::ffi()->GenMeshHeightmap($heightmap, $size);
+        return new Mesh(self::ffi()->GenMeshHeightmap($heightmap->struct(), $size->struct()));
     }
 
     /**
      * 从体素图生成立方体地图
      *
-     * @param \FFI\CData $cubicmap Image对象，体素图
-     * @param \FFI\CData $cubeSize Vector3对象，立方体大小
-     * @return \FFI\CData Mesh对象
+     * @param Image $cubicmap 体素图
+     * @param Vector3 $cubeSize 立方体大小
+     * @return Mesh Mesh对象
      */
-    public static function genMeshCubicmap(\FFI\CData $cubicmap, \FFI\CData $cubeSize): \FFI\CData
+    public static function genMeshCubicmap(Image $cubicmap, Vector3 $cubeSize): Mesh
     {
-        return self::ffi()->GenMeshCubicmap($cubicmap, $cubeSize);
+        return new Mesh(self::ffi()->GenMeshCubicmap($cubicmap->struct(), $cubeSize->struct()));
     }
 
     //### 材质管理函数
@@ -791,69 +806,72 @@ class Models extends Base
      *
      * @param string $fileName 文件名
      * @param int &$materialCount 材质数量引用
-     * @return \FFI\CData Material对象数组
+     * @return Material[] Material对象数组
      */
-    public static function loadMaterials(string $fileName, int &$materialCount): \FFI\CData
+    public static function loadMaterials(string $fileName, int &$materialCount): array
     {
-        return self::ffi()->LoadMaterials($fileName, \FFI::addr(\FFI::new('int', false, true)));
+        $materialCount = 0;
+        $materials = self::ffi()->LoadMaterials($fileName, \FFI::addr(\FFI::new('int', false, true)));
+        $materialCount = $materials[0];
+        return array_map(fn($material) => new Material($material), array_slice($materials, 1));
     }
 
     /**
      * 加载默认材质（支持漫反射/高光/法线贴图）
      *
-     * @return \FFI\CData Material对象
+     * @return Material Material对象
      */
-    public static function loadMaterialDefault(): \FFI\CData
+    public static function loadMaterialDefault(): Material
     {
-        return self::ffi()->LoadMaterialDefault();
+        return new Material(self::ffi()->LoadMaterialDefault());
     }
 
     /**
      * 检查材质有效性（已加载着色器和纹理）
      *
-     * @param \FFI\CData $material Material对象
+     * @param Material $material Material对象
      * @return bool 是否有效
      */
-    public static function isMaterialValid(\FFI\CData $material): bool
+    public static function isMaterialValid(Material $material): bool
     {
-        return self::ffi()->IsMaterialValid($material);
+        return self::ffi()->IsMaterialValid($material->struct());
     }
 
     /**
      * 卸载材质数据
      *
-     * @param \FFI\CData $material Material对象
+     * @param Material $material Material对象
      * @return void
      */
-    public static function unloadMaterial(\FFI\CData $material): void
+    public static function unloadMaterial(Material $material): void
     {
-        self::ffi()->UnloadMaterial($material);
+        self::ffi()->UnloadMaterial($material->struct());
     }
 
     /**
      * 设置材质贴图类型（漫反射/高光等）
      *
-     * @param \FFI\CData $material Material对象引用
+     * @param Material $material Material对象引用
      * @param int $mapType 贴图类型
-     * @param \FFI\CData $texture Texture2D对象
+     * @param Texture2D $texture Texture2D对象
      * @return void
      */
-    public static function setMaterialTexture(\FFI\CData &$material, int $mapType, \FFI\CData $texture): void
+    public static function setMaterialTexture(Material &$material, int $mapType, Texture2D $texture): void
     {
-        self::ffi()->SetMaterialTexture($material, $mapType, $texture);
+        self::ffi()->SetMaterialTexture($material->struct(), $mapType, $texture->struct());
     }
 
     /**
      * 为指定网格设置材质
      *
-     * @param \FFI\CData $model Model对象引用
+     * @param Model $model Model对象引用
      * @param int $meshId 网格ID
      * @param int $materialId 材质ID
      * @return void
      */
-    public static function setModelMeshMaterial(\FFI\CData &$model, int $meshId, int $materialId): void
+    public static function setModelMeshMaterial(Model &$model, int $meshId, int $materialId): void
     {
-        self::ffi()->SetModelMeshMaterial($model, $meshId, $materialId);
+        self::ffi()->SetModelMeshMaterial($model->struct(), $meshId, $materialId);
     }
 
     //### 动画管理函数
@@ -863,72 +881,75 @@ class Models extends Base
      *
      * @param string $fileName 文件名
      * @param int &$animCount 动画数量引用
-     * @return \FFI\CData ModelAnimation对象数组
+     * @return ModelAnimation[] ModelAnimation对象数组
      */
-    public static function loadModelAnimations(string $fileName, int &$animCount): \FFI\CData
+    public static function loadModelAnimations(string $fileName, int &$animCount): array
     {
-        return self::ffi()->LoadModelAnimations($fileName, \FFI::addr(\FFI::new('int', false, true)));
+        $animCount = 0;
+        $animations = self::ffi()->LoadModelAnimations($fileName, \FFI::addr(\FFI::new('int', false, true)));
+        $animCount = $animations[0];
+        return array_map(fn($animation) => new ModelAnimation($animation), array_slice($animations, 1));
     }
 
     /**
      * 更新模型动画姿态（CPU端）
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $anim ModelAnimation对象
+     * @param Model $model Model对象
+     * @param ModelAnimation $anim ModelAnimation对象
      * @param int $frame 帧号
      * @return void
      */
-    public static function updateModelAnimation(\FFI\CData $model, \FFI\CData $anim, int $frame): void
+    public static function updateModelAnimation(Model &$model, ModelAnimation &$anim, int $frame): void
     {
-        self::ffi()->UpdateModelAnimation($model, $anim, $frame);
+        self::ffi()->UpdateModelAnimation($model->struct(), $anim->struct(), $frame);
     }
 
     /**
      * 更新骨骼矩阵（GPU蒙皮）
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $anim ModelAnimation对象
+     * @param Model $model Model对象
+     * @param ModelAnimation $anim ModelAnimation对象
      * @param int $frame 帧号
      * @return void
      */
-    public static function updateModelAnimationBones(\FFI\CData $model, \FFI\CData $anim, int $frame): void
+    public static function updateModelAnimationBones(Model &$model, ModelAnimation &$anim, int $frame): void
     {
-        self::ffi()->UpdateModelAnimationBones($model, $anim, $frame);
+        self::ffi()->UpdateModelAnimationBones($model->struct(), $anim->struct(), $frame);
     }
 
     /**
      * 卸载单个动画
      *
-     * @param \FFI\CData $anim ModelAnimation对象
+     * @param ModelAnimation $anim ModelAnimation对象
      * @return void
      */
-    public static function unloadModelAnimation(\FFI\CData $anim): void
+    public static function unloadModelAnimation(ModelAnimation &$anim): void
     {
-        self::ffi()->UnloadModelAnimation($anim);
+        self::ffi()->UnloadModelAnimation($anim->struct());
     }
 
     /**
      * 卸载动画数组
      *
-     * @param \FFI\CData $animations ModelAnimation对象数组
+     * @param ModelAnimation[] $animations ModelAnimation对象数组
      * @param int $animCount 动画数量
      * @return void
      */
-    public static function unloadModelAnimations(\FFI\CData $animations, int $animCount): void
+    public static function unloadModelAnimations(array $animations, int $animCount): void
     {
-        self::ffi()->UnloadModelAnimations($animations, $animCount);
+        self::ffi()->UnloadModelAnimations(array_map(fn($animation) => $animation->struct(), $animations), $animCount);
     }
 
     /**
      * 检查动画与模型骨骼匹配性
      *
-     * @param \FFI\CData $model Model对象
-     * @param \FFI\CData $anim ModelAnimation对象
+     * @param Model $model Model对象
+     * @param ModelAnimation $anim ModelAnimation对象
      * @return bool 是否匹配
      */
-    public static function isModelAnimationValid(\FFI\CData $model, \FFI\CData $anim): bool
+    public static function isModelAnimationValid(Model &$model, ModelAnimation &$anim): bool
     {
-        return self::ffi()->IsModelAnimationValid($model, $anim);
+        return self::ffi()->IsModelAnimationValid($model->struct(), $anim->struct());
     }
 
     //### 碰撞检测函数
@@ -936,106 +957,136 @@ class Models extends Base
     /**
      * 检测球体间碰撞
      *
-     * @param \FFI\CData $center1 Vector3对象，第一个球体中心
+     * @param Vector3 $center1 Vector3对象，第一个球体中心
      * @param float $radius1 第一个球体半径
-     * @param \FFI\CData $center/XMLSchema$center2 Vector3对象，第二个球体中心
+     * @param Vector3 $center2 Vector3对象，第二个球体中心
      * @param float $radius2 第二个球体半径
      * @return bool 是否碰撞
      */
-    public static function checkCollisionSpheres(\FFI\CData $center1, float $radius1, \FFI\CData $center2, float $radius2): bool
+    public static function checkCollisionSpheres(Vector3 $center1, float $radius1, Vector3 $center2, float $radius2): bool
     {
-        return self::ffi()->CheckCollisionSpheres($center1, $radius1, $center2, $radius2);
+        return self::ffi()->CheckCollisionSpheres($center1->struct(), $radius1, $center2->struct(), $radius2);
     }
 
     /**
      * 检测包围盒间碰撞
      *
-     * @param \FFI\CData $box1 BoundingBox对象，第一个包围盒
-     * @param \FFI\CData $box2 BoundingBox对象，第二个包围盒
+     * @param BoundingBox $box1 BoundingBox对象，第一个包围盒
+     * @param BoundingBox $box2 BoundingBox对象，第二个包围盒
      * @return bool 是否碰撞
      */
-    public static function checkCollisionBoxes(\FFI\CData $box1, \FFI\CData $box2): bool
+    public static function checkCollisionBoxes(BoundingBox $box1, BoundingBox $box2): bool
     {
-        return self::ffi()->CheckCollisionBoxes($box1, $box2);
+        return self::ffi()->CheckCollisionBoxes($box1->struct(), $box2->struct());
     }
 
     /**
      * 检测包围盒与球体碰撞
      *
-     * @param \FFI\CData $box BoundingBox对象，包围盒
-     * @param \FFI\CData $center Vector3对象，球体中心
+     * @param BoundingBox $box BoundingBox对象，包围盒
+     * @param Vector3 $center Vector3对象，球体中心
      * @param float $radius 球体半径
      * @return bool 是否碰撞
      */
-    public static function checkCollisionBoxSphere(\FFI\CData $box, \FFI\CData $center, float $radius): bool
+    public static function checkCollisionBoxSphere(BoundingBox $box, Vector3 $center, float $radius): bool
     {
-        return self::ffi()->CheckCollisionBoxSphere($box, $center, $radius);
+        return self::ffi()->CheckCollisionBoxSphere($box->struct(), $center->struct(), $radius);
     }
 
     /**
      * 获取射线与球体碰撞信息
      *
-     * @param \FFI\CData $ray Ray对象，射线
-     * @param \FFI\CData $center Vector3对象，球体中心
+     * @param Ray $ray Ray对象，射线
+     * @param Vector3 $center Vector3对象，球体中心
      * @param float $radius 球体半径
-     * @return \FFI\CData RayCollision对象
+     * @return RayCollision RayCollision对象
      */
-    public static function getRayCollisionSphere(\FFI\CData $ray, \FFI\CData $center, float $radius): \FFI\CData
+    public static function getRayCollisionSphere(Ray $ray, Vector3 $center, float $radius): RayCollision
     {
-        return self::ffi()->GetRayCollisionSphere($ray, $center, $radius);
+        $res = self::ffi()->GetRayCollisionSphere($ray->struct(), $center->struct(), $radius);
+        return new RayCollision(
+            $res->hit,
+            $res->distance,
+            new Vector3($res->point->x, $res->point->y, $res->point->z),
+            new Vector3($res->normal->x, $res->normal->y, $res->normal->z),
+        );
     }
 
     /**
      * 获取射线与包围盒碰撞信息
      *
-     * @param \FFI\CData $ray Ray对象，射线
-     * @param \FFI\CData $box BoundingBox对象，包围盒
-     * @return \FFI\CData RayCollision对象
+     * @param Ray $ray Ray对象，射线
+     * @param BoundingBox $box BoundingBox对象，包围盒
+     * @return RayCollision RayCollision对象
      */
-    public static function getRayCollisionBox(\FFI\CData $ray, \FFI\CData $box): \FFI\CData
+    public static function getRayCollisionBox(Ray $ray, BoundingBox $box): RayCollision
     {
-        return self::ffi()->GetRayCollisionBox($ray, $box);
+        $res = self::ffi()->GetRayCollisionBox($ray->struct(), $box->struct());
+        return new RayCollision(
+            $res->hit,
+            $res->distance,
+            new Vector3($res->point->x, $res->point->y, $res->point->z),
+            new Vector3($res->normal->x, $res->normal->y, $res->normal->z),
+        );
     }
 
     /**
      * 获取射线与网格碰撞信息（需变换矩阵）
      *
-     * @param \FFI\CData $ray Ray对象，射线
-     * @param \FFI\CData $mesh Mesh对象，网格
-     * @param \FFI\CData $transform Matrix对象，变换矩阵
-     * @return \FFI\CData RayCollision对象
+     * @param Ray $ray Ray对象，射线
+     * @param Mesh $mesh Mesh对象，网格
+     * @param Matrix $transform Matrix对象，变换矩阵
+     * @return RayCollision RayCollision对象
      */
-    public static function getRayCollisionMesh(\FFI\CData $ray, \FFI\CData $mesh, \FFI\CData $transform): \FFI\CData
+    public static function getRayCollisionMesh(Ray $ray, Mesh $mesh, Matrix $transform): RayCollision
     {
-        return self::ffi()->GetRayCollisionMesh($ray, $mesh, $transform);
+        $res = self::ffi()->GetRayCollisionMesh($ray->struct(), $mesh->struct(), $transform->struct());
+        return new RayCollision(
+            $res->hit,
+            $res->distance,
+            new Vector3($res->point->x, $res->point->y, $res->point->z),
+            new Vector3($res->normal->x, $res->normal->y, $res->normal->z),
+        );
     }
 
     /**
      * 获取射线与三角形碰撞信息
      *
-     * @param \FFI\CData $ray Ray对象，射线
-     * @param \FFI\CData $p1 Vector3对象，三角形顶点1
-     * @param \FFI\CData $p2 Vector3对象，三角形顶点2
-     * @param \FFI\CData $p3 Vector3对象，三角形顶点3
-     * @return \FFI\CData RayCollision对象
+     * @param Ray $ray Ray对象，射线
+     * @param Vector3 $p1 Vector3对象，三角形顶点1
+     * @param Vector3 $p2 Vector3对象，三角形顶点2
+     * @param Vector3 $p3 Vector3对象，三角形顶点3
+     * @return RayCollision RayCollision对象
      */
-    public static function getRayCollisionTriangle(\FFI\CData $ray, \FFI\CData $p1, \FFI\CData $p2, \FFI\CData $p3): \FFI\CData
+    public static function getRayCollisionTriangle(Ray $ray, Vector3 $p1, Vector3 $p2, Vector3 $p3): RayCollision
     {
-        return self::ffi()->GetRayCollisionTriangle($ray, $p1, $p2, $p3);
+        $res = self::ffi()->GetRayCollisionTriangle($ray->struct(), $p1->struct(), $p2->struct(), $p3->struct());
+        return new RayCollision(
+            $res->hit,
+            $res->distance,
+            new Vector3($res->point->x, $res->point->y, $res->point->z),
+            new Vector3($res->normal->x, $res->normal->y, $res->normal->z),
+        );
     }
 
     /**
      * 获取射线与四边形碰撞信息
      *
-     * @param \FFI\CData $ray Ray对象，射线
-     * @param \FFI\CData $p1 Vector3对象，四边形顶点1
-     * @param \FFI\CData $p2 Vector3对象，四边形顶点2
-     * @param \FFI\CData $p3 Vector3对象，四边形顶点3
-     * @param \FFI\CData $p4 Vector3对象，四边形顶点4
-     * @return \FFI\CData RayCollision对象
+     * @param Ray $ray Ray对象，射线
+     * @param Vector3 $p1 Vector3对象，四边形顶点1
+     * @param Vector3 $p2 Vector3对象，四边形顶点2
+     * @param Vector3 $p3 Vector3对象，四边形顶点3
+     * @param Vector3 $p4 Vector3对象，四边形顶点4
+     * @return RayCollision RayCollision对象
      */
-    public static function getRayCollisionQuad(\FFI\CData $ray, \FFI\CData $p1, \FFI\CData $p2, \FFI\CData $p3, \FFI\CData $p4): \FFI\CData
+    public static function getRayCollisionQuad(Ray $ray, Vector3 $p1, Vector3 $p2, Vector3 $p3, Vector3 $p4): RayCollision
     {
-        return self::ffi()->GetRayCollisionQuad($ray, $p1, $p2, $p3, $p4);
+        $res = self::ffi()->GetRayCollisionQuad($ray->struct(), $p1->struct(), $p2->struct(), $p3->struct(), $p4->struct());
+        return new RayCollision(
+            $res->hit,
+            $res->distance,
+            new Vector3($res->point->x, $res->point->y, $res->point->z),
+            new Vector3($res->normal->x, $res->normal->y, $res->normal->z),
+        );
     }
 }

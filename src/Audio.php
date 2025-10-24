@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace Kingbes\Raylib;
 
-use \FFI\CData;
 use Kingbes\Raylib\Utils\Sound;
 use Kingbes\Raylib\Utils\Wave;
 use Kingbes\Raylib\Utils\Music;
@@ -357,11 +356,16 @@ class Audio extends Base
      * 加载Wave采样数据（返回32位浮点数组）
      *
      * @param Wave $wave Wave对象
-     * @return CData 浮点数组指针
+     * @return array<float> 浮点数组
      */
-    public static function loadWaveSamples(Wave $wave): CData
+    public static function loadWaveSamples(Wave $wave): array
     {
-        return self::ffi()->LoadWaveSamples($wave->struct());
+        $samples = self::ffi()->LoadWaveSamples($wave->struct());
+        $arr = [];
+        foreach ($samples as $sample) {
+            $arr[] = $sample;
+        }
+        return $arr;
     }
 
     /**
@@ -414,7 +418,7 @@ class Audio extends Base
     /**
      * 检查音乐流有效性
      *
-     * @param CData $music Music对象
+     * @param Music $music Music对象
      * @return bool 是否有效
      */
     public static function isMusicValid(Music $music): bool
@@ -425,7 +429,7 @@ class Audio extends Base
     /**
      * 卸载音乐流
      *
-     * @param CData $music Music对象
+     * @param Music $music Music对象
      * @return void
      */
     public static function unloadMusicStream(Music $music): void
@@ -610,13 +614,15 @@ class Audio extends Base
      * 更新音频流缓冲区数据
      *
      * @param AudioStream $stream AudioStream对象
-     * @param CData $data 数据指针
+     * @param string $data 数据
      * @param int $frameCount 帧数
      * @return void
      */
-    public static function updateAudioStream(AudioStream $stream, CData $data, int $frameCount): void
+    public static function updateAudioStream(AudioStream $stream, string $data, int $frameCount): void
     {
-        self::ffi()->UpdateAudioStream($stream->struct(), $data, $frameCount);
+        $c_char = self::ffi()->new('char[' . strlen($data) . ']');
+        self::ffi()::memcpy($c_char, $data, strlen($data));
+        self::ffi()->UpdateAudioStream($stream->struct(), self::ffi()->cast('void*', $c_char), $frameCount);
     }
 
     /**
