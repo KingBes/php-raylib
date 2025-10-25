@@ -47,8 +47,13 @@ abstract class Base
             // 返回 Windows 系统下的 Raylib 动态链接库文件路径
             return dirname(__DIR__) . '/build/lib/windows/raylib.dll';
         } else if (PHP_OS_FAMILY === 'Linux') {
+            if (php_uname('m') === 'x86_64') { // 判断是否amd64还是arm64
+                $arrch = 'amd64';
+            } else {
+                $arrch = 'arm64';
+            }
             // 返回 Linux 系统下的 Raylib 共享库文件路径
-            return dirname(__DIR__) . '/build/lib/linux/libraylib.so';
+            return dirname(__DIR__) . '/build/lib/linux/' . $arrch . '/libraylib.so';
         } elseif (PHP_OS_FAMILY === 'Darwin') {
             // 返回 macOS 系统下的 Raylib 共享库文件路径
             return dirname(__DIR__) . '/build/lib/macos/libraylib.dylib';
