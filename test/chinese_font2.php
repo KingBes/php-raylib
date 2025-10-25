@@ -26,13 +26,13 @@ $text = "这个是中文文本"; // 中文文本
 
 // 加载字体码位
 $codepoints = Text::loadCodepoints($text);
-var_dump(Text::ffi()->cast("int[7]", $codepoints["data"]));
+// var_dump(Text::ffi()->cast("int[7]", $codepoints["data"]));
 // 从内存加载字体
 $font = Text::loadFontFromMemory(
     ".ttf",
     $fileData["data"],
     $fileData["size"],
-    72,
+    500,
     $codepoints["data"],
     $codepoints["count"]
 );
@@ -57,7 +57,7 @@ while (!Core::windowShouldClose()) {
     Core::beginDrawing(); //开始绘制
     Core::clearBackground($white); //清楚背景色
 
-    Text::drawTextEx($font, $text, $textPosition, 32, 2, $red); // 绘制提示文本
+    Text::drawTextEx($font, $text, $textPosition, 12, 2, $red); // 绘制提示文本
 
     Core::endDrawing(); //结束绘制
 }

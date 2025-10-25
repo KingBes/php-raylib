@@ -52,34 +52,13 @@ $listViewText = [
 
 $secretViewActive = false;
 
-// 读取字体文件
-$fileData = Core::loadFileData(
-    // 字体文件路径
-    __DIR__ . DIRECTORY_SEPARATOR . "seguiemj.ttf"
+$text = "asd中文说明"; // 中文文本
+
+$font = Text::loadFontEx(
+    __DIR__ . DIRECTORY_SEPARATOR . "AlimamaShuHeiTi-Bold.ttf",
+    // __DIR__ . DIRECTORY_SEPARATOR . "seguiemj.ttf",
+    64
 );
-
-$text = "asd🤣"; // 中文文本
-
-// 加载字体码位
-$codepoints = Text::loadCodepoints($text);
-
-// 从内存加载字体
-$font = Text::loadFontFromMemory(
-    ".ttf",
-    $fileData["data"],
-    $fileData["size"],
-    72,
-    $codepoints["data"],
-    $codepoints["count"]
-);
-
-// 释放码点表
-Text::unloadCodepoints($codepoints["data"]);
-
-if (Text::isFontValid($font) == false) {
-    // 如果字体加载失败，抛出异常
-    throw new \Exception("无法加载系统字体，请检查路径是否正确！");
-}
 
 Gui::setFont($font);
 

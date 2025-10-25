@@ -18,16 +18,17 @@ Core::setTargetFPS(60); //设置目标帧率
 
 $font = Text::loadFontEx(
     __DIR__ . DIRECTORY_SEPARATOR . "AlimamaShuHeiTi-Bold.ttf",
-    72
+    // __DIR__ . DIRECTORY_SEPARATOR . "seguiemj.ttf",
+    64
 );
 
-$text = "你好"; // 中文文本
+$text = "你好，中文！asd"; // 中文文本
 
 
 // 白色
 $white = Utils::color(255, 255, 255);
 
-$red = Utils::color(255, 0, 0, 0); // 红色
+$red = Utils::color(255, 0, 0); // 红色
 
 $textPosition  = Utils::vector2(100, 100); // 文本位置
 
