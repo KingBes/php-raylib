@@ -50,16 +50,18 @@ class Text extends Base
         string $fileName,
         int $fontSize
     ): Font {
-        $c_codepoints = self::ffi()->new("int[" . filesize($fileName) . "]");
-        foreach ($c_codepoints as $key => $value) {
-            $c_codepoints[$key] = $key;
+        $c_codepoints = self::ffi()->new("int[1000000]", false);
+
+        for($i = 0; $i < 1000000; $i++){
+            $c_codepoints[$i] = $i;
         }
+        
         $cc_codepoints = self::ffi()->cast("int*", $c_codepoints);
         $res = new Font(self::ffi()->LoadFontEx(
             $fileName,
             $fontSize,
             $cc_codepoints,
-            filesize($fileName)
+            1000000
         ));
         if (self::isFontValid($res) == false) {
             // 如果字体加载失败，抛出异常
