@@ -5,7 +5,6 @@ require dirname(__DIR__) . "/vendor/autoload.php";
 use Kingbes\Raylib\Core; //核心
 use Kingbes\Raylib\Utils; // 工具类
 use Kingbes\Raylib\Gui;
-use Kingbes\Raylib\Text;
 
 Core::initWindow(800, 450, "Hello World"); //初始化窗口
 
@@ -52,36 +51,26 @@ $listViewText = [
 
 $secretViewActive = false;
 
-$text = "asd中文说明"; // 中文文本
-
-$font = Text::loadFontEx(
-    __DIR__ . DIRECTORY_SEPARATOR . "AlimamaShuHeiTi-Bold.ttf",
-    // __DIR__ . DIRECTORY_SEPARATOR . "seguiemj.ttf",
-    64
-);
-
-Gui::setFont($font);
-
 // 主循环
 while (!Core::windowShouldClose()) {
     Core::beginDrawing(); //开始绘制
 
     Core::clearBackground($white); // 清除背景
 
-    // // 按钮控件控件
-    // if (Gui::button($recBtn, "#191#Show Message")) { // 按钮被点击
-    //     $showMsgBox = true;
-    // }
+    // 按钮控件控件
+    if (Gui::button($recBtn, "#191#Show Message")) { // 按钮被点击
+        $showMsgBox = true;
+    }
 
-    // if ($showMsgBox) { // 如果消息盒子被打开
-    //     // 消息盒子控件
-    //     $res = Gui::messageBox($recMsgBox, "Message Box", "This is a message box.", "Nice;Cool");
-    //     if ($res >= 0) { // 如果用户点击了按钮
-    //         // 根据用户点击的按钮，执行不同的操作
-    //         echo "用户点击了按钮: $res\n";
-    //         $showMsgBox = false;
-    //     }
-    // }
+    if ($showMsgBox) { // 如果消息盒子被打开
+        // 消息盒子控件
+        $res = Gui::messageBox($recMsgBox, "Message Box", "This is a message box.", "Nice;Cool");
+        if ($res >= 0) { // 如果用户点击了按钮
+            // 根据用户点击的按钮，执行不同的操作
+            echo "用户点击了按钮: $res\n";
+            $showMsgBox = false;
+        }
+    }
 
     /* $tab = Gui::dropdownBox(
         Utils::rectangle(24, 120, 250, 30),
@@ -106,7 +95,7 @@ while (!Core::windowShouldClose()) {
     } */
 
     // 文本框控件
-    $res = Gui::textBox(
+    /* $res = Gui::textBox(
         Utils::rectangle(24, 120, 250, 30),
         $text,
         20,
@@ -115,7 +104,7 @@ while (!Core::windowShouldClose()) {
     if ($res) {
         $textBoxEditMode = !$textBoxEditMode;
         echo "文本框内容: $text\n";
-    }
+    } */
 
     // 网格控件
     /* Gui::grid(
